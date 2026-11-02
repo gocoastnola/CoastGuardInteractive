@@ -1,0 +1,49 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build for project subpath
+        run: |
+          npx tsc -b
+          npx vite build --base=/CoastGuardInteractive/
+          # App uses root-absolute asset URLs in source; rewrite them for the project subpath.
+          find dist -type f \( -name '*.js' -o -name '*.html' \) -print0 | xargs -0 sed -i \
+            -e 's#"/media/#"/CoastGuardInteractive/media/#g' \
+            -e "s#'/media/#'/CoastGuardInteractive/media/#g" \
+            -e 's#"/data/#"/CoastGuardInteractive/data/#g' \
+            -e "s#'/data/#'/CoastGuardInteractive/data/#g"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
