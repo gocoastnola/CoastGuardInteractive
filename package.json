@@ -1,0 +1,40 @@
+{
+  "name": "coastguard-interactive",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CoastGuard Interactive — independent educational demo: a cinematic interactive map of U.S. Coast Guard units (demo data, unverified).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5175",
+    "validate:data": "tsx scripts/validate-data.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc -b",
+    "build:zips": "tsx scripts/build-zips.ts"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.1.1",
+    "gsap": "^3.13.0",
+    "maplibre-gl": "^6.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^22.13.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^5.0.5"
+  }
+}

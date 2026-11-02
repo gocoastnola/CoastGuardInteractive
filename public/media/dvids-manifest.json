@@ -1,0 +1,142 @@
+{
+  "mission-aviation": {
+    "dvids_id": "image:7589799",
+    "title": "USCGC Stone\u2019s crew conducts helicopter training underway",
+    "credit": "PO1 Riley Perkofski",
+    "unit": "U.S. Coast Guard Atlantic Area",
+    "date": "2023-01-14T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/7589799/uscgc-stones-crew-conducts-helicopter-training-underway",
+    "screened": "visual+keyword (scripts/screen_images.py), 2026-10-19"
+  },
+  "mission-sar": {
+    "dvids_id": "image:9290812",
+    "title": "U.S. Coast Guard Air Station Barbers Point conducts training",
+    "credit": "PO1 Tyler Robertson",
+    "unit": "U.S. Coast Guard Oceania",
+    "date": "2025-09-02T04:00:00Z",
+    "page": "https://www.dvidshub.net/image/9290812/us-coast-guard-air-station-barbers-point-conducts-training",
+    "screened": "visual+keyword (scripts/screen_images.py), 2026-10-19"
+  },
+  "mission-ice": {
+    "dvids_id": "image:3102483",
+    "title": "USCGC Polar Star icebreaking operations off of Antarctica",
+    "credit": "CPO David Mosley",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2017-01-16T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/3102483/uscgc-polar-star-icebreaking-operations-off-antarctica",
+    "screened": "visual+keyword (scripts/screen_images.py), 2026-10-19"
+  },
+  "polar-star-hero": {
+    "dvids_id": "image:8230207",
+    "title": "Coast Guard Cutter Polar Star (WAGB 10) breaks channel to McMurdo Station",
+    "credit": "U.S. Coast Guard",
+    "page": "https://www.dvidshub.net/image/8230207",
+    "note": "replaced initial pick with ship-in-ice aerial"
+  },
+  "polar-star-bow": {
+    "dvids_id": "image:3102497",
+    "title": "Antarctic Icebreaking 2017",
+    "credit": "CPO David Mosley",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2017-01-15T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/3102497/antarctic-icebreaking-2017",
+    "screened": "visual+keyword (scripts/screen_images.py), 2026-10-19"
+  },
+  "polar-star-crew": {
+    "dvids_id": "image:9616693",
+    "title": "A U.S. Coast Guard Cutter Polar Star (WAGB 10) crew member poses for a family photo at Coast Guard Base Seattle after being reunited with family following a 146-day Antarctic deployment in support of Operation Deep Freeze, April 13, 2026.",
+    "credit": "SN Jade Moen",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2026-04-13T07:00:00Z",
+    "page": "https://www.dvidshub.net/image/9616693/us-coast-guard-cutter-polar-star-wagb-10-crew-member-poses-family-photo-coast-guard-base",
+    "bytes": 379741
+  },
+  "port-seattle": {
+    "dvids_id": "image:9783909",
+    "title": "USCGC Polar Star holds a change-of-command ceremony",
+    "credit": "PO3 Adrian Sanchez villa",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2026-06-29T07:00:00Z",
+    "page": "https://www.dvidshub.net/image/9783909/uscgc-polar-star-holds-change-command-ceremony",
+    "bytes": 345336
+  },
+  "port-honolulu": {
+    "dvids_id": "image:9423707",
+    "title": "USCGC Polar Star departs Honolulu port call, onloads first-ever Coast Guard diver chamber for Operation Deep Freeze",
+    "credit": "PO2 Christopher Bokum",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2025-12-03T08:00:00Z",
+    "page": "https://www.dvidshub.net/image/9423707/uscgc-polar-star-departs-honolulu-port-call-onloads-first-ever-coast-guard-diver-chamber-operation-deep-freeze",
+    "bytes": 438535
+  },
+  "port-hobart": {
+    "dvids_id": "image:8177443",
+    "title": "Coast Guard Cutter Polar Star (WAGB 10) holds tours in Hobart",
+    "credit": "PO2 Ryan Graves",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2023-12-18T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/8177443/coast-guard-cutter-polar-star-wagb-10-holds-tours-hobart",
+    "bytes": 659084
+  },
+  "port-wellington": {
+    "dvids_id": "image:8882501",
+    "title": "USCGC Polar Star (WAGB 10) conducts crew exchange in McMurdo Sound during Operation Deep Freeze",
+    "credit": "PO2 Briana Carter",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2025-02-07T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/8882501/uscgc-polar-star-wagb-10-conducts-crew-exchange-mcmurdo-sound-during-operation-deep-freeze",
+    "bytes": 383697
+  },
+  "port-punta-arenas": {
+    "dvids_id": "image:7693671",
+    "title": "Chilean Navy hosts Coast Guard Cutter Polar Star commanding officer at First Naval Zone Headquarters building",
+    "credit": "PO3 Aidan Cooney",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2023-03-20T04:00:00Z",
+    "page": "https://www.dvidshub.net/image/7693671/chilean-navy-hosts-coast-guard-cutter-polar-star-commanding-officer-first-naval-zone-headquarters-building",
+    "bytes": 359310
+  },
+  "port-rio": {
+    "dvids_id": "image:7408763",
+    "title": "UNITAS 2022: Opening Ceremony",
+    "credit": "Sgt Ethan Craw",
+    "unit": "U.S. Marine Corps Forces, South",
+    "date": "2022-09-08T04:00:00Z",
+    "page": "https://www.dvidshub.net/image/7408763/unitas-2022-opening-ceremony"
+  },
+  "port-panama": {
+    "dvids_id": "image:9787142",
+    "title": "Legend-class national security cutter USCGC Kimball conducts operations in the Pacific and Caribbean Sea during 73-day multi-mission patrol",
+    "credit": null,
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2026-04-21T07:00:00Z",
+    "page": "https://www.dvidshub.net/image/9787142/legend-class-national-security-cutter-uscgc-kimball-conducts-operations-pacific-and-caribbean-sea-during-73-day-multi-mission",
+    "bytes": 666797
+  },
+  "port-homecoming": {
+    "dvids_id": "image:5168574",
+    "title": "Nation's only heavy icebreaker returns from Antarctic mission",
+    "credit": "PO3 Amanda Norcross",
+    "unit": "U.S. Coast Guard Northwest",
+    "date": "2019-03-11T04:00:00Z",
+    "page": "https://www.dvidshub.net/image/5168574/nations-only-heavy-icebreaker-returns-antarctic-mission",
+    "bytes": 1157292
+  },
+  "port-cape-horn": {
+    "dvids_id": "image:7574169",
+    "title": "Coast Guard Cutter Polar Star (WAGB 10) sails through rough seas enroute to Antarctica",
+    "credit": "PO3 Aidan Cooney",
+    "unit": "U.S. Coast Guard Pacific Area",
+    "date": "2022-12-15T05:00:00Z",
+    "page": "https://www.dvidshub.net/image/7574169/coast-guard-cutter-polar-star-wagb-10-sails-through-rough-seas-enroute-antarctica"
+  },
+  "mission-fire": {
+    "dvids_id": "image:9812451",
+    "title": "Station Islamorada responds to vessel fire",
+    "credit": "",
+    "unit": "U.S. Coast Guard Southeast",
+    "date": "2026-07-05T04:00:00Z",
+    "page": "https://www.dvidshub.net/image/9812451/station-islamorada-responds-vessel-fire",
+    "screened": "visual+keyword (scripts/screen_images.py), 2026-10-19"
+  }
+}

@@ -1,0 +1,17 @@
+import { chromium } from '@playwright/test'
+const b = await chromium.launch()
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } })
+const logs = []
+p.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`))
+await p.goto('http://127.0.0.1:5174/')
+await p.getByTestId('explore').click()
+await p.waitForTimeout(4000)
+const rects = await p.evaluate(() => Array.from(document.querySelectorAll('[data-unit-id]')).map(el => { const r = el.getBoundingClientRect(); return [el.dataset.unitId, Math.round(r.x + r.width/2), Math.round(r.y + r.height/2)] }))
+console.log(JSON.stringify(rects.filter(r => r[0].includes('new-orleans') || r[0].includes('grand-isle') || r[0].includes('venice') || r[0].includes('golden') || r[0].includes('stratton'))))
+await p.screenshot({ path: process.argv[2] + '/declutter-national.png', clip: { x: 700, y: 560, width: 320, height: 200 } })
+await p.getByTestId('jump-gulf').click()
+await p.waitForTimeout(2800)
+const rects2 = await p.evaluate(() => Array.from(document.querySelectorAll('[data-unit-id]')).map(el => { const r = el.getBoundingClientRect(); return [el.dataset.unitId, Math.round(r.x + r.width/2), Math.round(r.y + r.height/2)] }))
+console.log(JSON.stringify(rects2.filter(r => r[0].includes('new-orleans'))))
+console.log(logs.join('\n') || 'no page errors')
+await b.close()

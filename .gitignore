@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+playwright-report
+test-results
+dev.log
+.DS_Store
+*.log
+.vite
+
+# raw Census gazetteer cache (rebuilt by npm run build:zips)
+data-src/
