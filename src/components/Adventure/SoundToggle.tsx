@@ -12,7 +12,12 @@ export function SoundToggle() {
       aria-pressed={muted}
       onClick={() => {
         sound.enable()
-        setMuted(sound.toggleMuted())
+        const next = sound.toggleMuted()
+        setMuted(next)
+        if (!next) {
+          sound.ambient()
+          sound.chime()
+        }
       }}
       data-testid="sound-toggle"
     >
