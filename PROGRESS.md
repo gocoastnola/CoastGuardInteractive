@@ -85,3 +85,11 @@ Full diff summary: CHANGES-2026-10-19.md.
 | Build / unit / e2e | ✅ | build clean · Vitest 55/55 · Playwright 6/6 |
 
 Demo/approx: ship dates and the 8-week length are illustrative (SOURCES.md).
+
+
+## 2026-11-06 — Globe/patrol restoration (review pending)
+- Patrol map now requests MapLibre globe projection, including after a basemap style fallback.
+- Patrol camera frames each leg instead of continuously zooming out over every previous leg; the progressive route remains drawn across legs.
+- Port photo cards remain on screen longer before the next leg; port markers continue accumulating.
+- Patrol enables the existing WebAudio soundscape and exposes an unmute chime; sounds require a browser user gesture and are subject to browser autoplay policies.
+- Verification pending: run `npm run build`, `npm test`, and `npm run test:e2e` in a Node 22 checkout, and visually inspect globe/antimeridian behavior on desktop and mobile before merging.
