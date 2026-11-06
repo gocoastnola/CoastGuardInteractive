@@ -15,8 +15,8 @@ interface Props {
 }
 
 /** Port cards live this long — but the ship sails on underneath them. */
-const CARD_LIFE_S = 2.6
-const CANAL_LIFE_S = 3.6
+const CARD_LIFE_S = 4.5
+const CANAL_LIFE_S = 5.5
 const FRAME_S = 0.55
 
 /**
@@ -49,6 +49,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   useEffect(() => {
     if (!map || !root.current) return
     done.current = false
+    sound.enable()
+    sound.ambient()
 
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
@@ -88,19 +90,20 @@ export function PatrolOverlay({ map, onDone }: Props) {
       const stop = PATROL_STOPS[k + 1]
       // Camera frames everything sailed so far PLUS this leg — the whole
       // trackline stays in view and grows across the world.
-      const framePts = fullPath.slice(0, sBefore + legSamples[k] + 1)
+      const framePts = leg.points
 
       // Frame this leg, update the "underway" beat, departure whoosh.
       tl.call(
         () => {
           map.fitPoints(framePts, {
             duration: FRAME_S * 1000,
-            pitch: 14,
-            maxZoom: 4.6,
+            pitch: 0,
+            maxZoom: 3.5,
             padding: { top: 110, bottom: window.innerWidth <= 860 ? 280 : 210, left: 80, right: 80 },
           })
           setPortLabel(stop.name)
           sound.whoosh()
+          sound.sonar()
           if (beatEl) {
             gsap.fromTo(beatEl, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
           }
@@ -153,7 +156,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         tl.to(card, { opacity: 0, y: -24, duration: 0.4, ease: 'power2.in' }, t + life)
       }
       // Homecoming gets a breath for the fanfare; every other port: sail on NOW.
-      t += stop.special === 'homecoming' ? 1.2 : 0.2
+      t += life + 0.1
 
       samplesBefore += legSamples[k]
       milesBefore += leg.miles
@@ -175,6 +178,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
     return () => {
       tl.kill()
+      sound.stopAmbient()
       gsap.set([...cards, beatEl].filter(Boolean) as HTMLElement[], { clearProps: 'all' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,6 +189,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       map?.stop()
+      sound.stopAmbient()
       map?.drawArc(fullPath, 1)
       setMiles(totalMiles)
       finish(true)

@@ -9,6 +9,7 @@
  *   lock()     — reel lands: low thunk + rising brass triad
  *   horn()     — ship's horn, two detuned lows with a slow swell
  *   whoosh()   — bandpassed noise sweep for departures / transitions
+ *   sonar()    — restrained navigational ping as a new route begins
  *   chime()    — port-arrival pluck triad
  *   fanfare()  — homecoming: arpeggio + pad swell
  *
@@ -245,6 +246,22 @@ class Sound {
     src.connect(bp).connect(g)
     src.start(at)
     src.stop(at + 0.9)
+  }
+
+  /** Soft sonar/navigation ping with a falling pitch and long tail. */
+  sonar(): void {
+    if (!this.ctx) return
+    const ctx = this.ctx
+    const at = ctx.currentTime
+    const g = this.env(at, 0.09, 0.008, 1.35)
+    if (!g) return
+    const o = ctx.createOscillator()
+    o.type = 'sine'
+    o.frequency.setValueAtTime(960, at)
+    o.frequency.exponentialRampToValueAtTime(610, at + 1.2)
+    o.connect(g)
+    o.start(at)
+    o.stop(at + 1.4)
   }
 
   /** Port-arrival pluck (gentle major triad). */
