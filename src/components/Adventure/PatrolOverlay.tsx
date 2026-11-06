@@ -103,6 +103,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
           })
           setPortLabel(stop.name)
           sound.whoosh()
+          sound.sonar()
           if (beatEl) {
             gsap.fromTo(beatEl, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
           }
