@@ -215,6 +215,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
             <img className="port-img" src={stop.img} alt={`Coast Guard imagery associated with ${stop.name}`} loading="eager" />
+            {stop.photoSource && <a className="port-photo-source" href={stop.photoSource} target="_blank" rel="noopener noreferrer" aria-label={`View original Coast Guard photograph for ${stop.name}`}>View original photo ↗</a>}
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
