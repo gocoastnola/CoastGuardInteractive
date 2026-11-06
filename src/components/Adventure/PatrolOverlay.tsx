@@ -6,7 +6,6 @@ import { sound } from '../../lib/audio'
 import { buildPatrolLegs, legDuration, patrolMiles, PATROL_STOPS } from '../../journey/patrol'
 import { PATROL } from '../../journey/copy'
 import { MilesCounter } from './MilesCounter'
-import { SoundToggle } from './SoundToggle'
 
 interface Props {
   map: MapHandle | null
@@ -49,6 +48,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   useEffect(() => {
     if (!map || !root.current) return
     done.current = false
+    sound.enable()
+    sound.ambient()
 
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
@@ -175,6 +176,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
     return () => {
       tl.kill()
+      sound.stopAmbient()
       gsap.set([...cards, beatEl].filter(Boolean) as HTMLElement[], { clearProps: 'all' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,6 +187,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       map?.stop()
+      sound.stopAmbient()
       map?.drawArc(fullPath, 1)
       setMiles(totalMiles)
       finish(true)
@@ -196,7 +199,6 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
   return (
     <div className={`patrol ${reduced ? 'is-static' : ''}`} ref={root} data-testid="patrol">
-      <SoundToggle />
       <div className="patrol-head">
         <div className="patrol-eyebrow">{PATROL.eyebrow}</div>
         <div className="patrol-title">{PATROL.title}</div>
@@ -212,7 +214,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       {!reduced &&
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
-            <img className="port-img" src={stop.img} alt={`${stop.name} port call`} loading="eager" />
+            <img className="port-img" src={stop.img} alt={`Coast Guard imagery associated with ${stop.name}`} loading="eager" />
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
