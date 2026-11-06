@@ -275,7 +275,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       maxZoom: 16,
       maxPitch: 62,
       // World copies let journey arcs to Guam cross the antimeridian; DOM markers smart-wrap so none duplicate.
-      renderWorldCopies: true,
+      renderWorldCopies: false,
+      projection: { type: 'globe' },
       attributionControl: false,
     })
     mapRef.current = map
@@ -290,6 +291,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       fellBack = true
       console.warn(`[map] primary style unavailable (${why}); falling back to CARTO Dark Matter`)
       map.setStyle(FALLBACK_STYLE)
+      map.setProjection({ type: 'globe' })
     }
     map.once('style.load', () => {
       styleLoaded = true
@@ -298,6 +300,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     map.on('style.load', () => {
       // fires again after a fallback swap: re-create the journey layers if an arc is on screen
       styleReady.current = true
+      map.setProjection({ type: 'globe' })
       applyArc(map)
     })
     map.on('error', (e: ErrorEvent) => {
