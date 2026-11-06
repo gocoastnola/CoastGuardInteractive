@@ -12,31 +12,15 @@
  *   chime()    — port-arrival pluck triad
  *   fanfare()  — homecoming: arpeggio + pad swell
  *
- * Mute is persisted to localStorage ("cgi-muted").
+ * Sound starts after user interaction; no mute state.
  */
-
-const MUTE_KEY = 'cgi-muted'
 
 class Sound {
   private ctx: AudioContext | null = null
   private master: GainNode | null = null
   private ambientNodes: { stop(): void } | null = null
-  private _muted = false
-
-  constructor() {
-    try {
-      this._muted = localStorage.getItem(MUTE_KEY) === '1'
-    } catch {
-      /* private mode */
-    }
-  }
-
   get enabled(): boolean {
     return !!this.ctx
-  }
-
-  get muted(): boolean {
-    return this._muted
   }
 
   /** Call from a click/keydown handler. Idempotent. */
@@ -50,28 +34,11 @@ class Sound {
       if (!Ctx) return
       this.ctx = new Ctx()
       this.master = this.ctx.createGain()
-      this.master.gain.value = this._muted ? 0 : 1
+      this.master.gain.value = 1
       this.master.connect(this.ctx.destination)
     } catch {
       this.ctx = null
     }
-  }
-
-  setMuted(muted: boolean): void {
-    this._muted = muted
-    try {
-      localStorage.setItem(MUTE_KEY, muted ? '1' : '0')
-    } catch {
-      /* ignore */
-    }
-    if (this.ctx && this.master) {
-      this.master.gain.setTargetAtTime(muted ? 0 : 1, this.ctx.currentTime, 0.05)
-    }
-  }
-
-  toggleMuted(): boolean {
-    this.setMuted(!this._muted)
-    return this._muted
   }
 
   /* ---------- helpers ---------- */
