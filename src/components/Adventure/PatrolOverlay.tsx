@@ -6,7 +6,6 @@ import { sound } from '../../lib/audio'
 import { buildPatrolLegs, legDuration, patrolMiles, PATROL_STOPS } from '../../journey/patrol'
 import { PATROL } from '../../journey/copy'
 import { MilesCounter } from './MilesCounter'
-import { SoundToggle } from './SoundToggle'
 
 interface Props {
   map: MapHandle | null
@@ -49,6 +48,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   useEffect(() => {
     if (!map || !root.current) return
     done.current = false
+    sound.enable()
+    sound.ambient()
 
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
@@ -86,18 +87,17 @@ export function PatrolOverlay({ map, onDone }: Props) {
       const sBefore = samplesBefore
       const mBefore = milesBefore
       const stop = PATROL_STOPS[k + 1]
-      // Camera frames everything sailed so far PLUS this leg — the whole
-      // trackline stays in view and grows across the world.
-      const framePts = fullPath.slice(0, sBefore + legSamples[k] + 1)
-
+      // Keep the entire circumnavigation framed throughout the voyage.
+      // A single stable world overview lets applicants appreciate the cumulative
+      // track and international reach rather than losing the earlier ports.
       // Frame this leg, update the "underway" beat, departure whoosh.
       tl.call(
         () => {
-          map.fitPoints(framePts, {
+          map.fitPoints(fullPath, {
             duration: FRAME_S * 1000,
-            pitch: 14,
-            maxZoom: 4.6,
-            padding: { top: 110, bottom: window.innerWidth <= 860 ? 280 : 210, left: 80, right: 80 },
+            pitch: 0,
+            maxZoom: 1.2,
+            padding: { top: 80, bottom: window.innerWidth <= 860 ? 260 : 170, left: 36, right: 36 },
           })
           setPortLabel(stop.name)
           sound.whoosh()
@@ -164,8 +164,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
       () => {
         map.fitPoints(fullPath, {
           duration: 2600,
-          pitch: 28,
-          padding: { top: 140, bottom: 140, left: 100, right: 100 }
+          pitch: 0,
+          maxZoom: 1.2,
+          padding: { top: 90, bottom: 110, left: 40, right: 40 }
         })
       },
       [],
@@ -175,6 +176,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
     return () => {
       tl.kill()
+      sound.stopAmbient()
       gsap.set([...cards, beatEl].filter(Boolean) as HTMLElement[], { clearProps: 'all' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,6 +187,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       map?.stop()
+      sound.stopAmbient()
       map?.drawArc(fullPath, 1)
       setMiles(totalMiles)
       finish(true)
@@ -196,7 +199,6 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
   return (
     <div className={`patrol ${reduced ? 'is-static' : ''}`} ref={root} data-testid="patrol">
-      <SoundToggle />
       <div className="patrol-head">
         <div className="patrol-eyebrow">{PATROL.eyebrow}</div>
         <div className="patrol-title">{PATROL.title}</div>
@@ -212,7 +214,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
       {!reduced &&
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
-            <img className="port-img" src={stop.img} alt={`${stop.name} port call`} loading="eager" />
+            <img className="port-img" src={stop.img} alt={`Coast Guard imagery associated with ${stop.name}`} loading="eager" />
+            {stop.photoSource && <a className="port-photo-source" href={stop.photoSource} target="_blank" rel="noopener noreferrer" aria-label={`View original Coast Guard photograph for ${stop.name}`}>View original photo ↗</a>}
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}

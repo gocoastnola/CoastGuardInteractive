@@ -22,6 +22,8 @@ export interface PortStop {
   blurb: string
   /** Image under public/media (DVIDS, public domain — see ASSET_LICENSES.md). */
   img: string
+  /** Verified source for the existing port-call photograph. */
+  photoSource?: string
   /** Invisible waypoints between the PREVIOUS stop and this one (sea routing). */
   via?: LngLat[]
   /** Panama gets the lock animation. */
@@ -48,6 +50,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [-157.8581, 21.3069],
     blurb: 'First port call: fuel, fresh stores, and your first liberty in paradise.',
     img: '/media/port-honolulu.jpg',
+    photoSource: 'https://www.dvidshub.net/image/9423707',
   },
   {
     id: 'hobart',
@@ -57,6 +60,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [147.3272, -42.8821],
     blurb: 'Across the entire Pacific. The last green hills before the Southern Ocean.',
     img: '/media/port-hobart.jpg',
+    photoSource: 'https://www.dvidshub.net/image/8177443',
   },
   {
     id: 'wellington',
@@ -66,6 +70,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [174.7762, -41.2866],
     blurb: 'Kiwi hospitality, one last mail call — then the roaring forties.',
     img: '/media/port-wellington.jpg',
+    photoSource: 'https://www.dvidshub.net/image/8882501',
   },
   {
     id: 'punta-arenas',
@@ -75,6 +80,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [-70.9171, -53.1638],
     blurb: 'Glaciers to port, penguins to starboard. Patagonia earns its legend.',
     img: '/media/port-punta-arenas.jpg',
+    photoSource: 'https://www.dvidshub.net/image/7693671',
     via: [[-130, -55]],
   },
   {
@@ -85,6 +91,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [-67.2726, -55.9797],
     blurb: 'Rounding the Horn — the sailors\u2019 rite of passage at the bottom of the world.',
     img: '/media/port-cape-horn.jpg',
+    photoSource: 'https://www.dvidshub.net/image/7574169',
     special: 'capeHorn',
   },
   {
@@ -95,6 +102,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [-43.1729, -22.9068],
     blurb: 'Up the Atlantic coast. Liberty under Sugarloaf with partner navies.',
     img: '/media/port-rio.jpg',
+    photoSource: 'https://www.dvidshub.net/image/7408763',
     via: [
       [-55, -40],
       [-47, -30],
@@ -108,6 +116,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: [-79.68, 9.1],
     blurb: '85 feet up and over the continental divide — lock by lock, ocean to ocean.',
     img: '/media/port-panama.jpg',
+    photoSource: 'https://www.dvidshub.net/image/9787142',
     special: 'canal',
     via: [
       [-34.5, -5.5],
@@ -123,6 +132,7 @@ export const PATROL_STOPS: PortStop[] = [
     lngLat: SEATTLE,
     blurb: 'Families on the pier. You just circumnavigated South America on your first patrol.',
     img: '/media/port-homecoming.jpg',
+    photoSource: 'https://www.dvidshub.net/image/5168574',
     special: 'homecoming',
     via: [
       [-90, 10],

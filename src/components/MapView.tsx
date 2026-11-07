@@ -22,7 +22,7 @@ import { prefersReducedMotion } from '../lib/motion'
 import { arcPrefix, boundsOf, type LngLat } from '../journey/arc'
 
 /** Keyless vector styles. Primary = OpenFreeMap; fallback = CARTO Dark Matter (both attribution-required). */
-export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/dark'
+export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/bright'
 export const FALLBACK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
 
 export interface JumpRequest {
@@ -121,26 +121,26 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       type: 'line',
       source: ARC_SRC,
       layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#22d3ee', 'line-width': 16, 'line-opacity': 0.38, 'line-blur': 10 },
+      paint: { 'line-color': '#0077f6', 'line-width': 20, 'line-opacity': 0.52, 'line-blur': 12 },
     })
     map.addLayer({
       id: 'journey-arc-line',
       type: 'line',
       source: ARC_SRC,
       layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#b8f7ff', 'line-width': 2.6, 'line-opacity': 0.98 },
+      paint: { 'line-color': '#ffcb3d', 'line-width': 4.2, 'line-opacity': 1 },
     })
     map.addLayer({
       id: 'journey-head-halo',
       type: 'circle',
       source: HEAD_SRC,
-      paint: { 'circle-radius': 18, 'circle-color': '#22d3ee', 'circle-opacity': 0.4, 'circle-blur': 1 },
+      paint: { 'circle-radius': 18, 'circle-color': '#ffb900', 'circle-opacity': 0.55, 'circle-blur': 1 },
     })
     map.addLayer({
       id: 'journey-head-dot',
       type: 'circle',
       source: HEAD_SRC,
-      paint: { 'circle-radius': 5, 'circle-color': '#ffffff', 'circle-stroke-color': '#22d3ee', 'circle-stroke-width': 2 },
+      paint: { 'circle-radius': 5, 'circle-color': '#ffffff', 'circle-stroke-color': '#0077f6', 'circle-stroke-width': 2 },
     })
   }
 
@@ -271,7 +271,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       zoom: 2.4,
       pitch: 35,
       bearing: -8,
-      minZoom: 1.6,
+      minZoom: 0.2,
       maxZoom: 16,
       maxPitch: 62,
       // World copies let journey arcs to Guam cross the antimeridian; DOM markers smart-wrap so none duplicate.

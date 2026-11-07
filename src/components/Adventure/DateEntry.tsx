@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { prefersReducedMotion } from '../../lib/motion'
 import { LANDING } from '../../journey/copy'
 import { dateParts, daysUntil, formatLong, isISODate, nextShipDates, toISODate } from '../../journey/dates'
+import { sound } from '../../lib/audio'
 import { LandingArt } from './LandingArt'
 import { MissionMosaic } from './MissionMosaic'
 import { DISCLAIMER } from './ZipEntry'
@@ -91,6 +92,8 @@ export function DateEntry({ onBegin, onExplore }: Props) {
       setError(LANDING.errors.past)
       return
     }
+    sound.enable()
+    sound.chime()
     exit(() => onBegin(iso))
   }
 
@@ -207,7 +210,7 @@ export function DateEntry({ onBegin, onExplore }: Props) {
         </form>
 
         <div className="landing-secondary" data-reveal>
-          <button type="button" className="link-quiet" onClick={() => exit(onExplore)} data-testid="explore">
+          <button type="button" className="link-quiet" onClick={() => { sound.enable(); sound.chime(); exit(onExplore) }} data-testid="explore">
             {LANDING.explore}
           </button>
         </div>

@@ -12,31 +12,19 @@
  *   chime()    — port-arrival pluck triad
  *   fanfare()  — homecoming: arpeggio + pad swell
  *
- * Mute is persisted to localStorage ("cgi-muted").
+ * Sound starts after user interaction; no mute state.
  */
-
-const MUTE_KEY = 'cgi-muted'
 
 class Sound {
   private ctx: AudioContext | null = null
   private master: GainNode | null = null
   private ambientNodes: { stop(): void } | null = null
-  private _muted = false
-
-  constructor() {
-    try {
-      this._muted = localStorage.getItem(MUTE_KEY) === '1'
-    } catch {
-      /* private mode */
-    }
-  }
-
+  private scoreTimer: number | null = null
+  private scoreMode = ''
+  private scoreBeat = 0
+  private scoreGain: GainNode | null = null
   get enabled(): boolean {
     return !!this.ctx
-  }
-
-  get muted(): boolean {
-    return this._muted
   }
 
   /** Call from a click/keydown handler. Idempotent. */
@@ -50,28 +38,11 @@ class Sound {
       if (!Ctx) return
       this.ctx = new Ctx()
       this.master = this.ctx.createGain()
-      this.master.gain.value = this._muted ? 0 : 1
+      this.master.gain.value = 1
       this.master.connect(this.ctx.destination)
     } catch {
       this.ctx = null
     }
-  }
-
-  setMuted(muted: boolean): void {
-    this._muted = muted
-    try {
-      localStorage.setItem(MUTE_KEY, muted ? '1' : '0')
-    } catch {
-      /* ignore */
-    }
-    if (this.ctx && this.master) {
-      this.master.gain.setTargetAtTime(muted ? 0 : 1, this.ctx.currentTime, 0.05)
-    }
-  }
-
-  toggleMuted(): boolean {
-    this.setMuted(!this._muted)
-    return this._muted
   }
 
   /* ---------- helpers ---------- */
@@ -173,6 +144,84 @@ class Sound {
   stopAmbient(): void {
     this.ambientNodes?.stop()
     this.ambientNodes = null
+  }
+
+  /**
+   * Original instrumental score, generated in WebAudio without third-party music.
+   * The same motif evolves from reflective training to adventurous patrol.
+   * Start only after a click has unlocked AudioContext.
+   */
+  score(mode: 'training' | 'orders' | 'arrival' | 'patrol' | 'explore' | 'off'): void {
+    if (mode === this.scoreMode) return
+    this.stopScore()
+    if (mode === 'off' || !this.ctx || !this.master) return
+    this.scoreMode = mode
+    this.scoreBeat = 0
+    const ctx = this.ctx
+    const bus = ctx.createGain()
+    bus.gain.setValueAtTime(0.0001, ctx.currentTime)
+    bus.gain.linearRampToValueAtTime(0.16, ctx.currentTime + 1.4)
+    bus.connect(this.master)
+    this.scoreGain = bus
+    const tempo = mode === 'training' ? 82 : mode === 'orders' ? 92 : mode === 'arrival' ? 104 : mode === 'patrol' ? 112 : 88
+    const interval = 60 / tempo
+    // Original eight-bar harmonic theme in D major / B minor.
+    const chords = [
+      [146.83, 220, 293.66], // D
+      [123.47, 185.00, 246.94], // Bm
+      [98, 146.83, 196], // G
+      [110, 164.81, 220], // A
+    ]
+    const melody = [293.66, 369.99, 440, 369.99, 329.63, 293.66, 246.94, 293.66,
+      369.99, 440, 493.88, 440, 369.99, 329.63, 293.66, 246.94]
+    const play = () => {
+      if (!this.ctx || this.scoreGain !== bus) return
+      const now = ctx.currentTime + 0.02
+      const beat = this.scoreBeat++
+      const chord = chords[Math.floor(beat / 8) % chords.length]
+      // Soft sustained strings / pads, changing every two measures.
+      if (beat % 8 === 0) {
+        for (const freq of chord) {
+          const g = ctx.createGain()
+          g.gain.setValueAtTime(0.0001, now)
+          g.gain.linearRampToValueAtTime(0.095, now + 0.5)
+          g.gain.exponentialRampToValueAtTime(0.0001, now + interval * 7.5)
+          g.connect(bus)
+          this.osc('triangle', freq, now, interval * 7.6, g)
+        }
+      }
+      // Pizzicato pulse builds urgency at orders and on patrol.
+      if (mode !== 'training' && mode !== 'explore') {
+        const g = ctx.createGain()
+        g.gain.setValueAtTime(0.0001, now)
+        g.gain.linearRampToValueAtTime(mode === 'patrol' ? 0.16 : 0.09, now + 0.012)
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.22)
+        g.connect(bus)
+        this.osc('triangle', chord[0] / 2, now, 0.25, g)
+      }
+      if (beat % 2 === 0) {
+        const g = ctx.createGain()
+        g.gain.setValueAtTime(0.0001, now)
+        g.gain.linearRampToValueAtTime(mode === 'training' ? 0.07 : 0.14, now + 0.025)
+        g.gain.exponentialRampToValueAtTime(0.0001, now + interval * 1.6)
+        g.connect(bus)
+        this.osc(mode === 'patrol' ? 'sawtooth' : 'sine', melody[Math.floor(beat / 2) % melody.length], now, interval * 1.7, g)
+      }
+    }
+    play()
+    this.scoreTimer = window.setInterval(play, interval * 1000)
+  }
+
+  stopScore(): void {
+    if (this.scoreTimer !== null) window.clearInterval(this.scoreTimer)
+    this.scoreTimer = null
+    if (this.scoreGain && this.ctx) {
+      const old = this.scoreGain
+      old.gain.cancelScheduledValues(this.ctx.currentTime)
+      old.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.3)
+    }
+    this.scoreGain = null
+    this.scoreMode = ''
   }
 
   /* ---------- one-shots ---------- */
