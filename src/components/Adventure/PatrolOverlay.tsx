@@ -215,6 +215,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
             <img className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `/media/port-${stop.id === 'home-seattle' ? 'homecoming' : stop.id === 'panama' ? 'panama' : stop.id}.jpg` }} />
+            {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
