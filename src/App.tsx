@@ -3,7 +3,9 @@ import { MapView, type JumpRequest, type MapHandle } from './components/MapView'
 import { StationPanel } from './components/StationPanel'
 import { Directory } from './components/Directory'
 import { Hud } from './components/Hud'
-import { DateEntry } from './components/Adventure/DateEntry'
+import { ZipEntry } from './components/Adventure/ZipEntry'
+import type { ZipResult } from './journey/zips'
+import { toISODate } from './journey/dates'
 import { JourneyOverlay, type Leg } from './components/Adventure/JourneyOverlay'
 import { SlotMachine } from './components/Adventure/SlotMachine'
 import { ShipIntro } from './components/Adventure/ShipIntro'
@@ -21,6 +23,7 @@ import type { LngLat } from './journey/arc'
 
 export default function App() {
   const [journey, dispatch] = useReducer(journeyReducer, INITIAL_JOURNEY)
+  const [home, setHome] = useState<ZipResult | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [directoryOpen, setDirectoryOpen] = useState(false)
   const [audioEnabled, setAudioEnabled] = useState(false)
@@ -37,7 +40,7 @@ export default function App() {
   // Adaptive original score follows the existing story; no narrative changes.
   useEffect(() => {
     if (phase === 'dateEntry' || phase === 'idle') { sound.stopScore(); return }
-    if (phase === 'act1') sound.score('training')
+    if (phase === 'act1' || phase === 'travel') sound.score('training')
     else if (phase === 'orders') sound.score('orders')
     else if (phase === 'act2' || phase === 'shipIntro') sound.score('arrival')
     else if (phase === 'patrol') sound.score('patrol')
@@ -65,13 +68,17 @@ export default function App() {
   }
 
   /* ---------- adventure transitions ---------- */
-  const begin = useCallback((shipDate: string) => {
+  const begin = useCallback((zipHome: ZipResult) => {
+    setHome(zipHome)
+    const shipDate = toISODate(new Date()) // Narrative demo starts immediately; no ship date is selected.
     setSelectedId(null)
     // The assignment board always lands on Polar Star (owner decision, DECISIONS.md).
-    dispatch({ type: 'START', shipDate, orderIds: [POLAR_STAR_ID] })
+    dispatch({ type: 'START', shipDate, orderIds: [POLAR_STAR_ID], viaZip: true })
   }, [])
 
   const freeExplore = useCallback(() => dispatch({ type: 'FREE_EXPLORE' }), [])
+
+  const travelDone = useCallback(() => dispatch({ type: 'TRAVEL_DONE' }), [])
 
   const act1Done = useCallback(({ skipped }: { skipped: boolean }) => {
     dispatch(skipped ? { type: 'SKIP_ACT' } : { type: 'ACT1_DONE' })
@@ -97,6 +104,7 @@ export default function App() {
 
   const restart = useCallback(() => {
     setSelectedId(null)
+    setHome(null)
     setDirectoryOpen(false)
     setJump(null)
     mapRef.current?.stop()
@@ -124,8 +132,18 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase])
 
-  // Act 1 has no hometown arc any more (date-first landing): every later leg
-  // originates at Cape May, so nothing downstream depends on a `home` point.
+  const hometownLeg = useMemo<Leg | null>(() => {
+    if (!home) return null
+    const origin: LngLat = [home.lng, home.lat]
+    const cape: LngLat = [CAPE_MAY.lng, CAPE_MAY.lat]
+    return {
+      from: origin, to: cape, toShort: 'Cape May', toName: 'Training Center Cape May',
+      markers: [
+        { id: `home-${home.zip}`, lngLat: origin, label: home.label, sublabel: LABELS.home, kind: 'home' },
+        { id: CAPE_MAY.id, lngLat: cape, label: CAPE_MAY.name, sublabel: LABELS.bootCamp, kind: 'bootcamp' },
+      ],
+    }
+  }, [home])
 
   const act2Leg = useMemo<Leg | null>(() => {
     if (!firstUnit) return null
@@ -189,6 +207,10 @@ export default function App() {
         />
       )}
 
+      {phase === 'travel' && hometownLeg && mapReady && (
+        <JourneyOverlay act={1} leg={hometownLeg} map={mapRef.current} onDone={travelDone} />
+      )}
+
       {phase === 'act1' && journey.shipDate && mapReady && (
         <TrainingAct shipDate={journey.shipDate} map={mapRef.current} onDone={act1Done} />
       )}
@@ -203,7 +225,7 @@ export default function App() {
 
       {phase === 'patrol' && mapReady && <PatrolOverlay map={mapRef.current} onDone={patrolDone} />}
 
-      {phase === 'dateEntry' && <DateEntry onBegin={begin} onExplore={freeExplore} />}
+      {phase === 'dateEntry' && <ZipEntry onBegin={begin} onExplore={freeExplore} />}
     </div>
   )
 }

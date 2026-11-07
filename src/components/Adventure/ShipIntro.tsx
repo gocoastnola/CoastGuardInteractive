@@ -76,7 +76,7 @@ export function ShipIntro({ unit, onBegin }: Props) {
           </ul>
           <div className="ship-gallery" data-ship-reveal>
             <img src="/media/mission-ice.jpg" alt="Polar Star crew on the Antarctic ice" loading="lazy" />
-            <img src="/media/polar-star-crew.jpg" alt="Polar Star crew member at work" loading="lazy" />
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Emperor_penguins.jpg?width=1000" alt="Emperor penguins on Antarctic sea ice" loading="lazy" />
           </div>
           <div className="ship-foot" data-ship-reveal>
             <span className="ship-demo-note">{SHIP.demoNote}</span>

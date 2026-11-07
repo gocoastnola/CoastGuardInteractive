@@ -2397,3 +2397,105 @@ input {
     display: none;
   }
 }
+
+/* 2026 applicant adventure refresh: mobile-safe cinematic photography. */
+.patrol .port-card {
+  width: min(480px, calc(100vw - 32px));
+  height: min(410px, 53vh);
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  bottom: clamp(88px, 11vh, 118px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: #101b30;
+  box-shadow: 0 22px 70px rgba(0,0,0,.58);
+}
+.patrol .port-img {
+  width: 100%;
+  height: 62%;
+  min-height: 0;
+  flex: 0 0 62%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+.patrol .port-body {
+  flex: 1;
+  padding: 13px 18px;
+  overflow: hidden;
+}
+.patrol .port-name { font-size: clamp(18px, 3.5vw, 24px); line-height: 1.18; }
+.patrol .port-blurb { font-size: 13px; line-height: 1.35; margin-top: 5px; }
+.patrol .port-country { font-size: 12px; }
+.training-gallery {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 26%;
+  transform: translateX(-50%);
+  width: min(780px, calc(100vw - 34px));
+  height: min(46vh, 440px);
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 20px 70px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+.training-photo {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity .75s ease;
+}
+.training-photo.is-active { opacity: 1; }
+.training-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.training-photo::after {
+  content: '';
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, rgba(2,8,20,.8));
+}
+.training-photo figcaption {
+  position: absolute;
+  z-index: 1;
+  bottom: 18px;
+  left: 20px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: .15em;
+  font-size: 13px;
+  text-shadow: 0 3px 12px #000;
+}
+.journey--training .journey-beats { z-index: 2; top: 8vh; }
+.journey--training .journey-counter { z-index: 2; }
+@media (max-width: 860px) {
+  .patrol .port-card { height: min(400px, 51vh); min-height: 290px; bottom: 94px; }
+  .patrol .port-img { height: 57%; flex-basis: 57%; }
+  .patrol .port-body { padding: 11px 14px; }
+  .training-gallery { top: 25%; height: 43vh; }
+  .journey--training .journey-beat { font-size: clamp(22px, 6vw, 36px); }
+  .landing .landing-title { font-size: clamp(36px, 8vw, 65px); line-height: 1.05; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .training-photo { transition: none; }
+  .journey--training.is-static .training-gallery { display: none; }
+}
+
+.patrol .port-credit {
+  position: absolute;
+  top: calc(62% - 24px);
+  right: 10px;
+  z-index: 2;
+  font-size: 10px;
+  line-height: 1;
+  color: white;
+  text-decoration: none;
+  padding: 5px 7px;
+  border-radius: 4px;
+  background: rgba(4,10,24,.78);
+  pointer-events: auto;
+}
+.patrol .port-credit:hover { text-decoration: underline; }
+@media (max-width: 860px) { .patrol .port-credit { top: calc(57% - 24px); } }

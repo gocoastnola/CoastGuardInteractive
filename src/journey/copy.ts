@@ -13,7 +13,7 @@ export const LANDING = {
   scheduleLabel: 'Demo schedule — illustrative dates',
   shipTo: 'Ship dates to Training Center Cape May',
   pickOther: 'Pick a different date',
-  begin: 'Begin',
+  begin: 'Start my journey',
   explore: 'or explore the map',
   errors: {
     none: 'Pick a ship date to begin.',
@@ -22,7 +22,7 @@ export const LANDING = {
   },
   footnote: 'Ship dates are demo placeholders — real Cape May class dates are not verified. Basic training shown as 8 weeks (demo).',
   /** Retained for the (unused) ZIP landing — see DECISIONS.md. */
-  zipSub: 'Enter your ZIP code. We trace the road from your hometown to boot camp — and on to your first unit.',
+  zipSub: 'Your journey starts at home. Watch the miles to Cape May, conquer eight weeks of boot camp, receive your orders, and see the world aboard Polar Star.',
   zipLabel: 'Your hometown ZIP code',
   zipPlaceholder: '5-digit ZIP',
   checking: 'Checking…',
@@ -39,20 +39,20 @@ export const LANDING = {
  * ("Tue, Nov 3"); gradDate = shipDate + 8 weeks (demo-unverified, SOURCES.md).
  */
 export const ACT1_BEATS = [
-  'You picked your date. Now the clock is real.',
-  'Report to Training Center Cape May — {shipDate}.',
+  'You made it to Cape May. Now the challenge begins.',
+  'Eight weeks at Training Center Cape May. One mission: earn your place.',
   'Eight weeks. Every one of them earned.',
   'Pushed harder than you thought you could go.',
-  'Graduation: {gradDate}. Stronger. Faster. Sharper.',
+  'Graduation day. Stronger. Faster. Sharper.',
 ] as const
 
 /** Legacy ZIP-era Act 1 beats (unused; kept with the ZIP landing — DECISIONS.md). */
 export const ACT1_ZIP_BEATS = [
   'Everyone starts somewhere. You start here.',
   '{miles} miles to Training Center Cape May.',
-  'Eight weeks. Every one of them earned.',
-  'Pushed harder than you thought you could go.',
-  'You graduate — stronger. Faster. Sharper.',
+  'Your hometown is behind you. Your future is ahead.',
+  'Cape May, New Jersey. This is where it begins.',
+  'Eight weeks of training await. Show them what you are made of.',
 ] as const
 
 /** Days counter / training progression readout. */

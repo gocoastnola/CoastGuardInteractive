@@ -73,6 +73,7 @@ export function SlotMachine({ units, onReport }: Props) {
     const proxy = { i: 0 }
     let lastRow = 0
     sound.whoosh()
+    sound.slotSpin()
     gsap.to(proxy, {
       i: finalIndex,
       duration: SPIN_S,

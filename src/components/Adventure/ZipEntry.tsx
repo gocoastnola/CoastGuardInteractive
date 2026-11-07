@@ -4,6 +4,7 @@ import { prefersReducedMotion } from '../../lib/motion'
 import { LANDING } from '../../journey/copy'
 import { isValidZipFormat, lookupZip, type ZipResult } from '../../journey/zips'
 import { LandingArt } from './LandingArt'
+import { sound } from '../../lib/audio'
 import { MissionMosaic } from './MissionMosaic'
 
 export const DISCLAIMER =
@@ -72,6 +73,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
       input.current?.focus()
       return
     }
+    sound.enable() // Must run before the asynchronous ZIP lookup for iOS audio permission.
     setBusy(true)
     setError(null)
     try {
@@ -81,6 +83,8 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
         input.current?.select()
         return
       }
+      sound.enable()
+      sound.chime()
       exit(() => onBegin(home))
     } catch (err) {
       console.warn('[adventure] ZIP lookup failed:', err)
@@ -102,7 +106,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
           {LANDING.eyebrow}
         </div>
         <h1 className="landing-title" data-reveal>
-          Start Your <em>Adventure</em>
+          Enter your ZIP code <em>and start your journey</em>
           <span className="landing-demo">DEMO</span>
         </h1>
         <p className="landing-sub" data-reveal>
@@ -140,7 +144,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
         </div>
 
         <div className="landing-secondary" data-reveal>
-          <button type="button" className="link-quiet" onClick={() => exit(onExplore)} data-testid="explore">
+          <button type="button" className="link-quiet" onClick={() => { sound.enable(); exit(onExplore) }} data-testid="explore">
             {LANDING.explore}
           </button>
         </div>

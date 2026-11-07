@@ -14,8 +14,8 @@ interface Props {
 }
 
 /** Port cards live this long — but the ship sails on underneath them. */
-const CARD_LIFE_S = 2.6
-const CANAL_LIFE_S = 3.6
+const CARD_LIFE_S = 3.8
+const CANAL_LIFE_S = 4.4
 const FRAME_S = 0.55
 
 /**
@@ -153,7 +153,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         tl.to(card, { opacity: 0, y: -24, duration: 0.4, ease: 'power2.in' }, t + life)
       }
       // Homecoming gets a breath for the fanfare; every other port: sail on NOW.
-      t += stop.special === 'homecoming' ? 1.2 : 0.2
+      t += life + 0.55
 
       samplesBefore += legSamples[k]
       milesBefore += leg.miles
@@ -214,8 +214,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
       {!reduced &&
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
-            <img className="port-img" src={stop.img} alt={`Coast Guard imagery associated with ${stop.name}`} loading="eager" />
-            {stop.photoSource && <a className="port-photo-source" href={stop.photoSource} target="_blank" rel="noopener noreferrer" aria-label={`View original Coast Guard photograph for ${stop.name}`}>View original photo ↗</a>}
+            <img className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `/media/port-${stop.id === 'home-seattle' ? 'homecoming' : stop.id === 'panama' ? 'panama' : stop.id}.jpg` }} />
+            {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}

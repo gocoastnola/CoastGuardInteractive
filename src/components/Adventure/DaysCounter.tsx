@@ -31,14 +31,9 @@ export function DaysCounter({ days, totalDays, shipDate, weeks }: Props) {
       {!training ? (
         <div className="days-readout">
           <span className="days-num" data-testid="days-value">
-            {shipsLabel(Math.max(0, Math.round(days)))}
+            {totalDays === 0 ? 'Welcome to Cape May' : shipsLabel(Math.max(0, Math.round(days)))}
           </span>
-          <span className="days-sep" aria-hidden="true">
-            ·
-          </span>
-          <span className="days-date" data-testid="ship-date">
-            {formatShort(shipDate)}
-          </span>
+          {totalDays > 0 && <><span className="days-sep" aria-hidden="true">·</span><span className="days-date" data-testid="ship-date">{formatShort(shipDate)}</span></>}
         </div>
       ) : (
         <div className="days-readout">

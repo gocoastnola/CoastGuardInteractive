@@ -54,3 +54,26 @@ patrol port calls). Source: DVIDS (Defense Visual Information Distribution Servi
 U.S. government works — public domain. Per-file DVIDS asset ids, titles and credits:
 `public/media/dvids-manifest.json`. DVIDS asks for courtesy attribution; port cards
 and the manifest preserve unit/photographer credits. No API key ships in the bundle.
+
+
+## 2026-11-07 scenic adventure refresh (externally hosted)
+
+The following destination images are hosted by Wikimedia Commons and rendered via its Special:FilePath redirect, not copied into this repository. Copyright and attribution remain with their respective creators. Follow the linked file pages for author, license, and attribution requirements. These images depict destinations, not a verified Polar Star itinerary or specific liberty events.
+
+| Adventure scene | Wikimedia Commons image / attribution page |
+|---|---|
+| Honolulu | [Panorama of Honolulu-Waikiki-Diamond Head](https://commons.wikimedia.org/wiki/File:Panorama_of_Honolulu-Waikiki-Diamond_Head_(16773142068).jpg) |
+| Hobart | [Mt Wellington looking down on Hobart, Tasmania](https://commons.wikimedia.org/wiki/File:Mt_Wellington_looking_down_on_Hobart,_Tasmania.jpg) |
+| Wellington | [Wellington Port from Mt Vic](https://commons.wikimedia.org/wiki/File:Wellington_Port_from_Mt_Vic.jpg) |
+| Punta Arenas | [Magellanic Penguins, Isla Magdalena](https://commons.wikimedia.org/wiki/File:Magellanic_Penguins,_Isla_Magdalena.jpg) |
+| Cape Horn | [CapeHorn](https://commons.wikimedia.org/wiki/File:CapeHorn.jpg) |
+| Rio | [Rio skyline and Cristo Redentor from Sugarloaf Mountain](https://commons.wikimedia.org/wiki/File:Rio_skyline_and_Cristo_Redentor_from_Sugarloaf_Mountain,_Brazil.jpg) |
+| Panama Canal | [Miraflores Locks, Panama Canal, Panama](https://commons.wikimedia.org/wiki/File:Miraflores_Locks,_Panama_Canal,_Panama.jpg) |
+| Seattle homecoming | [The Seattle Skyline](https://commons.wikimedia.org/wiki/File:The_Seattle_Skyline_(52802453072).jpg) |
+| Polar Star gallery (Antarctic wildlife) | [Emperor penguins](https://commons.wikimedia.org/wiki/File:Emperor_penguins.jpg) — NSF public domain |
+| Boot camp formation | [Coast Guard recruits marching in Cape May](https://commons.wikimedia.org/wiki/File:U.S._Coast_Guard_recruits_assigned_to_Company_Quebec_188_march_during_Cadence_Contest_2013_at_Training_Center_Cape_May_in_Cape_May,_N.J.,_Sept_130906-G-WA946-323.jpg) — USCG public domain |
+| Boot camp pool | [Survival Float B-204](https://www.dvidshub.net/image/7912769) — USCG public domain |
+| Boot camp pugil sticks | [Coast Guard recruits training with pugil sticks](https://commons.wikimedia.org/wiki/File:U.S._Coast_Guard_recruits_use_pugil_sticks_during_training_at_Coast_Guard_Training_Center_Cape_May_in_Cape_May,_N.J.,_Aug._1,_2013_130801-G-WA946-704.jpg) — USCG public domain |
+| Boot camp confidence course | [Confidence Course](https://www.dvidshub.net/image/1121174) — USCG public domain |
+
+The destination photos are **not all public domain**; Commons file pages contain the relevant Creative Commons licenses, including attribution/share-alike conditions. Before official distribution, review each license and add an accessible on-page photo credits panel. Remote photos require network access; the patrol scene has a bundled fallback if a Commons image fails to load.
