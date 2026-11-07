@@ -87,8 +87,8 @@ These are **public-domain U.S. Coast Guard photographs** published on DVIDS; pho
 |---|---|---|
 | Polar Star moored at McMurdo ice pier (2026) | [9520592](https://www.dvidshub.net/image/9520592) | PO2 Christopher Bokum / USCG Pacific Area |
 | Polar Star breaking McMurdo sea ice (2016) | [2400145](https://www.dvidshub.net/image/2400145) | PO2 Grant DeVuyst / USCG Pacific Area |
-| McMurdo Station and Polar Star (2025) | [8882514](https://www.dvidshub.net/image/8882514) | PO2 Briana Carter / USCG Pacific Area |
-| Antarctic research logistics and pier support (2026) | [9553891](https://www.dvidshub.net/image/9553891) | Lt. Joseph Miller / USCG Pacific Area |
+| Polar Star breaking ice toward McMurdo Sound (2026) | [9481427](https://www.dvidshub.net/image/9481427) | PO2 Christopher Bokum / USCG Pacific Area |
+| McMurdo Station research-base panorama | [NSF public-domain photograph](https://commons.wikimedia.org/wiki/File:McMurdo_Station_in_Antarctica.jpg) | National Science Foundation / McMurdo Arrival Heights webcam |
 | Cape May graduation, J-209 (Sept. 2026), photograph one | [9939059](https://www.dvidshub.net/image/9939059) | SN Juliana Thornton / USCG Training Center Cape May |
 | Cape May graduation, J-209 (Sept. 2026), photograph two | [9939061](https://www.dvidshub.net/image/9939061) | SN Juliana Thornton / USCG Training Center Cape May |
 
