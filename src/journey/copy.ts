@@ -39,11 +39,11 @@ export const LANDING = {
  * ("Tue, Nov 3"); gradDate = shipDate + 8 weeks (demo-unverified, SOURCES.md).
  */
 export const ACT1_BEATS = [
-  'You picked your date. Now the clock is real.',
-  'Report to Training Center Cape May — {shipDate}.',
+  'You made it to Cape May. Now the challenge begins.',
+  'Eight weeks at Training Center Cape May. One mission: earn your place.',
   'Eight weeks. Every one of them earned.',
   'Pushed harder than you thought you could go.',
-  'Graduation: {gradDate}. Stronger. Faster. Sharper.',
+  'Graduation day. Stronger. Faster. Sharper.',
 ] as const
 
 /** Legacy ZIP-era Act 1 beats (unused; kept with the ZIP landing — DECISIONS.md). */
