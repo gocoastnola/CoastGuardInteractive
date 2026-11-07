@@ -13,7 +13,7 @@ export const LANDING = {
   scheduleLabel: 'Demo schedule — illustrative dates',
   shipTo: 'Ship dates to Training Center Cape May',
   pickOther: 'Pick a different date',
-  begin: 'Begin',
+  begin: 'Start my journey',
   explore: 'or explore the map',
   errors: {
     none: 'Pick a ship date to begin.',
@@ -22,7 +22,7 @@ export const LANDING = {
   },
   footnote: 'Ship dates are demo placeholders — real Cape May class dates are not verified. Basic training shown as 8 weeks (demo).',
   /** Retained for the (unused) ZIP landing — see DECISIONS.md. */
-  zipSub: 'Enter your ZIP code. We trace the road from your hometown to boot camp — and on to your first unit.',
+  zipSub: 'Your journey starts at home. Watch the miles to Cape May, conquer eight weeks of boot camp, receive your orders, and see the world aboard Polar Star.',
   zipLabel: 'Your hometown ZIP code',
   zipPlaceholder: '5-digit ZIP',
   checking: 'Checking…',
