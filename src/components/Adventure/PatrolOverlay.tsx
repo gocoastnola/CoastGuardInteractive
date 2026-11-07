@@ -21,9 +21,9 @@ const FRAME_S = 0.55
 
 /**
  * The Polar Star first patrol — Seattle → Honolulu → Hobart → Wellington →
- * Punta Arenas → Cape Horn → Rio → Panama Canal → home. One GSAP timeline is
+ * McMurdo Station → Punta Arenas → Cape Horn → Rio → Panama Canal → home. One GSAP timeline is
  * the master clock; the map camera frames each leg, the arc extends port to
- * port, port cards (DVIDS photos) slide in at each stop, and the Panama card
+ * port, port cards slide in at each stop; McMurdo gets a science-mission photo gallery, and the Panama card
  * plays a lock-chamber animation. Esc quietly ends the patrol (no overlay
  * chrome — owner preference).
  */
