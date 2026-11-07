@@ -50,9 +50,9 @@ export const ACT1_BEATS = [
 export const ACT1_ZIP_BEATS = [
   'Everyone starts somewhere. You start here.',
   '{miles} miles to Training Center Cape May.',
-  'Eight weeks. Every one of them earned.',
-  'Pushed harder than you thought you could go.',
-  'You graduate — stronger. Faster. Sharper.',
+  'Your hometown is behind you. Your future is ahead.',
+  'Cape May, New Jersey. This is where it begins.',
+  'Eight weeks of training await. Show them what you are made of.',
 ] as const
 
 /** Days counter / training progression readout. */
