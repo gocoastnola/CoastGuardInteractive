@@ -16,6 +16,7 @@ import { INITIAL_JOURNEY, isCinematic, journeyReducer } from './journey/machine'
 import { POLAR_STAR_ID } from './journey/patrol'
 import { CAPE_MAY } from './journey/constants'
 import { LABELS } from './journey/copy'
+import { sound } from './lib/audio'
 import type { LngLat } from './journey/arc'
 
 export default function App() {
@@ -33,6 +34,15 @@ export default function App() {
   }, [])
 
   const { phase } = journey
+  // Adaptive original score follows the existing story; no narrative changes.
+  useEffect(() => {
+    if (phase === 'dateEntry' || phase === 'idle') { sound.stopScore(); return }
+    if (phase === 'act1') sound.score('training')
+    else if (phase === 'orders') sound.score('orders')
+    else if (phase === 'act2' || phase === 'shipIntro') sound.score('arrival')
+    else if (phase === 'patrol') sound.score('patrol')
+    else sound.score('explore')
+  }, [phase])
   const mapActive = phase !== 'dateEntry' && phase !== 'idle'
   const cinematic = isCinematic(phase) || phase === 'orders'
   const selected = unitById(selectedId)
