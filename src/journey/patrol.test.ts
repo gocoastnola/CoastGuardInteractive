@@ -14,7 +14,10 @@ describe('patrol route', () => {
       expect(leg.to.id).toBe(PATROL_STOPS[i + 1].id)
     })
     const ids = PATROL_STOPS.map((s) => s.id)
-    for (const required of ['honolulu', 'hobart', 'wellington', 'punta-arenas', 'cape-horn', 'rio', 'panama']) {
+    expect(ids.indexOf('wellington')).toBeLessThan(ids.indexOf('mcmurdo'))
+    expect(ids.indexOf('mcmurdo')).toBeLessThan(ids.indexOf('punta-arenas'))
+    expect(PATROL_STOPS.find((stop) => stop.id === 'mcmurdo')?.gallery).toHaveLength(4)
+    for (const required of ['honolulu', 'hobart', 'wellington', 'mcmurdo', 'punta-arenas', 'cape-horn', 'rio', 'panama']) {
       expect(ids).toContain(required)
     }
   })
