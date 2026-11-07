@@ -17,7 +17,7 @@
  * app has decided which entry to show; the UI starts straight in `dateEntry`.
  */
 
-export type Phase = 'idle' | 'dateEntry' | 'act1' | 'orders' | 'act2' | 'shipIntro' | 'patrol' | 'explore'
+export type Phase = 'idle' | 'dateEntry' | 'travel' | 'act1' | 'orders' | 'act2' | 'shipIntro' | 'patrol' | 'explore'
 
 export interface JourneyState {
   phase: Phase
@@ -32,7 +32,8 @@ export interface JourneyState {
 }
 
 export type JourneyAction =
-  | { type: 'START'; shipDate: string; orderIds: string[] }
+  | { type: 'START'; shipDate: string; orderIds: string[]; viaZip?: boolean }
+  | { type: 'TRAVEL_DONE' }
   | { type: 'ACT1_DONE' }
   | { type: 'SKIP_ACT' }
   | { type: 'CHOOSE_ORDER'; unitId: string }
@@ -54,7 +55,9 @@ export function journeyReducer(state: JourneyState, action: JourneyAction): Jour
   switch (action.type) {
     case 'START':
       if (state.phase !== 'dateEntry' && state.phase !== 'idle') return state
-      return { ...INITIAL_JOURNEY, phase: 'act1', shipDate: action.shipDate, orderIds: action.orderIds }
+      return { ...INITIAL_JOURNEY, phase: action.viaZip ? 'travel' : 'act1', shipDate: action.shipDate, orderIds: action.orderIds }
+    case 'TRAVEL_DONE':
+      return state.phase === 'travel' ? { ...state, phase: 'act1' } : state
     case 'ACT1_DONE':
       return state.phase === 'act1' ? { ...state, phase: 'orders' } : state
     case 'SKIP_ACT':
@@ -82,5 +85,5 @@ export function journeyReducer(state: JourneyState, action: JourneyAction): Jour
 
 /** True while a cinematic act owns the screen (HUD hidden; Esc quietly advances). */
 export function isCinematic(phase: Phase): boolean {
-  return phase === 'act1' || phase === 'act2' || phase === 'shipIntro' || phase === 'patrol'
+  return phase === 'travel' || phase === 'act1' || phase === 'act2' || phase === 'shipIntro' || phase === 'patrol'
 }
