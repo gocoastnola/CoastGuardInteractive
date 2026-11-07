@@ -5,7 +5,7 @@ import { Directory } from './components/Directory'
 import { Hud } from './components/Hud'
 import { ZipEntry } from './components/Adventure/ZipEntry'
 import type { ZipResult } from './journey/zips'
-import { nextShipDates } from './journey/dates'
+import { toISODate } from './journey/dates'
 import { JourneyOverlay, type Leg } from './components/Adventure/JourneyOverlay'
 import { SlotMachine } from './components/Adventure/SlotMachine'
 import { ShipIntro } from './components/Adventure/ShipIntro'
@@ -70,8 +70,7 @@ export default function App() {
   /* ---------- adventure transitions ---------- */
   const begin = useCallback((zipHome: ZipResult) => {
     setHome(zipHome)
-    const shipDate = nextShipDates(new Date())[0]
-    if (!shipDate) return
+    const shipDate = toISODate(new Date()) // Narrative demo starts immediately; no ship date is selected.
     setSelectedId(null)
     // The assignment board always lands on Polar Star (owner decision, DECISIONS.md).
     dispatch({ type: 'START', shipDate, orderIds: [POLAR_STAR_ID], viaZip: true })
