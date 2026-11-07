@@ -226,13 +226,32 @@ class Sound {
 
   /* ---------- one-shots ---------- */
 
+  /** Original arcade-style rising arpeggio behind the orders reveal. */
+  slotSpin(): void {
+    if (!this.ctx) return
+    const at = this.ctx.currentTime
+    const notes = [392, 493.88, 587.33, 783.99, 587.33, 493.88, 440, 587.33,
+      659.25, 783.99, 987.77, 783.99, 659.25, 783.99, 987.77, 1174.66]
+    notes.forEach((freq, i) => {
+      const t = at + i * 0.235
+      const g = this.env(t, 0.085 + i * 0.002, 0.006, 0.18)
+      if (g) this.osc('sine', freq, t, 0.21, g)
+    })
+    // Bright celebratory pickup just before the final unit is revealed.
+    ;[587.33, 739.99, 880, 1174.66].forEach((freq, i) => {
+      const t = at + 3.7 + i * 0.14
+      const g = this.env(t, 0.11, 0.012, 0.35)
+      if (g) this.osc('triangle', freq, t, 0.4, g)
+    })
+  }
+
   /** Slot-reel click. `speed` 0..1 (1 = fastest) raises pitch slightly. */
   tick(speed = 1): void {
     if (!this.ctx) return
     const at = this.ctx.currentTime
-    const g = this.env(at, 0.05, 0.001, 0.045)
+    const g = this.env(at, 0.022, 0.001, 0.03)
     if (!g) return
-    this.osc('square', 1800 + speed * 900, at, 0.05, g)
+    this.osc('sine', 980 + speed * 360, at, 0.035, g)
   }
 
   /** Reel lands: thunk + rising triad. */
