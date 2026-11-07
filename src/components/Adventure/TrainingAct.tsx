@@ -23,6 +23,13 @@ interface Beat {
   hold: number
 }
 
+const TRAINING_PHOTOS = [
+  { src: 'https://commons.wikimedia.org/wiki/Special:FilePath/U.S._Coast_Guard_recruits_assigned_to_Company_Quebec_188_march_during_Cadence_Contest_2013_at_Training_Center_Cape_May_in_Cape_May%2C_N.J.%2C_Sept_130906-G-WA946-323.jpg?width=1200', caption: 'FORMATION • TEAMWORK', alt: 'Coast Guard recruits marching in formation at Cape May' },
+  { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2307/7912769/1000w_q95.jpg', caption: 'WATER SURVIVAL • CONFIDENCE', alt: 'Coast Guard recruits practicing survival skills in the Cape May pool' },
+  { src: 'https://commons.wikimedia.org/wiki/Special:FilePath/U.S._Coast_Guard_recruits_use_pugil_sticks_during_training_at_Coast_Guard_Training_Center_Cape_May_in_Cape_May%2C_N.J.%2C_Aug._1%2C_2013_130801-G-WA946-704.jpg?width=1200', caption: 'PUGIL STICKS • COURAGE', alt: 'Coast Guard recruits competing with padded pugil sticks' },
+  { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1208/1121174/1000w_q95.jpg', caption: 'CONFIDENCE COURSE • GRIT', alt: 'Coast Guard recruits tackling the Cape May confidence course' },
+] as const
+
 const CAPE_MAY_LNGLAT: LngLat = [CAPE_MAY.lng, CAPE_MAY.lat]
 const CAPE_MAY_CAMERA = { zoom: 7.4, pitch: 48, bearing: -12 }
 
@@ -145,6 +152,7 @@ export function TrainingAct({ shipDate, map, onDone }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
+  const photoIndex = weeks === null ? -1 : Math.min(3, Math.floor(weeks / 2))
   return (
     <div className={`journey journey--act1 journey--training ${reduced ? 'is-static' : ''}`} ref={root} data-testid="journey-act1">
       <div className="journey-beats" aria-live="polite">
@@ -160,6 +168,14 @@ export function TrainingAct({ shipDate, map, onDone }: Props) {
         )}
       </div>
 
+      <div className="training-gallery" aria-label="Coast Guard boot camp training photography">
+        {TRAINING_PHOTOS.map((photo, i) => (
+          <figure className={`training-photo ${photoIndex === i ? 'is-active' : ''}`} key={photo.caption}>
+            <img src={photo.src} alt={photo.alt} loading="eager" />
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
       <div className="journey-counter" data-counter>
         <DaysCounter days={days} totalDays={totalDays} shipDate={shipDate} weeks={weeks} />
       </div>
