@@ -87,18 +87,17 @@ export function PatrolOverlay({ map, onDone }: Props) {
       const sBefore = samplesBefore
       const mBefore = milesBefore
       const stop = PATROL_STOPS[k + 1]
-      // Camera frames everything sailed so far PLUS this leg — the whole
-      // trackline stays in view and grows across the world.
-      const framePts = fullPath.slice(0, sBefore + legSamples[k] + 1)
-
+      // Keep the entire circumnavigation framed throughout the voyage.
+      // A single stable world overview lets applicants appreciate the cumulative
+      // track and international reach rather than losing the earlier ports.
       // Frame this leg, update the "underway" beat, departure whoosh.
       tl.call(
         () => {
-          map.fitPoints(framePts, {
+          map.fitPoints(fullPath, {
             duration: FRAME_S * 1000,
-            pitch: 14,
-            maxZoom: 4.6,
-            padding: { top: 110, bottom: window.innerWidth <= 860 ? 280 : 210, left: 80, right: 80 },
+            pitch: 0,
+            maxZoom: 1.2,
+            padding: { top: 80, bottom: window.innerWidth <= 860 ? 260 : 170, left: 36, right: 36 },
           })
           setPortLabel(stop.name)
           sound.whoosh()
@@ -165,8 +164,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
       () => {
         map.fitPoints(fullPath, {
           duration: 2600,
-          pitch: 28,
-          padding: { top: 140, bottom: 140, left: 100, right: 100 }
+          pitch: 0,
+          maxZoom: 1.2,
+          padding: { top: 90, bottom: 110, left: 40, right: 40 }
         })
       },
       [],
