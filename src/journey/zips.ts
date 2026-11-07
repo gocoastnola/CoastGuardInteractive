@@ -22,7 +22,7 @@ export interface ZipResult {
   label: string
 }
 
-export const ZIPS_URL = '/data/zips.json'
+export const ZIPS_URL = `${import.meta.env.BASE_URL}data/zips.json`
 
 let cache: ZipTable | null = null
 let inflight: Promise<ZipTable> | null = null
