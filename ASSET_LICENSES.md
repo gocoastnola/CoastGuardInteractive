@@ -77,3 +77,19 @@ The following destination images are hosted by Wikimedia Commons and rendered vi
 | Boot camp confidence course | [Confidence Course](https://www.dvidshub.net/image/1121174) — USCG public domain |
 
 The destination photos are **not all public domain**; Commons file pages contain the relevant Creative Commons licenses, including attribution/share-alike conditions. Before official distribution, review each license and add an accessible on-page photo credits panel. Remote photos require network access; the patrol scene has a bundled fallback if a Commons image fails to load.
+
+
+## McMurdo Station and boot camp graduation additions (2026-11-07)
+
+These are **public-domain U.S. Coast Guard photographs** published on DVIDS; photographer credit and source links should remain visible in the recruiting module. Photos illustrate different real-world deployments and training classes; they are not from a single fictional patrol or graduating company.
+
+| Scene | DVIDS image | Credit |
+|---|---|---|
+| Polar Star moored at McMurdo ice pier (2026) | [9520592](https://www.dvidshub.net/image/9520592) | PO2 Christopher Bokum / USCG Pacific Area |
+| Polar Star breaking McMurdo sea ice (2016) | [2400145](https://www.dvidshub.net/image/2400145) | PO2 Grant DeVuyst / USCG Pacific Area |
+| McMurdo Station and Polar Star (2025) | [8882514](https://www.dvidshub.net/image/8882514) | PO2 Briana Carter / USCG Pacific Area |
+| Antarctic research logistics and pier support (2026) | [9553891](https://www.dvidshub.net/image/9553891) | Lt. Joseph Miller / USCG Pacific Area |
+| Cape May graduation, J-209 (Sept. 2026), photograph one | [9939059](https://www.dvidshub.net/image/9939059) | SN Juliana Thornton / USCG Training Center Cape May |
+| Cape May graduation, J-209 (Sept. 2026), photograph two | [9939061](https://www.dvidshub.net/image/9939061) | SN Juliana Thornton / USCG Training Center Cape May |
+
+DVIDS photo URLs use the site's CDN thumbnail pattern. Check network loading in the live browser before using in an official recruiting presentation.

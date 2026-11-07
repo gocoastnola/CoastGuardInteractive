@@ -28,6 +28,8 @@ const TRAINING_PHOTOS = [
   { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2307/7912769/1000w_q95.jpg', caption: 'WATER SURVIVAL • CONFIDENCE', alt: 'Coast Guard recruits practicing survival skills in the Cape May pool' },
   { src: 'https://commons.wikimedia.org/wiki/Special:FilePath/U.S._Coast_Guard_recruits_use_pugil_sticks_during_training_at_Coast_Guard_Training_Center_Cape_May_in_Cape_May%2C_N.J.%2C_Aug._1%2C_2013_130801-G-WA946-704.jpg?width=1200', caption: 'PUGIL STICKS • COURAGE', alt: 'Coast Guard recruits competing with padded pugil sticks' },
   { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1208/1121174/1000w_q95.jpg', caption: 'CONFIDENCE COURSE • GRIT', alt: 'Coast Guard recruits tackling the Cape May confidence course' },
+  { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2609/9939059/1000w_q95.jpg', caption: 'WEEK EIGHT • YOU MADE IT', alt: 'Coast Guard Cape May recruits raising their hands during graduation ceremony' },
+  { src: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2609/9939061/1000w_q95.jpg', caption: 'GRADUATION • SEMPER PARATUS', alt: 'Coast Guard recruits graduate from Training Center Cape May and prepare to receive orders' },
 ] as const
 
 const CAPE_MAY_LNGLAT: LngLat = [CAPE_MAY.lng, CAPE_MAY.lat]
@@ -152,7 +154,7 @@ export function TrainingAct({ shipDate, map, onDone }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
-  const photoIndex = weeks === null ? -1 : Math.min(3, Math.floor(weeks / 2))
+  const photoIndex = weeks === null ? -1 : Math.min(TRAINING_PHOTOS.length - 1, Math.floor(weeks / 1.5))
   return (
     <div className={`journey journey--act1 journey--training ${reduced ? 'is-static' : ''}`} ref={root} data-testid="journey-act1">
       <div className="journey-beats" aria-live="polite">

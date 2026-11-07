@@ -16,13 +16,14 @@ interface Props {
 /** Port cards live this long — but the ship sails on underneath them. */
 const CARD_LIFE_S = 3.8
 const CANAL_LIFE_S = 4.4
+const ANTARCTIC_LIFE_S = 10.2
 const FRAME_S = 0.55
 
 /**
  * The Polar Star first patrol — Seattle → Honolulu → Hobart → Wellington →
- * Punta Arenas → Cape Horn → Rio → Panama Canal → home. One GSAP timeline is
+ * McMurdo Station → Punta Arenas → Cape Horn → Rio → Panama Canal → home. One GSAP timeline is
  * the master clock; the map camera frames each leg, the arc extends port to
- * port, port cards (DVIDS photos) slide in at each stop, and the Panama card
+ * port, port cards slide in at each stop; McMurdo gets a science-mission photo gallery, and the Panama card
  * plays a lock-chamber animation. Esc quietly ends the patrol (no overlay
  * chrome — owner preference).
  */
@@ -131,7 +132,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       // sails straight on to the next leg. The card lives (and dies) on its
       // own clock, overlapping the next passage. Boop — boop — boop.
       const card = cards[k]
-      const life = stop.special === 'canal' ? CANAL_LIFE_S : CARD_LIFE_S
+      const life = stop.gallery ? ANTARCTIC_LIFE_S : stop.special === 'canal' ? CANAL_LIFE_S : CARD_LIFE_S
       tl.call(
         () => {
           markers.push(markerFor(k + 1))
@@ -143,6 +144,18 @@ export function PatrolOverlay({ map, onDone }: Props) {
         [],
         t,
       )
+      if (card && stop.gallery) {
+        const slides = Array.from(card.querySelectorAll<HTMLElement>('[data-antarctic-slide]'))
+        slides.forEach((slide, index) => {
+          tl.set(slide, { opacity: index === 0 ? 1 : 0 }, t + 0.02)
+          if (index > 0) {
+            tl.to(slide, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + index * 2.1)
+          }
+          if (index < slides.length - 1) {
+            tl.to(slide, { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + (index + 1) * 2.1)
+          }
+        })
+      }
       if (card) {
         tl.fromTo(card, { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out' }, t + 0.03)
         if (stop.special === 'canal') {
@@ -214,8 +227,22 @@ export function PatrolOverlay({ map, onDone }: Props) {
       {!reduced &&
         PATROL_STOPS.slice(1).map((stop) => (
           <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
-            <img className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `/media/port-${stop.id === 'home-seattle' ? 'homecoming' : stop.id === 'panama' ? 'panama' : stop.id}.jpg` }} />
-            {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
+            {stop.gallery ? (
+              <div className="antarctic-gallery" aria-label="Polar Star at McMurdo Station: icebreaking, research station and science support">
+                {stop.gallery.map((photo, index) => (
+                  <div className="antarctic-slide" data-antarctic-slide key={photo.source} style={{ opacity: index === 0 ? 1 : 0 }}>
+                    <img src={photo.img} alt={photo.caption} loading="eager" />
+                    <div className="antarctic-caption">{photo.caption}</div>
+                    <a className="antarctic-credit" href={photo.source} target="_blank" rel="noopener noreferrer">USCG photo · source</a>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <img className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `/media/port-${stop.id === 'home-seattle' ? 'homecoming' : stop.id === 'panama' ? 'panama' : stop.id}.jpg` }} />
+                {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
+              </>
+            )}
             <div className="port-body">
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
