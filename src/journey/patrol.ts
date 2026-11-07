@@ -1,7 +1,7 @@
 /**
  * USCGC Polar Star first-patrol route (owner-directed story beat; see
  * DECISIONS.md "World patrol exception"). Seattle → Honolulu → Hobart →
- * Wellington → Punta Arenas → Cape Horn → Rio de Janeiro → Panama Canal →
+ * Wellington → McMurdo Station → Punta Arenas → Cape Horn → Rio de Janeiro → Panama Canal →
  * Seattle. Coordinates are approximate, sea-routed and demo-unverified;
  * `via` points exist only to keep arcs off land masses.
  *
@@ -24,6 +24,8 @@ export interface PortStop {
   img: string
   /** Verified source for the existing port-call photograph. */
   photoSource?: string
+  /** Optional multi-photo gallery, used for the Antarctic science mission. */
+  gallery?: { img: string; caption: string; source: string }[]
   /** Invisible waypoints between the PREVIOUS stop and this one (sea routing). */
   via?: LngLat[]
   /** Panama gets the lock animation. */
@@ -73,6 +75,39 @@ export const PATROL_STOPS: PortStop[] = [
     photoSource: 'https://commons.wikimedia.org/wiki/File:Wellington%20Port%20from%20Mt%20Vic.jpg',
   },
   {
+    id: 'mcmurdo',
+    name: 'McMurdo Station, Antarctica',
+    country: 'Antarctica · Ross Island',
+    flag: '🇦🇶',
+    lngLat: [166.6682, -77.8463],
+    blurb: 'Operation Deep Freeze: carve a channel through Antarctic sea ice, deliver vital supplies, and help keep a world-class scientific research station running.',
+    img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg',
+    photoSource: 'https://www.dvidshub.net/image/9520592/uscg-polar-star-wagb-10-supports-mcmurdo-station-during-operation-deep-freeze-2026',
+    gallery: [
+      {
+        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg',
+        caption: 'POLAR STAR · MOORED AT THE ICE PIER',
+        source: 'https://www.dvidshub.net/image/9520592/uscg-polar-star-wagb-10-supports-mcmurdo-station-during-operation-deep-freeze-2026',
+      },
+      {
+        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1602/2400145/1000w_q95.jpg',
+        caption: 'BREAKING A CHANNEL THROUGH THE ICE',
+        source: 'https://www.dvidshub.net/image/2400145/coast-guard-cutter-polar-star-breaks-ice-support-operation-deep-freeze-2016',
+      },
+      {
+        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2503/8882514/1000w_q95.jpg',
+        caption: 'THE NATIONAL SCIENCE FOUNDATION RESEARCH BASE',
+        source: 'https://www.dvidshub.net/image/8882514/uscgc-polar-star-wagb-10-visits-nsf-mcmurdo-station-during-operation-deep-freeze',
+      },
+      {
+        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2603/9553891/1000w_q95.jpg',
+        caption: 'SUPPORTING SCIENCE · ANTARCTIC LOGISTICS',
+        source: 'https://www.dvidshub.net/image/9553891/uscgc-polar-star-wagb-10-supports-installation-pier-mcmurdo-station-during-operation-deep-freeze-2026',
+      },
+    ],
+    via: [[174, -57], [173, -66], [168, -73]],
+  },
+  {
     id: 'punta-arenas',
     name: 'Punta Arenas, Patagonia',
     country: 'Chile',
@@ -81,7 +116,7 @@ export const PATROL_STOPS: PortStop[] = [
     blurb: 'Glaciers to port, penguins to starboard. Patagonia earns its legend.',
     img: 'https://commons.wikimedia.org/wiki/Special:FilePath/Magellanic%20Penguins%2C%20Isla%20Magdalena.jpg?width=1200',
     photoSource: 'https://commons.wikimedia.org/wiki/File:Magellanic%20Penguins%2C%20Isla%20Magdalena.jpg',
-    via: [[-130, -55]],
+    via: [[-170, -69], [-145, -63], [-115, -60], [-90, -58]],
   },
   {
     id: 'cape-horn',
