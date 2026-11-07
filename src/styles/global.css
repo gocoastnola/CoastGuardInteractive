@@ -2482,3 +2482,20 @@ input {
   .training-photo { transition: none; }
   .journey--training.is-static .training-gallery { display: none; }
 }
+
+.patrol .port-credit {
+  position: absolute;
+  top: calc(62% - 24px);
+  right: 10px;
+  z-index: 2;
+  font-size: 10px;
+  line-height: 1;
+  color: white;
+  text-decoration: none;
+  padding: 5px 7px;
+  border-radius: 4px;
+  background: rgba(4,10,24,.78);
+  pointer-events: auto;
+}
+.patrol .port-credit:hover { text-decoration: underline; }
+@media (max-width: 860px) { .patrol .port-credit { top: calc(57% - 24px); } }
