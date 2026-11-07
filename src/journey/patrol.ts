@@ -86,23 +86,23 @@ export const PATROL_STOPS: PortStop[] = [
     gallery: [
       {
         img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg',
-        caption: 'POLAR STAR · MOORED AT THE ICE PIER',
-        source: 'https://www.dvidshub.net/image/9520592/uscg-polar-star-wagb-10-supports-mcmurdo-station-during-operation-deep-freeze-2026',
+        caption: 'POLAR STAR · MOORED AT McMURDO ICE PIER',
+        source: 'https://www.dvidshub.net/image/9520592',
       },
       {
         img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1602/2400145/1000w_q95.jpg',
-        caption: 'BREAKING A CHANNEL THROUGH THE ICE',
-        source: 'https://www.dvidshub.net/image/2400145/coast-guard-cutter-polar-star-breaks-ice-support-operation-deep-freeze-2016',
+        caption: 'POLAR STAR · BREAKING ANTARCTIC ICE',
+        source: 'https://www.dvidshub.net/image/2400145',
       },
       {
-        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2503/8882514/1000w_q95.jpg',
-        caption: 'THE NATIONAL SCIENCE FOUNDATION RESEARCH BASE',
-        source: 'https://www.dvidshub.net/image/8882514/uscgc-polar-star-wagb-10-visits-nsf-mcmurdo-station-during-operation-deep-freeze',
+        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2601/9481427/1000w_q95.jpg',
+        caption: 'POLAR STAR · FORGING THROUGH McMURDO SOUND',
+        source: 'https://www.dvidshub.net/image/9481427',
       },
       {
-        img: 'https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2603/9553891/1000w_q95.jpg',
-        caption: 'SUPPORTING SCIENCE · ANTARCTIC LOGISTICS',
-        source: 'https://www.dvidshub.net/image/9553891/uscgc-polar-star-wagb-10-supports-installation-pier-mcmurdo-station-during-operation-deep-freeze-2026',
+        img: 'https://commons.wikimedia.org/wiki/Special:FilePath/McMurdo%20Station%20in%20Antarctica.jpg?width=1200',
+        caption: 'McMURDO STATION · ANTARCTIC RESEARCH BASE',
+        source: 'https://commons.wikimedia.org/wiki/File:McMurdo_Station_in_Antarctica.jpg',
       },
     ],
     via: [[174, -57], [173, -66], [168, -73]],
