@@ -73,6 +73,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
       input.current?.focus()
       return
     }
+    sound.enable() // Must run before the asynchronous ZIP lookup for iOS audio permission.
     setBusy(true)
     setError(null)
     try {
