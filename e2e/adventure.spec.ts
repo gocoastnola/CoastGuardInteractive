@@ -1,15 +1,12 @@
 import { test, expect } from '@playwright/test'
-import { beginZip, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, globeStage, imageLoaded, noAssignmentSpoilers, noHorizontalOverflow, observeJourney, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
+import { beginZip, completedPatrolArrivals, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, fullPatrolRecap, globeStage, imageLoaded, nativePatrolState, noAssignmentSpoilers, noHorizontalOverflow, observeJourney, observePatrol, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
 
 const POLAR_STAR = 'USCGC Polar Star (WAGB-10)'
-// Explicit intended itinerary: deleting or reordering a destination must fail.
-const PORTS = ['honolulu', 'hobart', 'wellington', 'mcmurdo', 'punta-arenas', 'cape-horn', 'rio', 'panama', 'home-seattle']
 test.beforeEach(async ({ page }) => deterministicMedia(page))
 
-for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 664 }]) {
   test(`complete ZIP-first journey at normal timing — ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
-    // Original measured baseline ~118 s; approved training/graduate holds add6.6 s.
-    test.setTimeout(160_000)
+    test.setTimeout(145_000)
     await page.setViewportSize(viewport)
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))
@@ -64,6 +61,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await controlInViewport(page, page.getByTestId('ship-begin'))
     await opaque(page.getByTestId('ship-begin'))
     await screenshot(page, testInfo, 'polar-star-exterior')
+    await observePatrol(page)
     await page.getByTestId('ship-begin').click()
     await phase(page, 'patrol')
     await expect(page.getByTestId('map')).toHaveClass(/is-cinematic/)
@@ -73,16 +71,11 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await expect(patrolCounter).toBeInViewport()
     await globeStage(page)
     await expect(page.getByTestId('miles-note')).toContainText(/approximate|illustrative/i)
-    for (const id of PORTS) {
-      const card = page.getByTestId(`port-${id}`)
-      await opaque(card, 20_000)
-      const arrival = await patrolGeography(page, id)
-      if (id === 'mcmurdo') {
-        expect(arrival.slides).toBe(4)
-        await screenshot(page, testInfo, 'mcmurdo-before-patagonia')
-      }
-      if (id === 'home-seattle') await screenshot(page, testInfo, 'homecoming')
-    }
+    const arrivals = await completedPatrolArrivals(page)
+    await testInfo.attach('actual-touch-and-go-arrivals', { body: JSON.stringify(arrivals, null, 2), contentType: 'application/json' })
+    await fullPatrolRecap(page)
+    await screenshot(page, testInfo, 'completed-patrol-overview')
+    await page.getByTestId('patrol-explore').click()
     await phase(page, 'explore')
     await explorationMarkers(page, false)
     await expect(page.getByTestId('panel-title')).toHaveText(POLAR_STAR)
@@ -167,6 +160,20 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await expect(stops.first()).toContainText('Honolulu')
   await expect(stops.last()).toContainText('Seattle')
   await expect(stops.filter({ hasText: 'McMurdo' })).toContainText(/research|science/i)
+  await expect(page.getByTestId('patrol')).toHaveAttribute('data-patrol-stage', 'static')
+  await expect(page.getByTestId('patrol-recap')).toHaveCount(0)
+  await expect(page.getByTestId('patrol-explore')).toHaveCount(0)
+  const before = await nativePatrolState(page)
+  // A real observation interval verifies the static camera; no animation clock is replaced.
+  await page.evaluate(() => new Promise<void>(resolve => {
+    const start = performance.now()
+    const frame = () => performance.now() - start >= 1200 ? resolve() : requestAnimationFrame(frame)
+    requestAnimationFrame(frame)
+  }))
+  const after = await nativePatrolState(page)
+  expect(after.lng).toBeCloseTo(before.lng, 5)
+  expect(after.lat).toBeCloseTo(before.lat, 5)
+  expect(after.moving).toBe(false)
   await page.getByTestId('journey-continue').click()
   await phase(page, 'explore')
   await explorationMarkers(page, false)

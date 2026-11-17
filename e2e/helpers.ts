@@ -1,4 +1,9 @@
 import { expect, type Locator, type Page, type TestInfo } from '@playwright/test'
+import type { Map as NativeMap } from 'maplibre-gl'
+import { buildPatrolLegs, patrolMiles } from '../src/journey/patrol'
+
+// Explicit owner-approved itinerary: omissions or reordered arrivals must fail.
+export const PATROL_PORTS = ['honolulu', 'hobart', 'wellington', 'mcmurdo', 'punta-arenas', 'cape-horn', 'rio', 'panama', 'home-seattle']
 
 // Deterministic CI fixtures replace only third-party map style/media responses.
 // MapLibre itself, its worker/route layers, GSAP timings, the ZIP table and WebAudio
@@ -19,10 +24,13 @@ declare global {
     __masterGains: GainNode[]
     __musicEndedCount: number
     __journeyObserved: { phases: string[]; weeks: number[] }
+    __readPatrolArrival: ReturnType<typeof installPatrolProbe>
+    __patrolObserved: { arrivals: { id: string; startMs: number; endMs?: number; geometry?: PatrolArrival; slides: number[]; opaqueMs: number }[]; startMs: number; recapMs?: number; lastFrameMs: number }
   }
 }
 
 export async function deterministicMedia(page: Page, failImages = false, failPrimaryMap = false) {
+  await page.addInitScript(installPatrolProbe)
   await page.route(/^https:\/\//, async (route) => {
     const request = route.request()
     if (/tiles\.openfreemap\.org\/styles\/|basemaps\.cartocdn\.com\/gl\//.test(request.url())) {
@@ -205,9 +213,9 @@ export async function globeStage(page: Page) {
   return state.stage
 }
 
-/** Capture one arrival atomically: serial browser calls can outlast its3.8s hold. */
-export async function patrolGeography(page: Page, stop: string) {
-  const state = await page.evaluate(stop => {
+/** Install a passive DOM reader before brief touch-and-go arrivals begin. */
+function installPatrolProbe() {
+  const readArrival = (stop: string) => {
     const rect = (selector: string) => {
       const box = document.querySelector(selector)!.getBoundingClientRect()
       return { x: box.x, y: box.y, width: box.width, height: box.height }
@@ -235,8 +243,20 @@ export async function patrolGeography(page: Page, stop: string) {
       dialogs: document.querySelectorAll('[role="dialog"]').length, slides: card.querySelectorAll('.antarctic-slide').length,
       noOverflow: document.documentElement.scrollWidth <= innerWidth + 1,
     }
-  }, stop)
-  const viewport = page.viewportSize()!
+
+  }
+  window.__readPatrolArrival = readArrival
+  return readArrival
+}
+
+type PatrolArrival = ReturnType<ReturnType<typeof installPatrolProbe>>
+
+/** Read one arrival in a single browser round trip. */
+export async function patrolGeography(page: Page, stop: string) {
+  return assertPatrolGeography(await page.evaluate(stop => window.__readPatrolArrival(stop), stop), page.viewportSize()!, stop)
+}
+
+function assertPatrolGeography(state: PatrolArrival, viewport: { width: number; height: number }, stop: string) {
   expect(state.active, `${stop}: assertions refer to this active arrival`).toBe('false')
   expect(state.cardAlpha).toBeGreaterThan(0.95)
   expect(state.projection).toBe('vertical-perspective')
@@ -267,6 +287,163 @@ export async function patrolGeography(page: Page, stop: string) {
   expect(state.thumbnail.width * state.thumbnail.height / (viewport.width * viewport.height)).toBeLessThanOrEqual(0.2)
   noOverlap(state.card, state.counter, `${stop}: port card must not obscure cumulative mileage`)
   expect(state.noOverflow).toBe(true)
+  return state
+}
+
+/** Sample real rendered arrivals without slowing or replacing the voyage clock. */
+export async function observePatrol(page: Page) {
+  await page.evaluate(() => {
+    const observed = window.__patrolObserved = { arrivals: [], startMs: performance.now(), lastFrameMs: performance.now() } as Window['__patrolObserved']
+    let previous: Window['__patrolObserved']['arrivals'][number] | undefined
+    const frame = (now: number) => {
+      const card = document.querySelector<HTMLElement>('[data-port-card][aria-hidden="false"]')
+      const id = card?.dataset.testid?.replace('port-', '')
+      if (previous?.id !== id) {
+        if (previous && !previous.endMs) previous.endMs = now
+        previous = id ? { id, startMs: now, slides: [], opaqueMs: 0 } : undefined
+        if (previous) observed.arrivals.push(previous)
+      }
+      if (card && previous) {
+        const state = window.__readPatrolArrival(previous.id)
+        if (state.cardAlpha > 0.95) {
+          previous.geometry ??= state
+          previous.opaqueMs += now - observed.lastFrameMs
+        }
+        card.querySelectorAll<HTMLElement>('[data-antarctic-slide]').forEach((slide, index) => {
+          const image = slide.querySelector('img')
+          if (slide.getAttribute('aria-hidden') === 'false' && Number(getComputedStyle(slide).opacity) > 0.95 && image?.complete && image.naturalWidth > 0 && !previous!.slides.includes(index)) previous!.slides.push(index)
+        })
+      }
+      observed.lastFrameMs = now
+      if (document.querySelector('[data-patrol-stage="recap"]')) { observed.recapMs = now; return }
+      if (document.querySelector('[data-testid="patrol"]')) requestAnimationFrame(frame)
+      else if (!observed.arrivals.length) requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
+  })
+}
+
+export async function completedPatrolArrivals(page: Page) {
+  await expect(page.getByTestId('patrol')).toHaveAttribute('data-patrol-stage', 'recap', { timeout: 50_000 })
+  const observed = await page.evaluate(() => window.__patrolObserved)
+  expect(observed.arrivals.map(arrival => arrival.id)).toEqual(PATROL_PORTS)
+  for (const arrival of observed.arrivals) {
+    expect(arrival.geometry, `${arrival.id}: the real arrival reached an opaque rendered frame`).toBeTruthy()
+    assertPatrolGeography(arrival.geometry!, page.viewportSize()!, arrival.id)
+    const holdMs = arrival.id === 'mcmurdo' ? 2400 : arrival.id === 'panama' ? 1800 : arrival.id === 'home-seattle' ? 2200 : 1400
+    expect(arrival.endMs! - arrival.startMs, `${arrival.id}: shorter hold preserves the complete stop`).toBeGreaterThan(holdMs - 200)
+    expect(arrival.endMs! - arrival.startMs, `${arrival.id}: arrival remains a quick touch-and-go`).toBeLessThan(holdMs + 1100)
+    expect(arrival.opaqueMs, `${arrival.id}: port identity stays readable during its shorter hold`).toBeGreaterThan(holdMs * 0.5)
+    if (arrival.id === 'mcmurdo') expect(arrival.slides).toEqual([0, 1, 2, 3])
+  }
+  expect(observed.recapMs! - observed.startMs, 'The complete nine-stop patrol is shorter than the former minute-long sequence').toBeLessThan(45_000)
+  return observed
+}
+
+/** Read the actual native MapLibre camera/source; no bearing-only DOM proxy. */
+export async function nativePatrolState(page: Page) {
+  return page.locator('.map-root').evaluate(element => {
+    type Fiber = { ref?: { current?: { getMap?: () => NativeMap } }; return?: Fiber }
+    const key = Object.keys(element).find(key => key.startsWith('__reactFiber$'))!
+    let fiber = (element as unknown as Record<string, Fiber>)[key]
+    while (fiber && !fiber.ref?.current?.getMap) fiber = fiber.return!
+    const map = fiber.ref!.current!.getMap!()
+    const center = map.getCenter()
+    const projected = map.project(center)
+    const canvas = map.getCanvas().getBoundingClientRect()
+    const stage = document.querySelector('[data-testid="voyage-globe-stage"]')?.getBoundingClientRect() ?? canvas
+    const source = map.getStyle().sources['journey-arc'] as { data?: { geometry?: { coordinates?: number[][] } } } | undefined
+    return { lng: center.lng, lat: center.lat, zoom: map.getZoom(), bearing: map.getBearing(), moving: map.isMoving(),
+      canvas: { width: canvas.width, height: canvas.height },
+      centerError: Math.hypot(canvas.x + projected.x - stage.x - stage.width / 2, canvas.y + projected.y - stage.y - stage.height / 2),
+      route: source?.data?.geometry?.coordinates ?? [] }
+  })
+}
+
+/** Observe a native 360° longitude orbit on the real browser clock. */
+export async function nativeOrbitSamples(page: Page, durationMs: number, minimumTravel?: number) {
+  return page.locator('.map-root').evaluate(async (element, { durationMs, minimumTravel }) => {
+    type Fiber = { ref?: { current?: { getMap?: () => NativeMap } }; return?: Fiber }
+    const key = Object.keys(element).find(key => key.startsWith('__reactFiber$'))!
+    let fiber = (element as unknown as Record<string, Fiber>)[key]
+    while (fiber && !fiber.ref?.current?.getMap) fiber = fiber.return!
+    const map = fiber.ref!.current!.getMap!()
+    const samples: { ms: number; lng: number; lat: number; bearing: number; moving: boolean }[] = []
+    const start = performance.now()
+    let travel = 0
+    await new Promise<void>((resolve, reject) => {
+      const frame = (now: number) => {
+        const elapsed = now - start
+        if (!samples.length || elapsed - samples.at(-1)!.ms >= 100) {
+          const center = map.getCenter()
+          if (samples.length) travel += (center.lng - samples.at(-1)!.lng + 540) % 360 - 180
+          samples.push({ ms: elapsed, lng: center.lng, lat: center.lat, bearing: map.getBearing(), moving: map.isMoving() })
+        }
+        if (minimumTravel && Math.abs(travel) >= minimumTravel) return resolve()
+        if (elapsed >= durationMs) return minimumTravel ? reject(new Error(`Native orbit reached only ${travel.toFixed(1)}° in ${durationMs}ms`)) : resolve()
+        requestAnimationFrame(frame)
+      }
+      requestAnimationFrame(frame)
+    })
+    return samples
+  }, { durationMs, minimumTravel })
+}
+
+export async function fullPatrolRecap(page: Page) {
+  // Read fixed recap geometry atomically: serial scroll/read calls each wait for
+  // another software-rendered globe frame and can outlast the behavior under test.
+  const dom = await page.evaluate(() => {
+    const rect = (element: Element) => {
+      const box = element.getBoundingClientRect()
+      return { x: box.x, y: box.y, width: box.width, height: box.height }
+    }
+    const recap = document.querySelector('[data-testid="patrol-recap"]')!
+    const explore = document.querySelector('[data-testid="patrol-explore"]')!
+    const map = document.querySelector('[data-testid="map"]')!
+    const visible = (element: Element) => getComputedStyle(element).visibility !== 'hidden' && getComputedStyle(element).display !== 'none' && element.getBoundingClientRect().height > 0
+    return { phase: document.querySelector<HTMLElement>('.app')!.dataset.phase,
+      stage: document.querySelector('[data-testid="patrol"]')!.getAttribute('data-patrol-stage'),
+      visited: document.querySelectorAll('.voyage-stop-rail .is-visited').length,
+      recapVisible: visible(recap), exploreVisible: visible(explore), explore: rect(explore),
+      miles: document.querySelector('[data-testid="miles-value"]')!.textContent,
+      progress: document.querySelector('.voyage-footer [role="progressbar"]')!.getAttribute('aria-valuenow'),
+      globe: rect(document.querySelector('[data-testid="voyage-globe-stage"]')!),
+      projection: map.getAttribute('data-projection'), worldCopies: map.getAttribute('data-world-copies'),
+      canvases: document.querySelectorAll('.maplibregl-canvas').length,
+      buttons: [...recap.querySelectorAll('button')].map(button => ({ id: button.dataset.testid, visible: visible(button), box: rect(button) })),
+      noOverflow: document.documentElement.scrollWidth <= innerWidth + 1 }
+  })
+  expect(dom.phase).toBe('patrol')
+  expect(dom.stage).toBe('recap')
+  expect(dom.recapVisible).toBe(true)
+  expect(dom.visited).toBe(9)
+  const legs = buildPatrolLegs()
+  const expectedPath = legs.flatMap((leg, index) => index === 0 ? leg.points : leg.points.slice(1))
+  const state = await nativePatrolState(page)
+  expect(state.route).toHaveLength(expectedPath.length)
+  // V8 in Node and Chromium can differ in the last trig bit. Compare every
+  // coordinate within sub-millimetre precision while requiring all1129 points.
+  const maxCoordinateError = Math.max(...state.route.flatMap((point, index) => point.map((value, axis) => Math.abs(value - expectedPath[index][axis]))))
+  expect(maxCoordinateError, 'The complete routed polyline remains drawn at100%').toBeLessThan(1e-9)
+  expect(dom.miles?.trim()).toBe(Math.round(patrolMiles(legs)).toLocaleString('en-US'))
+  expect(dom.progress).toBe('100')
+  expect(dom.projection).toBe('vertical-perspective')
+  expect(dom.worldCopies).toBe('false')
+  expect(dom.canvases).toBe(1)
+  assertStage(dom.globe, page.viewportSize()!)
+  expect(dom.noOverflow).toBe(true)
+  const inViewport = (box: StageBox) => {
+    expect(box.x).toBeGreaterThanOrEqual(-1)
+    expect(box.y).toBeGreaterThanOrEqual(-1)
+    expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1)
+    expect(box.y + box.height).toBeLessThanOrEqual(page.viewportSize()!.height + 1)
+  }
+  expect(dom.exploreVisible).toBe(true)
+  expect(dom.explore.width).toBeGreaterThanOrEqual(44)
+  expect(dom.explore.height).toBeGreaterThanOrEqual(44)
+  inViewport(dom.explore)
+  expect(dom.buttons.map(button => button.id)).toEqual(PATROL_PORTS.map(id => `recap-port-${id}`))
+  for (const button of dom.buttons) { expect(button.visible).toBe(true); inViewport(button.box) }
   return state
 }
 

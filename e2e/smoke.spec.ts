@@ -110,7 +110,7 @@ test('requested McMurdo gallery pauses the real voyage, scrolls, traps focus and
     await imageLoaded(figures.nth(i).locator('img'))
     await expect(figures.nth(i).locator('figcaption a')).toHaveAttribute('href', /^https:\/\//)
   }
-  // Observe the genuine scene for longer than its authored10.2s hold.
+  // Observe the genuine scene for longer than its authored2.4s hold.
   // This is a pause-duration assertion, not a sleep used to guess readiness;
   // the real clock and engine must remain paused on every observed frame.
   const miles = await page.getByTestId('miles-value').innerText()
@@ -123,7 +123,7 @@ test('requested McMurdo gallery pauses the real voyage, scrolls, traps focus and
       const frame = () => {
         frames++
         if (card.getAttribute('aria-hidden') !== 'false' || document.querySelector('[data-testid="miles-value"]')!.textContent !== miles) return reject(new Error('Voyage progressed while requested gallery was open'))
-        if (performance.now() - start >= 11_000) {
+        if (performance.now() - start >= 3100) {
           if (frames < 30) return reject(new Error('Too few rendered frames to verify gallery pause on this host'))
           return resolve()
         }
