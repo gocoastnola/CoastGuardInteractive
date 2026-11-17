@@ -1,0 +1,246 @@
+{
+  "rotation-before": {
+    "rotation": {
+      "before": {
+        "viewport": {
+          "width": 390,
+          "height": 664
+        },
+        "stage": {
+          "x": 0,
+          "y": 52,
+          "width": 390,
+          "height": 372,
+          "top": 52,
+          "right": 390,
+          "bottom": 424,
+          "left": 0
+        },
+        "padding": {
+          "top": 52,
+          "bottom": 240,
+          "left": 0,
+          "right": 0
+        },
+        "projectedCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "stageCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "zoom": 1.0673574090218922,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": true
+      },
+      "landscape": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "stage": {
+          "x": 0,
+          "y": 44,
+          "width": 540.390625,
+          "height": 322,
+          "top": 44,
+          "right": 540.390625,
+          "bottom": 366,
+          "left": 0
+        },
+        "padding": {
+          "top": 52,
+          "bottom": 240,
+          "left": 0,
+          "right": 0
+        },
+        "projectedCenter": {
+          "x": 422,
+          "y": 100.99999999999999
+        },
+        "stageCenter": {
+          "x": 270.1953125,
+          "y": 205
+        },
+        "zoom": 1.3145704366550248,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": true
+      },
+      "restored": {
+        "viewport": {
+          "width": 390,
+          "height": 664
+        },
+        "stage": {
+          "x": 0,
+          "y": 52,
+          "width": 390,
+          "height": 372,
+          "top": 52,
+          "right": 390,
+          "bottom": 424,
+          "left": 0
+        },
+        "padding": {
+          "top": 52,
+          "bottom": 240,
+          "left": 0,
+          "right": 0
+        },
+        "projectedCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "stageCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "zoom": 1.2846582659660066,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": false
+      }
+    },
+    "console": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x15b4001c6800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x15b4001c6800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x15b4001c6800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x15b4001c6800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      }
+    ],
+    "failures": []
+  },
+  "rotation-after": {
+    "rotation": {
+      "before": {
+        "viewport": {
+          "width": 390,
+          "height": 664
+        },
+        "stage": {
+          "x": 0,
+          "y": 52,
+          "width": 390,
+          "height": 372,
+          "top": 52,
+          "right": 390,
+          "bottom": 424,
+          "left": 0
+        },
+        "padding": {
+          "top": 52,
+          "bottom": 240,
+          "left": 0,
+          "right": 0
+        },
+        "projectedCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "stageCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "zoom": 1.0166439398350726,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": true
+      },
+      "landscape": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "stage": {
+          "x": 0,
+          "y": 44,
+          "width": 540.390625,
+          "height": 322,
+          "top": 44,
+          "right": 540.390625,
+          "bottom": 366,
+          "left": 0
+        },
+        "padding": {
+          "top": 44,
+          "bottom": 24,
+          "left": 0,
+          "right": 303.609375
+        },
+        "projectedCenter": {
+          "x": 270.19531250000006,
+          "y": 205
+        },
+        "stageCenter": {
+          "x": 270.1953125,
+          "y": 205
+        },
+        "zoom": 1.2224487182024673,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": true
+      },
+      "restored": {
+        "viewport": {
+          "width": 390,
+          "height": 664
+        },
+        "stage": {
+          "x": 0,
+          "y": 52,
+          "width": 390,
+          "height": 372,
+          "top": 52,
+          "right": 390,
+          "bottom": 424,
+          "left": 0
+        },
+        "padding": {
+          "top": 52,
+          "bottom": 240,
+          "left": 0,
+          "right": 0
+        },
+        "projectedCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "stageCenter": {
+          "x": 195,
+          "y": 238
+        },
+        "zoom": 1.2846582659660064,
+        "leg": "Honolulu \u2192 Hobart, Tasmania",
+        "moving": false
+      }
+    },
+    "console": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x22ec00975600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x22ec00975600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x22ec00975600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x22ec00975600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      }
+    ],
+    "failures": []
+  }
+}

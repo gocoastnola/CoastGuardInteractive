@@ -1,5 +1,5 @@
 import { SafeImage } from '../SafeImage'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import type { MapHandle, JourneyMarker } from '../MapView'
 import { prefersReducedMotion } from '../../lib/motion'
@@ -7,41 +7,53 @@ import { sound } from '../../lib/audio'
 import { buildPatrolLegs, legDuration, patrolMiles, PATROL_STOPS } from '../../journey/patrol'
 import { PATROL } from '../../journey/copy'
 import { MilesCounter } from './MilesCounter'
+import '../../styles/voyage-stage.css'
 
 interface Props {
   map: MapHandle | null
-  /** Fires once when the patrol ends (or Esc skips it). */
   onDone: (opts: { skipped: boolean }) => void
 }
 
-/** Port cards live this long — but the ship sails on underneath them. */
+// Preserve the authored itinerary and arrival holds. Details pause this clock.
 const CARD_LIFE_S = 3.8
 const CANAL_LIFE_S = 4.4
 const ANTARCTIC_LIFE_S = 10.2
 const FRAME_S = 0.55
 
-/**
- * The Polar Star first patrol — Seattle → Honolulu → Hobart → Wellington →
- * McMurdo Station → Punta Arenas → Cape Horn → Rio → Panama Canal → home. One GSAP timeline is
- * the master clock; the map camera frames each leg, the arc extends port to
- * port, port cards slide in at each stop; McMurdo gets a science-mission photo gallery, and the Panama card
- * plays a lock-chamber animation. Esc quietly ends the patrol (no overlay
- * chrome — owner preference).
- */
+function CanalLocks() {
+  return <svg className="canal-locks" viewBox="0 0 220 64" aria-hidden="true">
+    <rect x="0" y="56" width="220" height="8" fill="#0e1830" />
+    {[0, 1, 2].map(i => <g key={i}>
+      <rect className="canal-water" x={14 + i * 68} y="52" width="56" height="10" rx="2" fill="#22d3ee" opacity="0.7" />
+      <rect x={8 + i * 68} y="18" width="5" height="44" fill="#a5c5cf" />
+      <rect x={72 + i * 68} y="18" width="5" height="44" fill="#a5c5cf" />
+    </g>)}
+    <g className="canal-ship"><rect x="26" y="40" width="34" height="8" rx="2" fill="#f3c25a" /><rect x="36" y="33" width="10" height="7" fill="#f3f6fb" /></g>
+  </svg>
+}
+
+/** The globe owns the stage; destination photographs expand only by request. */
 export function PatrolOverlay({ map, onDone }: Props) {
   const root = useRef<HTMLDivElement>(null)
   const done = useRef(false)
   const onDoneRef = useRef(onDone)
   onDoneRef.current = onDone
   const reduced = prefersReducedMotion()
-
+  const timeline = useRef<gsap.core.Timeline | null>(null)
+  const returnFocus = useRef<HTMLElement | null>(null)
+  const legCamera = useRef<{ points: ReturnType<typeof buildPatrolLegs>[number]['points']; until: number } | null>(null)
   const legs = useMemo(() => buildPatrolLegs(), [])
-  const fullPath = useMemo(() => legs.flatMap((l, i) => (i === 0 ? l.points : l.points.slice(1))), [legs])
+  const fullPath = useMemo(() => legs.flatMap((leg, i) => i === 0 ? leg.points : leg.points.slice(1)), [legs])
   const totalMiles = useMemo(() => patrolMiles(legs), [legs])
   const [miles, setMiles] = useState(reduced ? totalMiles : 0)
-  const [portLabel, setPortLabel] = useState(PATROL_STOPS[1].name)
+  const [legIndex, setLegIndex] = useState(0)
+  const [visited, setVisited] = useState(reduced ? legs.length : 0)
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const [activeSlide, setActiveSlide] = useState(0)
+  const [detailsId, setDetailsId] = useState<string | null>(null)
+  const detailsIdRef = useRef(detailsId)
+  detailsIdRef.current = detailsId
+  const detailStop = PATROL_STOPS.find(stop => stop.id === detailsId)
 
   const finish = (skipped: boolean) => {
     if (done.current) return
@@ -49,122 +61,96 @@ export function PatrolOverlay({ map, onDone }: Props) {
     onDoneRef.current({ skipped })
   }
 
+  const closeDetails = useCallback(() => {
+    setDetailsId(null)
+    const tl = timeline.current
+    const camera = legCamera.current
+    if (tl && camera && camera.until > tl.time()) {
+      map?.frameVoyageLeg(camera.points, { duration: (camera.until - tl.time()) * 1000 })
+    }
+    tl?.resume()
+    window.requestAnimationFrame(() => {
+      if (returnFocus.current?.isConnected) returnFocus.current.focus()
+    })
+  }, [map])
+
+  const openDetails = (id: string, trigger: HTMLElement) => {
+    timeline.current?.pause()
+    map?.stop()
+    returnFocus.current = trigger
+    setDetailsId(id)
+  }
+
   useEffect(() => {
     if (!map || !root.current) return
     done.current = false
     sound.enable()
     sound.ambient()
-
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
-      // Keep markers on the same unwrapped world copy as the cumulative track.
-      // At phone overview zoom, multiple copies can be on screen simultaneously.
-      lngLat: i === 0 ? PATROL_STOPS[0].lngLat : legs[i - 1].points[legs[i - 1].points.length - 1],
+      lngLat: i === 0 ? PATROL_STOPS[0].lngLat : legs[i - 1].points.at(-1)!,
       label: PATROL_STOPS[i].name,
       sublabel: PATROL_STOPS[i].country,
       kind: i === 0 || i === PATROL_STOPS.length - 1 ? 'home' : 'unit',
     })
-
     if (reduced) {
+      setVisited(legs.length)
       map.setJourneyMarkers(PATROL_STOPS.map((_, i) => markerFor(i)))
-      map.fitPoints(fullPath, { duration: 0, pitch: 0, padding: { top: 90, bottom: 110, left: 70, right: 70 } })
       map.drawArc(fullPath, 1)
-      return () => sound.stopAmbient()
+      map.frameVoyageLeg([PATROL_STOPS[0].lngLat], { duration: 0 })
+      return () => {
+        map.stop()
+        map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
+        sound.stopAmbient()
+      }
     }
 
     const cards = Array.from(root.current.querySelectorAll<HTMLElement>('[data-port-card]'))
-    // Fit the entire voyage into the free chart area, beside the desktop card
-    // or above the tallest phone card. offsetTop ignores GSAP's entrance transform.
-    const chartPadding = () => {
-      if (window.innerHeight <= 520 && window.innerWidth >= 600) {
-        return { top: 90, bottom: 80, left: 24, right: Math.ceil(window.innerWidth * 0.58) }
-      }
-      if (window.innerWidth <= 860) {
-        const cardTop = Math.min(...cards.map(card => card.offsetTop))
-        const chartBottom = Math.max(220, cardTop - 28)
-        return { top: 140, bottom: Math.max(100, window.innerHeight - chartBottom), left: 24, right: 24 }
-      }
-      return { top: 190, bottom: 95, left: 48, right: 470 }
-    }
-    const beatEl = root.current.querySelector<HTMLElement>('[data-patrol-beat]')
     const markers: JourneyMarker[] = [markerFor(0)]
     map.setJourneyMarkers(markers)
     map.drawArc(fullPath, 0)
-
-    // Sample offsets so each leg maps onto a slice of the full-path progress.
-    const legSamples = legs.map((l, i) => (i === 0 ? l.points.length : l.points.length - 1))
+    map.frameVoyageLeg(legs[0].points, { duration: 0 })
+    const legSamples = legs.map((leg, i) => i === 0 ? leg.points.length : leg.points.length - 1)
     const totalSamples = legSamples.reduce((a, b) => a + b, 0)
-
     const tl = gsap.timeline({ defaults: { ease: 'none' } })
+    timeline.current = tl
     tl.call(() => sound.horn())
-
     let samplesBefore = 0
     let milesBefore = 0
-    let t = 0.3 // small lead-in
+    let t = 0.3
     legs.forEach((leg, k) => {
       const dur = legDuration(leg)
       const sBefore = samplesBefore
       const mBefore = milesBefore
       const stop = PATROL_STOPS[k + 1]
-      // Keep the entire circumnavigation framed throughout the voyage.
-      // A single stable world overview lets applicants appreciate the cumulative
-      // track and international reach rather than losing the earlier ports.
-      // Frame this leg, update the "underway" beat, departure whoosh.
-      tl.call(
-        () => {
-          map.fitPoints(fullPath, {
-            duration: FRAME_S * 1000,
-            pitch: 0,
-            maxZoom: 1.2,
-            absolutePadding: true,
-            padding: chartPadding(),
-          })
-          setPortLabel(stop.name)
-          sound.whoosh()
-          if (beatEl) {
-            gsap.fromTo(beatEl, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
-          }
-        },
-        [],
-        t,
-      )
+      const departure = t
+      tl.call(() => {
+        setLegIndex(k)
+        legCamera.current = { points: leg.points, until: departure + dur }
+        map.frameVoyageLeg(leg.points, { duration: dur * 1000 })
+        sound.whoosh()
+      }, [], t)
       t += FRAME_S * 0.5
-
-      // Extend the arc across this leg; tick the cumulative miles.
-      const proxy = { p: 0 }
-      tl.to(
-        proxy,
-        {
-          p: 1,
-          duration: dur,
-          ease: 'power1.inOut',
-          onUpdate: () => {
-            map.drawArc(fullPath, (sBefore + proxy.p * legSamples[k]) / totalSamples)
-            setMiles(mBefore + proxy.p * leg.miles)
-          },
+      const progress = { p: 0 }
+      tl.to(progress, {
+        p: 1, duration: dur, ease: 'power1.inOut',
+        onUpdate: () => {
+          map.drawArc(fullPath, (sBefore + progress.p * legSamples[k]) / totalSamples)
+          setMiles(mBefore + progress.p * leg.miles)
         },
-        t,
-      )
+      }, t)
       t += dur
-
-      // Arrival: marker drops, chime hits, the port card pops — and the ship
-      // sails straight on to the next leg. The card lives (and dies) on its
-      // own clock, overlapping the next passage. Boop — boop — boop.
       const card = cards[k]
       const life = stop.gallery ? ANTARCTIC_LIFE_S : stop.special === 'canal' ? CANAL_LIFE_S : CARD_LIFE_S
-      tl.call(
-        () => {
-          setActiveStop(stop.id)
-          setActiveSlide(0)
-          markers.push(markerFor(k + 1))
-          map.setJourneyMarkers([...markers])
-          if (stop.special === 'homecoming') sound.fanfare()
-          else sound.chime()
-          if (beatEl) gsap.to(beatEl, { opacity: 0, duration: 0.25 })
-        },
-        [],
-        t,
-      )
+      tl.call(() => {
+        setActiveStop(stop.id)
+        setActiveSlide(0)
+        setVisited(k + 1)
+        markers.push(markerFor(k + 1))
+        map.setJourneyMarkers([...markers])
+        if (stop.special === 'homecoming') sound.fanfare()
+        else sound.chime()
+      }, [], t)
       if (card && stop.gallery) {
         const slides = Array.from(card.querySelectorAll<HTMLElement>('[data-antarctic-slide]'))
         slides.forEach((slide, index) => {
@@ -173,58 +159,90 @@ export function PatrolOverlay({ map, onDone }: Props) {
             tl.call(() => setActiveSlide(index), [], t + 0.4 + index * 2.1)
             tl.to(slide, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + index * 2.1)
           }
-          if (index < slides.length - 1) {
-            tl.to(slide, { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + (index + 1) * 2.1)
-          }
+          if (index < slides.length - 1) tl.to(slide, { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + (index + 1) * 2.1)
         })
       }
       if (card) {
-        tl.fromTo(card, { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out' }, t + 0.03)
+        tl.fromTo(card, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, t + 0.03)
         if (stop.special === 'canal') {
-          // Lock-chamber animation: water rises, the ship silhouette lifts with it.
           tl.fromTo(card.querySelectorAll('.canal-water'), { attr: { height: 10, y: 52 } }, { attr: { height: 40, y: 22 }, duration: 1.8, ease: 'power1.inOut', stagger: 0.35 }, t + 0.4)
           tl.to(card.querySelector('.canal-ship'), { y: -26, duration: 2.1, ease: 'power1.inOut' }, t + 0.4)
         }
-        tl.to(card, { opacity: 0, y: -24, duration: 0.4, ease: 'power2.in' }, t + life)
+        tl.to(card, { opacity: 0, y: -8, duration: 0.4, ease: 'power2.in' }, t + life)
         tl.call(() => setActiveStop(null), [], t + life + 0.4)
       }
-      // Homecoming gets a breath for the fanfare; every other port: sail on NOW.
       t += life + 0.55
-
       samplesBefore += legSamples[k]
       milesBefore += leg.miles
     })
-
-    // Home: frame the entire patrol route at readable scale, then hand off to explore.
-    tl.call(
-      () => {
-        map.fitPoints(fullPath, {
-          duration: 2600,
-          pitch: 0,
-          maxZoom: 1.2,
-          absolutePadding: true,
-          padding: { top: 90, bottom: 110, left: 40, right: 40 }
-        })
-      },
-      [],
-      t,
-    )
+    tl.call(() => {
+      const points = [PATROL_STOPS.at(-1)!.lngLat]
+      legCamera.current = { points, until: t + 2.6 }
+      map.frameVoyageLeg(points, { duration: 2600 })
+    }, [], t)
     tl.call(() => finish(false), [], t + 3.2)
-
     return () => {
-      tl.kill()
-      // Absolute chart insets belong to this scene, not subsequent exploration.
+      tl.revert()
+      timeline.current = null
+      map.stop()
       map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
       sound.stopAmbient()
-      gsap.set([...cards, beatEl].filter(Boolean) as HTMLElement[], { clearProps: 'all' })
     }
+    // Scene setup owns a single timeline. Current onDone is read through its ref.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
-  /* Quiet Esc: complete the route instantly and move on. */
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
+    if (!map) return
+    let frame = 0
+    const reframe = () => {
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(() => {
+        // Read the new CSS stage after rotation, then update the native camera.
+        // A paused gallery stays paused; an underway leg retains its end time.
+        map.getMap()?.resize()
+        const camera = legCamera.current
+        const tl = timeline.current
+        const points = camera?.points ?? (reduced ? [PATROL_STOPS[0].lngLat] : legs[0].points)
+        const duration = !detailsIdRef.current && tl && camera ? Math.max(0, camera.until - tl.time()) * 1000 : 0
+        map.frameVoyageLeg(points, { duration, reflow: true })
+      })
+    }
+    window.addEventListener('resize', reframe)
+    return () => {
+      window.removeEventListener('resize', reframe)
+      window.cancelAnimationFrame(frame)
+    }
+  }, [map, legs, reduced])
+
+  useEffect(() => {
+    if (!detailsId || !root.current) return
+    const dialog = root.current.querySelector<HTMLElement>('.voyage-details')
+    dialog?.querySelector<HTMLButtonElement>('[data-testid="gallery-close"]')?.focus()
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        closeDetails()
+        return
+      }
+      if (event.key !== 'Tab' || !dialog) return
+      const controls = Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex]')).filter(el => el.tabIndex >= 0)
+      const first = controls[0]
+      const last = controls.at(-1)
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); last?.focus()
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); first?.focus()
+      }
+    }
+    window.addEventListener('keydown', trapFocus, true)
+    return () => window.removeEventListener('keydown', trapFocus, true)
+  }, [detailsId, closeDetails])
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || detailsIdRef.current) return
       map?.stop()
       sound.stopAmbient()
       map?.drawArc(fullPath, 1)
@@ -237,93 +255,63 @@ export function PatrolOverlay({ map, onDone }: Props) {
   }, [map, fullPath, totalMiles])
 
   return (
-    <div className={`patrol long-watch-patrol ${reduced ? 'is-static' : ''}`}  ref={root} data-testid="patrol">
-      <div className="patrol-head">
-        <p className="scene-kicker"><span>05</span> A wider world</p>
-        <div className="patrol-eyebrow">{PATROL.eyebrow}</div>
-        <div className="patrol-title">{PATROL.title}</div>
+    <div className={`patrol voyage-stage${reduced ? ' is-static' : ''}`} ref={root} data-testid="patrol" data-gallery-open={!!detailsId}>
+      <header className="voyage-header" aria-hidden={detailsId ? true : undefined}>
+        <div><p>{PATROL.eyebrow}</p><h2>{PATROL.title}</h2></div>
+        <span className="voyage-chapter">09 STOPS</span>
+      </header>
+      <div className="voyage-globe-stage" data-testid="voyage-globe-stage" aria-hidden="true">
+        <p className="voyage-leg-status">{reduced ? 'The complete illustrative voyage' : `${legs[legIndex].from.name} → ${legs[legIndex].to.name}`}</p>
       </div>
-
-      {!reduced && (
-        <p className="patrol-beat" data-patrol-beat aria-live="polite">
-          Underway — <strong>{portLabel}</strong>
-        </p>
-      )}
-
-      {/* Port cards (one per arrival) */}
-      {!reduced &&
-        PATROL_STOPS.slice(1).map((stop, portIndex) => (
-          <div className={`port-card${stop.special === 'canal' ? ' port-card--canal' : ''}`} key={stop.id} aria-hidden={activeStop !== stop.id} data-port-card data-testid={`port-${stop.id}`}>
-            {stop.gallery ? (
-              <div className="antarctic-gallery" aria-label="Polar Star at McMurdo Station: icebreaking, research station and science support">
-                {stop.gallery.map((photo, index) => (
-                  <div className="antarctic-slide" data-antarctic-slide key={photo.source} aria-hidden={activeStop !== stop.id || activeSlide !== index} style={{ opacity: index === 0 ? 1 : 0 }}>
-                    <SafeImage src={photo.img} alt={photo.caption} loading="eager" />
-                    <div className="antarctic-caption">{photo.caption}</div>
-                    <a className="antarctic-credit" tabIndex={activeStop === stop.id && activeSlide === index ? 0 : -1} style={{ pointerEvents: activeStop === stop.id && activeSlide === index ? 'auto' : 'none' }} href={photo.source} target="_blank" rel="noopener noreferrer">{photo.source.includes('commons.wikimedia.org') ? 'NSF photo · source' : 'USCG photo · source'}</a>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <>
-                <SafeImage className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" />
-                {stop.photoSource && <a className="port-credit" tabIndex={activeStop === stop.id ? 0 : -1} style={{ pointerEvents: activeStop === stop.id ? 'auto' : 'none' }} href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
-              </>
-            )}
-            <div className="port-body">
-              <div className="port-sequence">{String(portIndex + 1).padStart(2, '0')} <span>/ 09 — FIRST PATROL</span></div>
-              <div className="port-eyebrow">
-                {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
-              </div>
-              <div className="port-name">
-                <span className="port-flag" aria-hidden="true">
-                  {stop.flag}
-                </span>
-                {stop.name}
-                <span className="port-country">{stop.country}</span>
-              </div>
-              <p className="port-blurb">{stop.blurb}</p>
-              {stop.special === 'canal' && (
-                <svg className="canal-locks" viewBox="0 0 220 64" aria-hidden="true">
-                  <rect x="0" y="56" width="220" height="8" fill="#0e1830" />
-                  {[0, 1, 2].map((i) => (
-                    <g key={i}>
-                      <rect className="canal-water" x={14 + i * 68} y="52" width="56" height="10" rx="2" fill="#22d3ee" opacity="0.5" />
-                      <rect x={8 + i * 68} y="18" width="5" height="44" fill="#6f7d94" />
-                      <rect x={72 + i * 68} y="18" width="5" height="44" fill="#6f7d94" />
-                    </g>
-                  ))}
-                  <g className="canal-ship">
-                    <rect x="26" y="40" width="34" height="8" rx="2" fill="#f3c25a" />
-                    <rect x="36" y="33" width="10" height="7" fill="#f3f6fb" />
-                  </g>
-                </svg>
-              )}
-            </div>
-          </div>
-        ))}
-
-      {/* Static fallback for prefers-reduced-motion */}
-      {reduced && (
-        <div className="patrol-static">
-          <ol className="patrol-static-list">
-            {PATROL_STOPS.slice(1).map((stop) => (
-              <li key={stop.id}>
-                <span aria-hidden="true">{stop.flag}</span> <strong>{stop.name}</strong> — {stop.country}
-                <p className="patrol-static-blurb">{stop.blurb}</p>
-              </li>
-            ))}
+      {reduced ? (
+        <section className="patrol-static voyage-static-dock" aria-label="Voyage stops — scroll to read" aria-hidden={detailsId ? true : undefined}>
+          <ol className="patrol-static-list" aria-label="Complete voyage itinerary">
+            {PATROL_STOPS.slice(1).map((stop, index) => <li key={stop.id}>
+              <strong>{String(index + 1).padStart(2, '0')} / {stop.name}</strong><span>{stop.country}</span>
+              <p className="patrol-static-blurb">{stop.blurb}</p>
+              <button onClick={event => openDetails(stop.id, event.currentTarget)} aria-haspopup="dialog">Photos &amp; details</button>
+            </li>)}
           </ol>
-          <button className="btn btn-primary journey-continue" onClick={() => finish(false)} data-testid="journey-continue">
-            {PATROL.continue} <span aria-hidden="true">→</span>
-          </button>
-        </div>
+        </section>
+      ) : (
+        <section className="voyage-dock-slot" aria-label="Current port" aria-live="polite" aria-hidden={detailsId ? true : undefined}>
+          <div className="voyage-underway" aria-hidden={!!activeStop}><span>UNDERWAY</span><strong>{legs[legIndex].to.name}</strong><small>The voyage continues</small></div>
+          {PATROL_STOPS.slice(1).map((stop, index) => {
+            const shown = activeStop === stop.id
+            const photo = stop.gallery?.[activeSlide]
+            const source = photo?.source ?? stop.photoSource
+            return <article className="port-card voyage-port-dock" key={stop.id} aria-hidden={!shown} data-port-card data-testid={`port-${stop.id}`}>
+              <div className="voyage-thumb">
+                {stop.gallery ? stop.gallery.map((image, slide) => <div className="antarctic-slide" data-antarctic-slide key={image.source} aria-hidden={!shown || activeSlide !== slide} style={{ opacity: slide === 0 ? 1 : 0 }}>
+                  <SafeImage src={image.img} alt={image.caption} loading="eager" />
+                </div>) : <SafeImage className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" />}
+                {stop.special === 'canal' && <CanalLocks />}
+                {source && <a className="voyage-thumb-credit" tabIndex={shown ? 0 : -1} href={source} target="_blank" rel="noopener noreferrer">Source</a>}
+              </div>
+              <div className="voyage-port-identity"><p>{String(index + 1).padStart(2, '0')} / {stop.special === 'canal' ? 'CANAL TRANSIT' : stop.special === 'homecoming' ? 'HOME AGAIN' : 'PORT CALL'}</p><h3>{stop.name}</h3><span>{stop.country}</span></div>
+              <button className="voyage-details-button" data-testid={`port-details-${stop.id}`} tabIndex={shown ? 0 : -1} onClick={event => openDetails(stop.id, event.currentTarget)} aria-haspopup="dialog" aria-label={`Photos and details: ${stop.name}`}>Details <span aria-hidden="true">↗</span></button>
+            </article>
+          })}
+        </section>
       )}
-
-      <div className="patrol-chart-label" aria-hidden="true"><span className="chart-key" /> CUMULATIVE VOYAGE / ILLUSTRATIVE ROUTE</div>
-      <div className="journey-counter patrol-counter">
+      <footer className="voyage-footer" aria-hidden={detailsId ? true : undefined}>
+        <ol className="voyage-stop-rail" aria-label="Voyage progression">
+          {PATROL_STOPS.slice(1).map((stop, index) => <li key={stop.id} className={index < visited ? 'is-visited' : ''} aria-current={activeStop === stop.id ? 'step' : undefined} title={`${stop.name}${index < visited ? ' — visited' : ' — ahead'}`}><span>{String(index + 1).padStart(2, '0')}</span><span className="sr-only">{stop.name}{index < visited ? ', visited' : ', ahead'}</span></li>)}
+        </ol>
         <MilesCounter miles={miles} total={totalMiles} place={PATROL.totalLabel} cumulative />
-      </div>
+        {reduced && <button className="btn btn-primary journey-continue" data-testid="journey-continue" onClick={() => finish(false)}>{PATROL.continue} <span aria-hidden="true">→</span></button>}
+      </footer>
+      <p className="voyage-credit-space" aria-hidden="true">ILLUSTRATIVE VOYAGE · CUMULATIVE ROUTE</p>
+      {detailStop && <div className="voyage-details-backdrop" onClick={event => { if (event.target === event.currentTarget) closeDetails() }}>
+        <section className="voyage-details" role="dialog" aria-modal="true" aria-labelledby="voyage-details-title" aria-describedby="voyage-details-description" data-testid="voyage-details">
+          <header><div><p>VOYAGE PAUSED / {detailStop.country}</p><h2 id="voyage-details-title">{detailStop.name}</h2></div><button onClick={closeDetails} data-testid="gallery-close" aria-label="Close details and resume voyage">Close <span aria-hidden="true">×</span></button></header>
+          <div className="voyage-details-content"><p className="port-blurb" id="voyage-details-description">{detailStop.blurb}</p>
+            {detailStop.special === 'canal' && <CanalLocks />}
+            <div className="voyage-gallery-grid" data-testid="gallery-grid">{(detailStop.gallery ?? [{ img: detailStop.img, caption: detailStop.name, source: detailStop.photoSource }]).map(photo => <figure key={photo.img}><SafeImage src={photo.img} alt={photo.caption} loading="eager" /><figcaption>{photo.caption}{photo.source && <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.source.includes('commons.wikimedia.org') ? 'Photo credit & license' : 'USCG photo · source'}</a>}</figcaption></figure>)}</div>
+            <p className="voyage-details-note">Illustrative itinerary and assignments. Photographs show real places and different deployments, not one guaranteed patrol.</p>
+          </div>
+        </section>
+      </div>}
     </div>
   )
 }

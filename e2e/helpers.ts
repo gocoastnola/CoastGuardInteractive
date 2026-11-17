@@ -14,6 +14,10 @@ const STYLE_FIXTURE = {
 declare global {
   interface Window {
     __audioContexts: AudioContext[]
+    __musicElements: HTMLMediaElement[]
+    __oscillatorTimes: number[]
+    __masterGains: GainNode[]
+    __musicEndedCount: number
     __journeyObserved: { phases: string[]; weeks: number[] }
   }
 }
@@ -36,12 +40,31 @@ export async function deterministicMedia(page: Page, failImages = false, failPri
   })
   await page.addInitScript(() => {
     window.__audioContexts = []
+    window.__musicElements = []
+    window.__oscillatorTimes = []
+    window.__masterGains = []
+    window.__musicEndedCount = 0
     const NativeAudioContext = window.AudioContext
     if (NativeAudioContext) {
       window.AudioContext = class extends NativeAudioContext {
         constructor(options?: AudioContextOptions) {
           super(options)
           window.__audioContexts.push(this)
+        }
+        createMediaElementSource(element: HTMLMediaElement): MediaElementAudioSourceNode {
+          if (!window.__musicElements.includes(element)) window.__musicElements.push(element)
+          element.addEventListener('ended', () => window.__musicEndedCount++)
+          return super.createMediaElementSource(element)
+        }
+        createOscillator(): OscillatorNode {
+          window.__oscillatorTimes.push(this.currentTime)
+          return super.createOscillator()
+        }
+        createGain(): GainNode {
+          const gain = super.createGain()
+          const index = window.__audioContexts.indexOf(this)
+          if (index >= 0 && !window.__masterGains[index]) window.__masterGains[index] = gain
+          return gain
         }
       }
     }
@@ -151,29 +174,100 @@ export function noOverlap(a: { x: number; y: number; width: number; height: numb
   expect(horizontal <= 1 || vertical <= 1, message).toBe(true)
 }
 
-/** Verify the actual portrait chart, without reaching into React or map internals. */
+/** The native projection is reported from the live map after its style loads. */
+export async function globeProjection(page: Page) {
+  await expect(page.getByTestId('map')).toHaveAttribute('data-projection', 'vertical-perspective')
+  await expect(page.getByTestId('map')).toHaveAttribute('data-world-copies', 'false')
+  await expect(page.locator('.maplibregl-canvas')).toHaveCount(1)
+}
+
+type StageBox = { x: number; y: number; width: number; height: number }
+function assertStage(stage: StageBox, viewport: { width: number; height: number }) {
+  expect(stage.width * stage.height / (viewport.width * viewport.height), 'The globe remains the majority of the viewport').toBeGreaterThan(0.5)
+  if (viewport.height > viewport.width) expect(stage.height / viewport.height).toBeGreaterThan(0.5)
+  expect(stage.x).toBeGreaterThanOrEqual(-1)
+  expect(stage.y).toBeGreaterThanOrEqual(-1)
+  expect(stage.x + stage.width).toBeLessThanOrEqual(viewport.width + 1)
+  expect(stage.y + stage.height).toBeLessThanOrEqual(viewport.height + 1)
+}
+
+/** Reserve a real unobscured stage, rather than counting the full-screen canvas. */
+export async function globeStage(page: Page) {
+  const state = await page.evaluate(() => {
+    const stage = document.querySelector('[data-testid="voyage-globe-stage"]')!.getBoundingClientRect()
+    const map = document.querySelector('[data-testid="map"]')!
+    return { stage: { x: stage.x, y: stage.y, width: stage.width, height: stage.height }, projection: map.getAttribute('data-projection'), worldCopies: map.getAttribute('data-world-copies'), canvases: document.querySelectorAll('.maplibregl-canvas').length }
+  })
+  expect(state.projection).toBe('vertical-perspective')
+  expect(state.worldCopies).toBe('false')
+  expect(state.canvases).toBe(1)
+  assertStage(state.stage, page.viewportSize()!)
+  return state.stage
+}
+
+/** Capture one arrival atomically: serial browser calls can outlast its3.8s hold. */
 export async function patrolGeography(page: Page, stop: string) {
-  const card = (await page.getByTestId(`port-${stop}`).boundingBox())!
-  const heading = (await page.locator('.patrol-head').boundingBox())!
-  const counter = (await page.locator('.patrol-counter').boundingBox())!
-  const dots = await page.locator('.map-root .journey-marker .jm-dot').evaluateAll(elements => elements.map(el => {
-    const box = el.getBoundingClientRect(); return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
-  }))
-  expect(dots.length, `${stop}: visited locations remain on the cumulative chart`).toBeGreaterThan(1)
-  for (const dot of dots) {
-    expect(dot.x, `${stop}: visited marker stays inside viewport`).toBeGreaterThanOrEqual(0)
-    expect(dot.x, `${stop}: visited marker stays inside viewport`).toBeLessThanOrEqual(page.viewportSize()!.width)
-    expect(dot.y, `${stop}: visited marker clears chapter heading`).toBeGreaterThanOrEqual(heading.y + heading.height)
-    expect(dot.y, `${stop}: visited marker stays above the photograph`).toBeLessThanOrEqual(card.y)
-  }
-  const current = (await page.locator('.journey-marker.is-current .jm-dot').boundingBox())!
-  // The wide Pacific frame has bearing0: Hobart/McMurdo lie west of Seattle.
-  // A canonical +360° marker copy would incorrectly appear on its right.
-  if (['hobart', 'mcmurdo'].includes(stop)) expect(current.x + current.width / 2).toBeLessThan(dots[0].x)
-  const label = (await page.locator('.journey-marker.is-current .jm-label').boundingBox())!
-  noOverlap(label, card, `${stop}: active label must clear the photograph`)
-  noOverlap(label, counter, `${stop}: active label must clear mileage`)
-  noOverlap(label, heading, `${stop}: active label must clear chapter heading`)
+  const state = await page.evaluate(stop => {
+    const rect = (selector: string) => {
+      const box = document.querySelector(selector)!.getBoundingClientRect()
+      return { x: box.x, y: box.y, width: box.width, height: box.height }
+    }
+    const alpha = (element: Element) => { let result = 1; for (let node: Element | null = element; node; node = node.parentElement) result *= Number(getComputedStyle(node).opacity); return result }
+    const card = document.querySelector(`[data-testid="port-${stop}"]`)!
+    const details = document.querySelector(`[data-testid="port-details-${stop}"]`)!
+    const detailsBox = details.getBoundingClientRect()
+    const detailsTarget = document.elementFromPoint(detailsBox.x + detailsBox.width / 2, detailsBox.y + detailsBox.height / 2)
+    const marker = document.querySelector('.journey-marker.is-current')!
+    const dot = marker.querySelector('.jm-dot')!
+    const map = document.querySelector('[data-testid="map"]')!
+    return {
+      stage: rect('[data-testid="voyage-globe-stage"]'), card: rect(`[data-testid="port-${stop}"]`),
+      heading: rect('.voyage-header'), counter: rect('.voyage-footer [data-testid="miles-counter"]'),
+      current: rect('.journey-marker.is-current .jm-dot'), label: rect('.journey-marker.is-current .jm-label'),
+      thumbnail: rect(`[data-testid="port-${stop}"] .voyage-thumb`), title: card.querySelector('h3')!.textContent,
+      currentTitle: marker.querySelector('strong')!.textContent, currentAlpha: alpha(dot), cardAlpha: alpha(card),
+      currentCovered: marker.classList.contains('maplibregl-marker-covered'),
+      active: card.getAttribute('aria-hidden'), detailsVisible: getComputedStyle(details).visibility !== 'hidden' && details.getBoundingClientRect().height > 0,
+      details: { x: detailsBox.x, y: detailsBox.y, width: detailsBox.width, height: detailsBox.height }, detailsReceivesPointer: detailsTarget === details || !!detailsTarget && details.contains(detailsTarget),
+      counterAlpha: alpha(document.querySelector('.voyage-footer [data-testid="miles-counter"]')!),
+      projection: map.getAttribute('data-projection'), worldCopies: map.getAttribute('data-world-copies'),
+      canvases: document.querySelectorAll('.maplibregl-canvas').length, markerCount: document.querySelectorAll('.map-root .journey-marker').length,
+      dialogs: document.querySelectorAll('[role="dialog"]').length, slides: card.querySelectorAll('.antarctic-slide').length,
+      noOverflow: document.documentElement.scrollWidth <= innerWidth + 1,
+    }
+  }, stop)
+  const viewport = page.viewportSize()!
+  expect(state.active, `${stop}: assertions refer to this active arrival`).toBe('false')
+  expect(state.cardAlpha).toBeGreaterThan(0.95)
+  expect(state.projection).toBe('vertical-perspective')
+  expect(state.worldCopies).toBe('false')
+  expect(state.canvases).toBe(1)
+  assertStage(state.stage, viewport)
+  expect(state.markerCount).toBeGreaterThan(1)
+  expect(state.currentAlpha, `${stop}: current arrival is visible on the sphere`).toBeGreaterThan(0.95)
+  expect(state.currentCovered).toBe(false)
+  expect(state.currentTitle).toBe(state.title)
+  expect(state.current.x + state.current.width / 2).toBeGreaterThanOrEqual(state.stage.x)
+  expect(state.current.x + state.current.width / 2).toBeLessThanOrEqual(state.stage.x + state.stage.width)
+  expect(state.current.y + state.current.height / 2).toBeGreaterThanOrEqual(state.stage.y)
+  expect(state.current.y + state.current.height / 2).toBeLessThanOrEqual(state.stage.y + state.stage.height)
+  noOverlap(state.label, state.card, `${stop}: active label must clear the photograph`)
+  noOverlap(state.label, state.counter, `${stop}: active label must clear mileage`)
+  noOverlap(state.label, state.heading, `${stop}: active label must clear chapter heading`)
+  expect(state.title).not.toBe('')
+  expect(state.detailsVisible).toBe(true)
+  expect(state.detailsReceivesPointer, `${stop}: Details remains a real usable control`).toBe(true)
+  expect(state.details.x).toBeGreaterThanOrEqual(0)
+  expect(state.details.y).toBeGreaterThanOrEqual(0)
+  expect(state.details.x + state.details.width).toBeLessThanOrEqual(viewport.width)
+  expect(state.details.y + state.details.height).toBeLessThanOrEqual(viewport.height)
+  expect(state.counterAlpha).toBeGreaterThan(0.95)
+  expect(state.dialogs).toBe(0)
+  expect(state.card.height, `${stop}: arrivals remain compact without an automatic photo takeover`).toBeLessThanOrEqual(104)
+  expect(state.thumbnail.width * state.thumbnail.height / (viewport.width * viewport.height)).toBeLessThanOrEqual(0.2)
+  noOverlap(state.card, state.counter, `${stop}: port card must not obscure cumulative mileage`)
+  expect(state.noOverflow).toBe(true)
+  return state
 }
 
 export async function explorationMarkers(page: Page, hidden: boolean) {
@@ -182,9 +276,14 @@ export async function explorationMarkers(page: Page, hidden: boolean) {
   await expect.poll(() => markers.evaluateAll((elements, storyHidden) => elements.every((element) => {
     const button = element as HTMLButtonElement
     const display = getComputedStyle(button).display
+    const box = button.getBoundingClientRect()
+    const x = box.x + box.width / 2, y = box.y + box.height / 2
+    const offscreen = x < 0 || y < 0 || x > innerWidth || y > innerHeight
     return storyHidden
       ? button.hidden && display === 'none' && button.tabIndex === -1 && button.getAttribute('aria-hidden') === 'true'
-      : !button.hidden && display !== 'none' && button.tabIndex === 0 && button.getAttribute('aria-hidden') !== 'true'
+      : !button.hidden && display !== 'none' && (button.classList.contains('maplibregl-marker-covered') || offscreen
+        ? button.tabIndex === -1 && button.getAttribute('aria-hidden') === 'true'
+        : button.tabIndex === 0 && button.getAttribute('aria-hidden') !== 'true')
   }), hidden)).toBe(true)
 }
 
@@ -197,6 +296,34 @@ export async function controlInViewport(page: Page, locator: Locator) {
   expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width + 1)
   expect(box!.y).toBeGreaterThanOrEqual(-1)
   expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height + 1)
+}
+
+/** A visible credit control must also receive the pointer above other chrome. */
+export async function attributionUsable(page: Page) {
+  const credit = page.locator('.maplibregl-ctrl-attrib')
+  await expect(credit).toBeInViewport()
+  const toggle = credit.locator('.maplibregl-ctrl-attrib-button')
+  if (await toggle.isVisible()) {
+    await expect.poll(() => toggle.evaluate(element => {
+      const box = element.getBoundingClientRect()
+      const target = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)
+      return target === element || !!target && element.contains(target)
+    }), { message: 'Provider attribution must receive a real pointer above the jump bar' }).toBe(true)
+    const wasExpanded = await credit.locator('.maplibregl-ctrl-attrib-inner').isVisible()
+    await toggle.click()
+    if (wasExpanded) {
+      // Native MapLibre initially expands compact credits; prove the toggle
+      // closes them, then reopen deliberately rather than assuming its state.
+      await expect(credit.locator('.maplibregl-ctrl-attrib-inner')).toBeHidden()
+      await toggle.click()
+    }
+    await expect(credit.locator('.maplibregl-ctrl-attrib-inner')).toBeVisible()
+    // CI's empty basemap fixture has no provider metadata. Live-resource review
+    // separately verifies provider names; this assertion covers actual access.
+    await expect(credit).toContainText(/Demo|OpenStreetMap|OpenFreeMap|CARTO/i)
+  } else {
+    await expect(credit.locator('.maplibregl-ctrl-attrib-inner')).toBeVisible()
+  }
 }
 
 export async function screenshot(page: Page, testInfo: TestInfo, name: string) {

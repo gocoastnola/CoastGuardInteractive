@@ -12,7 +12,7 @@ vi.mock('gsap', () => ({ default: {
 } }))
 vi.mock('../../lib/audio', () => ({ sound: {
   enable: vi.fn(), ambient: vi.fn(), whoosh: vi.fn(), slotSpin: vi.fn(),
-  tick: vi.fn(), lock: vi.fn(), horn: vi.fn(),
+  tick: vi.fn(), stopSlotSpin: vi.fn(), lock: vi.fn(), horn: vi.fn(),
 } }))
 
 beforeEach(() => vi.clearAllMocks())
@@ -36,9 +36,11 @@ describe('assignment animation lifecycle', () => {
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(ownedTween.kill).toHaveBeenCalledOnce()
     expect(screen.getByTestId('slot-final')).toHaveTextContent('USCGC Polar Star')
+    expect(sound.stopSlotSpin).toHaveBeenCalled()
+    expect(sound.tick).not.toHaveBeenCalled()
   })
 
-  it('unmount cancels the reel and its pending horn so a departed scene cannot play it later', () => {
+  it('unmount cancels the reel and its cohesive anticipation cue without a delayed duplicate horn', () => {
     vi.useFakeTimers()
     const { unmount } = render(<SlotMachine units={UNITS} onReport={() => {}} />)
     fireEvent.click(screen.getByTestId('slot-spin'))
@@ -49,5 +51,6 @@ describe('assignment animation lifecycle', () => {
     act(() => vi.runAllTimers())
     expect(ownedTween.kill).toHaveBeenCalledOnce()
     expect(sound.horn).not.toHaveBeenCalled()
+    expect(sound.stopSlotSpin).toHaveBeenCalled()
   })
 })

@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import type { Unit } from '../../data/schema'
 import { prefersReducedMotion } from '../../lib/motion'
 import { sound } from '../../lib/audio'
+import { ORDERS_RISE_SECONDS } from '../../lib/audioScore'
 import { SLOT } from '../../journey/copy'
 import { POLAR_STAR_ID } from '../../journey/patrol'
 import { SoundToggle } from './SoundToggle'
@@ -15,7 +16,7 @@ interface Props {
 
 const ROW_H = 72 // must match .slot-row height in global.css
 const LOOPS = 3 // full passes through the reel before landing
-const SPIN_S = 4.6
+const SPIN_S = ORDERS_RISE_SECONDS
 
 /**
  * "Orders are in" — the assignment board. A vertical reel of unit names
@@ -26,7 +27,6 @@ export function SlotMachine({ units, onReport }: Props) {
   const root = useRef<HTMLDivElement>(null)
   const strip = useRef<HTMLDivElement>(null)
   const spinTween = useRef<gsap.core.Tween | null>(null)
-  const hornTimer = useRef<number | null>(null)
   const [state, setState] = useState<'ready' | 'spinning' | 'landed'>('ready')
   const reduced = prefersReducedMotion()
 
@@ -59,7 +59,7 @@ export function SlotMachine({ units, onReport }: Props) {
 
   useEffect(() => () => {
     spinTween.current?.kill()
-    if (hornTimer.current !== null) window.clearTimeout(hornTimer.current)
+    sound.stopSlotSpin()
   }, [])
 
   // Animate the result after React has mounted it, not in the reel's completion callback.
@@ -92,7 +92,6 @@ export function SlotMachine({ units, onReport }: Props) {
     }
     const finalIndex = LOOPS * reel.items.length + reel.target
     const proxy = { i: 0 }
-    let lastRow = 0
     sound.whoosh()
     sound.slotSpin()
     spinTween.current = gsap.to(proxy, {
@@ -102,15 +101,9 @@ export function SlotMachine({ units, onReport }: Props) {
       onUpdate: () => {
         const y = -proxy.i * ROW_H
         gsap.set(strip.current, { y })
-        const row = Math.floor(proxy.i)
-        if (row !== lastRow) {
-          lastRow = row
-          sound.tick(1 - proxy.i / finalIndex)
-        }
       },
       onComplete: () => {
         sound.lock()
-        hornTimer.current = window.setTimeout(() => sound.horn(), 500)
         setState('landed')
       },
     })
@@ -122,6 +115,7 @@ export function SlotMachine({ units, onReport }: Props) {
       if (e.key !== 'Escape') return
       if (state === 'ready' || state === 'spinning') {
         spinTween.current?.kill()
+        sound.stopSlotSpin()
         setState('landed')
       }
     }

@@ -19,7 +19,12 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'], launchOptions: { args: ['--enable-unsafe-swiftshader'] } } },
-    ...(process.env.E2E_WEBKIT === '1' ? [{ name: 'webkit', testMatch: '**/compatibility.spec.ts', use: { ...devices['Desktop Safari'] } }] : []),
+    ...(process.env.E2E_WEBKIT === '1' ? [{ name: 'webkit', testMatch: '**/compatibility.spec.ts', use: {
+      ...devices['Desktop Safari'],
+      // Optional reversible cloud-only launcher for user-space native libraries.
+      // CI and ordinary installs retain Playwright's standard executable.
+      launchOptions: process.env.E2E_WEBKIT_EXECUTABLE_PATH ? { executablePath: process.env.E2E_WEBKIT_EXECUTABLE_PATH } : {},
+    } }] : []),
   ],
   webServer: {
     command: production ? 'npm run preview -- --base=/CoastGuardInteractive/' : 'npm run dev',

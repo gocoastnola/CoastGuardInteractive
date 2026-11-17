@@ -37,7 +37,7 @@ export default function App() {
   }, [])
 
   const { phase } = journey
-  // Adaptive original score follows the existing story; no narrative changes.
+  // The authored driving score follows the existing story; no narrative changes.
   useEffect(() => {
     if (phase === 'dateEntry' || phase === 'idle') { sound.stopScore(); return }
     if (phase === 'act1' || phase === 'travel') sound.score('training')

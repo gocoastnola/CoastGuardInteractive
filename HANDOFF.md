@@ -1,26 +1,26 @@
 # CoastGuard Interactive — current handoff (2026-11-17)
 
-This is the current entry point. The active work is the bounded story-locked visual update described in [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md). The appendices below preserve older development reports; their URLs, counts, date-picker statements and hosting assumptions are historical, not current verification.
+Current work is [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md): the owner-requested native globe, compact destination dock/explicit gallery, and licensed recorded primary soundtrack with authored fallback/cues. Earlier repair/visual documents and the appendices below are historical source-state evidence, not certification of this revision.
 
-## Project and fixed product decisions
+## Locked project and story
 
-- Repository: https://github.com/gocoastnola/CoastGuardInteractive
-- Existing app: Vite + React 18 + TypeScript + MapLibre + GSAP + plain CSS. Do not rebuild or replace the map engine during stabilization.
-- Opening: **“Enter your ZIP code and start your journey.”** ZIP entry is final.
-- Flow: ZIP → hometown travel and approximate miles → Cape May training weeks 1–8 → graduation → illustrative Polar Star assignment → Seattle travel → exterior ship introduction → full patrol → Polar Star unit panel and free exploration.
-- Patrol order: Seattle → Honolulu → Hobart → Wellington → **McMurdo Station → Punta Arenas (Patagonia)** → Cape Horn → Rio → Panama Canal → Seattle. Preserve the cumulative route and wide geographic context.
-- Keep exterior/moored/icebreaking ship photographs and Antarctic station/environment/research context. Authentic training and graduation photography are intentional.
-- Independent educational demonstration; no affiliation or endorsement. Unit facts and itinerary remain demo-unverified and assignments illustrative.
+- Repository: `gocoastnola/CoastGuardInteractive`. Retain Vite, React, TypeScript, MapLibre, GSAP and plain CSS.
+- Opening remains the four-corner mission-photo **“Enter your ZIP code and start your journey”** screen with its familiar controls and no pre-orders assignment/destination spoiler.
+- Hometown → Cape May travel → eight training weeks → graduation → illustrative Polar Star reveal → Seattle/ship introduction → full patrol → homecoming/exploration.
+- All nine arrivals remain Honolulu, Hobart, Wellington, **McMurdo before Punta Arenas/Patagonia**, Cape Horn, Rio, Panama and Seattle. Approved training/graduation/exterior/research/penguin imagery, source credits and every destination’s context remain.
+- Preserve independent-demo, unverified-content and illustrative-assignment language. No accounts, applicant forms, backend, keys or paid services are introduced.
 
-## Recovery and current work
+## Current implementation and recovery
 
-See [docs/RECOVERY.md](docs/RECOVERY.md). Original recovery tag and freshly fetched main both identify `013fff722014729f4e044b0ce4060dbdfc3bbd57`; the development branch starts from that verified baseline. The separate hosted benchmark repository is not modified by this repair task.
+The current branch is `codex/globe-and-adventure-audio-20261117-162137Z`, based on fresh main `481c4c98b31451541c6ceae26158b9f08f122571`. Remotely verified annotated tag `pre-codex-baseline-20261117-162137Z` preserves that pre-globe baseline. Original tag `pre-codex-redesign-2026-11-16` still preserves `013fff722014729f4e044b0ce4060dbdfc3bbd57`. A complete-history bundle is outside Git at `/workspace/coastguard-globe-evidence/pre-globe-recovery.bundle`. Do not move tags or edit the separately hosted benchmark.
 
-The technical-repair foundation is commit `b37975c2a604d59f0f375c358c796794a4d81458`. The owner subsequently approved **scoped visual/sound changes with the story locked**, on the separate branch `codex/long-watch-visual-20261117`, stacked above that repair commit. Preserve the original four-photo ZIP opening/form, avoid early assignment/destination spoilers, retain every scene/arrival and the existing map engine/score.
+The globe uses MapLibre’s native vertical-perspective projection. It stays broad and turns toward each voyage leg; far-hemisphere route portions are naturally hidden, while full route data and the visited rail remain. Stylized procedural clouds/ocean highlights are not live weather or satellite imagery. Automatic photography is a compact thumbnail dock; Details pauses travel and opens full text/credits/gallery, then restores focus and resumes.
 
-Current presentation work includes an ocean/teal/ice chart, amber cumulative route, larger approved training/exterior photography, a dispatch-style assignment reel and responsive port staging. It does not authorize new journey branches, altered destinations or new outcomes. Read [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md) before further changes. Its visual-branch ledger records 65 unit tests, 18 data records, the production-subpath build, 13 development browser cases and 5 later production-preview cases as **PASS**. The browser runs cover 14 distinct cases in total, not one full 14-case run. Those browser runs preceded a later real mobile chart-fit failure found in full live captures. The scoped camera repair now pre-commits absolute patrol insets, allows zoom −2 and clears padding on exit. Build/unit checks pass after the scoped camera correction. The final mobile patrol capture then confirms first-port fitting, route-aligned unwrapped markers, McMurdo clearance, all nine arrivals and exploration. Final desktop camera capture/result remains pending; do not describe earlier 13+5 browser runs as one full final-candidate suite. The final 2-case production regression rerun passes after the camera/marker repair. Actual selected screenshots belong in [docs/evidence/visual/README.md](docs/evidence/visual/README.md). Live captures recorded no HTTP/JavaScript errors but did include tile cancellations, an upstream sprite warning and software-GPU warnings, so do not claim a clean console. WebKit is **BLOCKED** by missing native libraries, and actual listening/physical-device checks are **NOT RUN**. [docs/VERIFICATION.md](docs/VERIFICATION.md) is the earlier repair report, not certification of this visual branch.
+Primary music is **Vanguard — Scott Buckley**, bundled under verified CC BY 4.0 terms with attribution in the native information control and `public/media/music/ATTRIBUTION.txt`. One streaming HTML audio element feeds the existing single AudioContext; it cues/restarts at 45 seconds, uses 0.4 recorded gain and gates audibility on playback/seek readiness. The authored 124–132 BPM training/orders/patrol score is the fallback, not Vanguard’s tempo. Arrival impact and the 4.6-second orders rise/reveal remain authored, without per-row clicks. No subjective listening claim is made; the actual recorded excerpt and fallback WAVs are distinct evidence.
 
-Do not merge, deploy or move recovery tags. The hosted backup remains unchanged. Keep current pointers in [PROGRESS.md](PROGRESS.md); none of the historical appendix results certify current work. Actual listening and physical-device checks are not implied by browser assertions or screenshots.
+Current Node 22.23.5/npm 11.9.0 results: locked install, 79 unit tests in 13 files, 18 valid/unverified records and production-subpath build **PASS**. The first full Chromium run was 15/17; all affected regressions passed after a directory-state harness correction, stronger real-window audio sampling at the same threshold, and the observed rotation repair. Final production **7/7** and native WebKit **7/7 PASS**. This is desktop-engine/viewport testing, not physical iPhone Safari.
+
+The portrait stage is 372/664 pixels (56.0%), with 56 pixels reserved for provider/music credits. The final unmocked desktop story and focused phone voyage observed all nine arrivals, gallery recovery and actual MP3 playback. [Curated genuine evidence](docs/evidence/globe-audio/README.md) includes matched phone and rotation pairs. Record software SwiftShader speed, the transient desktop external-photo 503 and optional gallery-footer overlap honestly; listening and physical-device checks remain NOT RUN. **Publication is explicitly approved:** on 2026-11-17 at approximately 20:30 UTC the owner answered “Yes” to merging PR #7 into main and deploying to the existing GitHub Pages site. This resolves the earlier automatic-review hold. Run #24 passed all application checks; PR #7 records the normal merge, deployment and hosted verification. Preserve the backup and immutable tags.
 
 ## Local workflow
 
@@ -35,7 +35,9 @@ No money, accounts, keys or paid services. Nothing secret in client source. `VIT
 - `JourneyOverlay.tsx`: hometown and Seattle travel; `TrainingAct.tsx` / `DaysCounter.tsx`: training and graduation.
 - `SlotMachine.tsx`, `ShipIntro.tsx`, `PatrolOverlay.tsx`: assignment, ship, full patrol.
 - `src/journey/patrol.ts`: ordered stops and antimeridian-safe route math.
-- `src/lib/audio.ts`: synthesized adaptive score, ambient bed and SFX. Journey audio starts after a gesture; current audio behavior has no journey mute. Narration’s separate UI gate is not a global mute.
+- `src/lib/audio.ts` / `recordedScore.ts` / `audioScore.ts`: the streaming licensed primary recording, authored cue/fallback scheduler and shared fallback-preview builders. Gesture unlock and the owner-directed no-mute policy remain; narration’s separate gate is not a global mute.
+- `src/lib/globe.ts` / `globe-atmosphere.ts`: native-globe framing math and authored procedural atmosphere; not live weather.
+- `src/styles/voyage-stage.css`: globe-led stage, compact dock, reduced-motion itinerary and explicit Details drawer.
 - `src/data/units.json`: unit data; only owner can mark records verified.
 - `public/data/zips.json`: live lazy-loaded Census ZIP centroid table.
 - `public/media/` and `ASSET_LICENSES.md`: bundled media and source records. Current training/ports also use remote Commons/DVIDS images; network failures must be distinguished from code defects.

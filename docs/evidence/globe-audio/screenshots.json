@@ -1,0 +1,42 @@
+[
+  {
+    "file": "after-honolulu-390x844.png",
+    "bytes": 204209,
+    "sha256": "a24160d0d062635d189b98af99a15477a03fc50df107b91bebfd8dd2d8eb982d"
+  },
+  {
+    "file": "before-honolulu-390x844.png",
+    "bytes": 236942,
+    "sha256": "3dbad345e764d92499a30c39211cf8e755d84aa54a7cf45d82de5acb3b4b0f07"
+  },
+  {
+    "file": "desktop-mcmurdo.png",
+    "bytes": 409095,
+    "sha256": "6c3ec75cd01381f8cd669575cc402343a98a552fecf28edf7d5ca37656ff391c"
+  },
+  {
+    "file": "opening-four-missions.png",
+    "bytes": 1538132,
+    "sha256": "dcd153e7d2b99b71e58b8ae52456130cb53f211553e3b99b15834e395e5ea61e"
+  },
+  {
+    "file": "phone-honolulu-390x664.png",
+    "bytes": 181765,
+    "sha256": "4e85ba587bb6c09200c5180edfd87dee4ff231d53d4a7037acd0169789d91462"
+  },
+  {
+    "file": "requested-mcmurdo-gallery.png",
+    "bytes": 211524,
+    "sha256": "5da2f9a8665d9e424072aac833920d58f7c9b0fb5e1e72b2c32f8c124ac5a676"
+  },
+  {
+    "file": "rotation-after-844x390.png",
+    "bytes": 154371,
+    "sha256": "05b34d1a7e9d911ac1a34ab6deba87fb9fe47067fc0f26985253b65b5c4f753b"
+  },
+  {
+    "file": "rotation-before-844x390.png",
+    "bytes": 145561,
+    "sha256": "991e721375f1466d3cbec7d8a7d9733e794991bc57b0283fd6e086da430fdd07"
+  }
+]

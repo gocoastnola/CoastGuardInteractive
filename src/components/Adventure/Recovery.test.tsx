@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { MapHandle } from '../MapView'
 import { TrainingAct } from './TrainingAct'
@@ -36,12 +36,17 @@ describe('reduced-motion story recovery', () => {
     const enable = vi.spyOn(sound, 'enable').mockImplementation(() => {})
     const ambient = vi.spyOn(sound, 'ambient').mockImplementation(() => {})
     const stopAmbient = vi.spyOn(sound, 'stopAmbient').mockImplementation(() => {})
-    const map = { setJourneyMarkers: vi.fn(), fitPoints: vi.fn(), drawArc: vi.fn() } as unknown as MapHandle
+    const setPadding = vi.fn()
+    const map = { setJourneyMarkers: vi.fn(), fitPoints: vi.fn(), frameVoyageLeg: vi.fn(), drawArc: vi.fn(), stop: vi.fn(), getMap: vi.fn(() => ({ setPadding })) } as unknown as MapHandle
     const { unmount } = render(<PatrolOverlay map={map} onDone={() => {}} />)
     expect(enable).toHaveBeenCalledOnce()
     expect(ambient).toHaveBeenCalledOnce()
-    expect(screen.getAllByRole('listitem')).toHaveLength(9)
+    const itinerary = screen.getByRole('list', { name: 'Complete voyage itinerary' })
+    expect(within(itinerary).getAllByRole('listitem')).toHaveLength(9)
+    expect(itinerary.textContent!.indexOf('McMurdo')).toBeLessThan(itinerary.textContent!.indexOf('Patagonia'))
     unmount()
+    expect(map.stop).toHaveBeenCalledOnce()
+    expect(setPadding).toHaveBeenCalledWith({ top: 0, bottom: 0, left: 0, right: 0 })
     expect(stopAmbient).toHaveBeenCalledOnce()
   })
 })

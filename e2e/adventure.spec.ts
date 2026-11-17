@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { beginZip, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, imageLoaded, noAssignmentSpoilers, noHorizontalOverflow, noOverlap, observeJourney, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
+import { beginZip, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, globeStage, imageLoaded, noAssignmentSpoilers, noHorizontalOverflow, observeJourney, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
 
 const POLAR_STAR = 'USCGC Polar Star (WAGB-10)'
 // Explicit intended itinerary: deleting or reordering a destination must fail.
@@ -68,22 +68,17 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await phase(page, 'patrol')
     await expect(page.getByTestId('map')).toHaveClass(/is-cinematic/)
     await explorationMarkers(page, true)
-    await opaque(page.locator('.patrol-counter'))
-    await expect(page.locator('.patrol-counter')).toBeInViewport()
+    const patrolCounter = page.locator('.voyage-footer [data-testid="miles-counter"]')
+    await opaque(patrolCounter)
+    await expect(patrolCounter).toBeInViewport()
+    await globeStage(page)
     await expect(page.getByTestId('miles-note')).toContainText(/approximate|illustrative/i)
     for (const id of PORTS) {
       const card = page.getByTestId(`port-${id}`)
       await opaque(card, 20_000)
-      if (viewport.width === 390 && ['honolulu', 'hobart', 'mcmurdo'].includes(id)) await patrolGeography(page, id)
-      await expect(card.locator('.port-name')).not.toBeEmpty()
-      await expect.poll(() => card.locator('.port-body').evaluate(body => body.scrollHeight <= body.clientHeight + 1), { message: `${id}: portrait/desktop port caption must fit without hidden overflow` }).toBe(true)
-      const cardBox = (await card.boundingBox())!
-      const mileageBox = (await page.locator('.patrol-counter').boundingBox())!
-      noOverlap(cardBox, mileageBox, `${id}: port card must not obscure cumulative mileage`)
-      await noHorizontalOverflow(page)
+      const arrival = await patrolGeography(page, id)
       if (id === 'mcmurdo') {
-        await expect(card).toContainText(/research|science/i)
-        await expect(card.locator('.antarctic-slide')).toHaveCount(4)
+        expect(arrival.slides).toBe(4)
         await screenshot(page, testInfo, 'mcmurdo-before-patagonia')
       }
       if (id === 'home-seattle') await screenshot(page, testInfo, 'homecoming')
@@ -96,6 +91,8 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     expect(await page.evaluate(() => window.__journeyObserved.phases)).toEqual(['dateEntry', 'travel', 'act1', 'orders', 'act2', 'shipIntro', 'patrol', 'explore'])
     expect(await page.evaluate(() => window.__audioContexts.length)).toBe(1)
     expect(await page.evaluate(() => window.__audioContexts[0].state)).toBe('running')
+    expect(await page.evaluate(() => window.__musicElements.length)).toBe(1)
+    expect(await page.evaluate(() => window.__musicElements[0].paused)).toBe(false)
     expect(errors).toEqual([])
   })
 }
@@ -160,7 +157,9 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await page.getByTestId('ship-begin').click()
   await phase(page, 'patrol')
   await explorationMarkers(page, true)
-  await opaque(page.locator('.patrol-counter'))
+  await opaque(page.locator('.voyage-footer [data-testid="miles-counter"]'))
+  await expect(page.getByTestId('miles-note')).toContainText(/approximate|illustrative/i)
+  await globeStage(page)
   const stops = page.locator('.patrol-static-list li')
   await expect(stops).toHaveCount(9)
   const texts = await stops.allTextContents()
@@ -175,6 +174,9 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
 })
 
 test('Escape, restart and repeated visits preserve a single map and audio context', async ({ page }) => {
+  // Two real traversals finished at35.6s in the software-rendered globe trace;
+  // allow bounded headroom without changing any action or lifecycle assertion.
+  test.setTimeout(50_000)
   await openLanding(page)
   for (let visit = 0; visit < 2; visit++) {
     await reachShipBySkip(page)
@@ -190,6 +192,8 @@ test('Escape, restart and repeated visits preserve a single map and audio contex
     await page.getByTestId('restart-adventure').click()
     await phase(page, 'dateEntry')
     await expect(page.getByTestId('zip-input')).toBeFocused()
+    await expect.poll(() => page.evaluate(() => window.__musicElements[0]?.paused)).toBe(true)
   }
   expect(await page.evaluate(() => window.__audioContexts.length)).toBe(1)
+  expect(await page.evaluate(() => window.__musicElements.length)).toBe(1)
 })

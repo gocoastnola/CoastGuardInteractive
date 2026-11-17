@@ -2,6 +2,17 @@
 
 Format: date · decision · why · alternatives · consequences.
 
+## 2026-11-17 · Owner-requested spherical globe and motivational audio revision
+
+- The owner rejected the preceding subtle restyling and its repeated Mercator worlds, oversized port photographs and ambient/click-heavy audio. The current instruction explicitly calls for one real globe on an axis, visible voyage progress, moving oceans/clouds, energetic background music and new arrival/orders effects.
+- Keep the existing MapLibre 6.14 engine. Its native `vertical-perspective` projection is a real sphere at every zoom, unlike the `globe` alias that blends into Mercator at high zoom. Do not substitute a masked flat map or three repeated worlds for a globe.
+- The globe is the primary voyage stage. Port photography becomes a compact contextual dock with an explicitly opened larger gallery. Preserve every original destination, approved image, research caption, cumulative route and approximate mileage. A real sphere occludes its far side; retain the complete route data and visited-stop context while turning the wide globe to follow the active passage.
+- Replace the old ambient score with the freely licensed recorded **Vanguard — Scott Buckley (CC BY 4.0)**, cued at 45 seconds and streamed through the existing WebAudio context. Keep the new project-authored rhythmic arrangement as a failure fallback, and replace click-heavy orders/boop cues with coherent arrival/reveal effects. This is the owner's requested audio change; the existing gesture requirement, single context and audio-control policy remain. The recording, official source and license are documented in ASSET_LICENSES.md and credited in the app.
+- Preserve the four-corner mission-photo ZIP opening, hometown-to-Cape-May travel, weeks 1–8/graduation, surprise illustrative Polar Star orders and exact voyage order. No Polar Star or Antarctic promotion before the orders reveal.
+- The earlier PR #7 merge attempt was rejected by automatic approval review because design approval did not explicitly override the original no-merge/no-deploy brief. On 2026-11-17 at approximately 20:30 UTC, the owner answered **“Yes”** to **“Do you approve merging PR #7 into main and deploying it to your existing GitHub Pages site?”** This explicitly authorizes that merge and the existing Pages deployment. Use the normal reviewed PR and validation pipeline; keep the benchmark and recovery tags unchanged.
+- Development begins at freshly fetched main `481c4c98b31451541c6ceae26158b9f08f122571`, on `codex/globe-and-adventure-audio-20261117-162137Z`. The remotely verified annotated baseline tag `pre-codex-baseline-20261117-162137Z` peels to that commit. The original recovery tag still peels to `013fff722014729f4e044b0ce4060dbdfc3bbd57`.
+
+
 ## 2026-10-18 · MapLibre GL JS over Mapbox GL JS
 
 - **Why:** keyless, no billing, BSD-3 licence, no vendor lock-in, same vector-tile ecosystem. Mapbox requires an access token and metered billing, which violates the "no accounts, no money" constraint.

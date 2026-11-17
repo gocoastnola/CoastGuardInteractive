@@ -9,9 +9,11 @@ import {
   type GeoJSONSource,
   type LngLatBoundsLike,
   type PaddingOptions,
+  type SymbolLayerSpecification,
 } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import '../styles/long-watch-map.css'
+import '../styles/globe-map.css'
 // MapLibre ≥5 loads its worker as a separate module relative to import.meta.url, which breaks under
 // Vite's dep pre-bundling. Let Vite bundle/serve the worker and hand MapLibre the resulting URL.
 import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
@@ -21,6 +23,8 @@ import { UNIT_TYPE_COLORS } from '../lib/units'
 import { bearingFor, boundsFor, NATIONAL_VIEW, type JumpTarget } from '../lib/camera'
 import { prefersReducedMotion } from '../lib/motion'
 import { arcPrefix, boundsOf, type LngLat } from '../journey/arc'
+import { globeOverviewZoom, voyageMidpoint } from '../lib/globe'
+import { installGlobeAtmosphere } from '../lib/globe-atmosphere'
 
 /** Keyless vector styles. Primary = OpenFreeMap; fallback = CARTO Dark Matter (both attribution-required). */
 export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/dark'
@@ -42,7 +46,7 @@ export interface JourneyMarker {
 
 export interface FitOptions {
   padding?: number | PaddingOptions
-  /** Keep viewport insets during fitting so Mercator constrains the free chart area. */
+  /** Keep viewport insets during fitting so the camera retains the free chart area. */
   absolutePadding?: boolean
   pitch?: number
   bearing?: number
@@ -58,6 +62,8 @@ export interface MapHandle {
   setJourneyMarkers(markers: JourneyMarker[]): void
   /** Frames every point (e.g. the whole arc) with optional pitch/bearing. */
   fitPoints(points: LngLat[], opts?: FitOptions): void
+  /** Rotate one physical, broad-view sphere toward the current sea leg. */
+  frameVoyageLeg(points: LngLat[], opts?: { duration?: number; reflow?: boolean }): void
   /** Same cinematic fly-in the station panel uses. */
   flyToUnit(unitId: string, opts?: { duration?: number }): void
   flyToPlace(lngLat: LngLat, opts?: { zoom?: number; pitch?: number; bearing?: number; duration?: number }): void
@@ -100,12 +106,17 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   const journeyMarkersRef = useRef<Marker[]>([])
   const arcState = useRef<{ points: LngLat[]; progress: number } | null>(null)
   const styleReady = useRef(false)
+  const storyLabelVisibility = useRef(new globalThis.Map<string, NonNullable<SymbolLayerSpecification['layout']>['visibility']>())
   const onSelectRef = useRef(onSelect)
   onSelectRef.current = onSelect
   const cinematicRef = useRef(cinematic)
   cinematicRef.current = cinematic
+  const activeRef = useRef(active)
+  activeRef.current = active
   const driftTimer = useRef<number | null>(null)
   const [basemap, setBasemap] = useState<Basemap>('loading')
+  const [projection, setProjection] = useState('loading')
+  const [worldCopies, setWorldCopies] = useState<boolean | undefined>(undefined)
 
   const cameraPadding = () =>
     panelOpen
@@ -113,6 +124,52 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         ? { top: 40, bottom: Math.round(window.innerHeight * 0.6), left: 20, right: 20 }
         : { top: 80, bottom: 80, left: 60, right: 440 + 40 }
       : NATIONAL_VIEW.padding
+
+  const syncMarkerAccess = () => {
+    const map = mapRef.current
+    const viewport = map?.getContainer()
+    const width = viewport?.clientWidth ?? 0
+    const height = viewport?.clientHeight ?? 0
+    markersRef.current.forEach(({ marker, el }) => {
+      const hiddenForStory = !activeRef.current || cinematicRef.current
+      const covered = el.classList.contains('maplibregl-marker-covered')
+      // Native covered-state updates intentionally stop outside the viewport.
+      // Keep those offscreen buttons out of keyboard/ARIA navigation too.
+      const point = map?.project(marker.getLngLat())
+      const offset = marker.getOffset()
+      const x = point ? point.x + offset.x : Number.NaN
+      const y = point ? point.y + offset.y : Number.NaN
+      const offscreen = !Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x > width || y > height
+      el.hidden = hiddenForStory
+      el.style.display = hiddenForStory ? 'none' : ''
+      if (hiddenForStory || covered || offscreen) {
+        el.setAttribute('aria-hidden', 'true')
+        el.tabIndex = -1
+        if (document.activeElement === el) el.blur()
+      } else {
+        el.removeAttribute('aria-hidden')
+        el.removeAttribute('tabindex')
+      }
+    })
+  }
+
+  const syncStoryLabels = (map: MLMap) => {
+    if (!styleReady.current) return
+    for (const layer of map.getStyle().layers ?? []) {
+      // The current port is supplied by our journey marker. Keep broad country
+      // and ocean context without a competing atlas of states, towns and roads.
+      if (layer.type !== 'symbol' || !/^(place_(other|suburb|village|town|city|state)|highway_name)/.test(layer.id)) continue
+      if (cinematicRef.current) {
+        if (!storyLabelVisibility.current.has(layer.id)) {
+          storyLabelVisibility.current.set(layer.id, map.getLayoutProperty(layer.id, 'visibility'))
+        }
+        map.setLayoutProperty(layer.id, 'visibility', 'none')
+      } else if (storyLabelVisibility.current.has(layer.id)) {
+        map.setLayoutProperty(layer.id, 'visibility', storyLabelVisibility.current.get(layer.id))
+        storyLabelVisibility.current.delete(layer.id)
+      }
+    }
+  }
 
   /* Retain the provider's geographic data while giving the voyage a rich ocean chart. */
   const applyChartPalette = (map: MLMap) => {
@@ -217,7 +274,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
           el.innerHTML =
             `<span class="jm-pulse"></span><span class="jm-ring"></span><span class="jm-dot"></span>` +
             `<span class="jm-label"><strong>${escapeHtml(jm.label)}</strong>${jm.sublabel ? `<small>${escapeHtml(jm.sublabel)}</small>` : ''}</span>`
-          const marker = new Marker({ element: el, anchor: 'center' }).setLngLat(jm.lngLat).addTo(map)
+          const marker = new Marker({ element: el, anchor: 'center', opacityWhenCovered: 0 }).setLngLat(jm.lngLat).addTo(map)
           journeyMarkersRef.current.push(marker)
         }
       },
@@ -242,6 +299,41 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
           duration: prefersReducedMotion() ? 0 : (opts.duration ?? 2000),
           essential: true,
         })
+      },
+      frameVoyageLeg(points, opts = {}) {
+        const map = mapRef.current
+        if (!map || !points.length) return
+        const canvas = map.getContainer().getBoundingClientRect()
+        const stage = document.querySelector('.voyage-globe-stage')?.getBoundingClientRect()
+        const slot = stage && stage.width > 0 && stage.height > 0 ? stage : canvas
+        const center = voyageMidpoint(points)
+        const diameter = Math.min(slot.width, slot.height) * 0.92
+        const padding = {
+          top: Math.max(0, slot.top - canvas.top),
+          bottom: Math.max(0, canvas.bottom - slot.bottom),
+          left: Math.max(0, slot.left - canvas.left),
+          right: Math.max(0, canvas.right - slot.right),
+        }
+        map.stop()
+        if (opts.reflow) {
+          // Rotation changes the layout immediately. Retain geographic position,
+          // fit the sphere now, then continue the remaining passage below.
+          map.jumpTo({
+            padding,
+            zoom: globeOverviewZoom(diameter, canvas.height, map.getCenter().lat, map.getVerticalFieldOfView()),
+            bearing: -18,
+            pitch: 0,
+          })
+        }
+        const camera = {
+          center,
+          zoom: globeOverviewZoom(diameter, canvas.height, center[1], map.getVerticalFieldOfView()),
+          bearing: -18,
+          pitch: 0,
+          padding,
+        }
+        if (prefersReducedMotion()) map.jumpTo(camera)
+        else map.easeTo({ ...camera, duration: opts.duration ?? 2200, essential: true })
       },
       flyToUnit(unitId, opts = {}) {
         const map = mapRef.current
@@ -310,20 +402,23 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       container: containerRef.current,
       style: PRIMARY_STYLE,
       center: [-96, 36],
-      zoom: 2.4,
-      pitch: 35,
-      bearing: -8,
-      // A padded phone chart can need zoom < 0 to retain both Seattle and McMurdo.
+      zoom: 0.8,
+      pitch: 0,
+      bearing: -18,
+      // Whole-sphere polar framing can require negative zoom on a small phone.
       minZoom: -2,
       maxZoom: 16,
       maxPitch: 62,
-      // World copies let journey arcs to Guam cross the antimeridian; DOM markers smart-wrap so none duplicate.
-      renderWorldCopies: true,
+      // One physical sphere; native globe shaders retain the antimeridian-safe route.
+      renderWorldCopies: false,
       attributionControl: false,
     })
     mapRef.current = map
     map.addControl(new NavigationControl({ visualizePitch: true }), 'bottom-right')
-    map.addControl(new AttributionControl({ compact: true, customAttribution: 'Demo · unit data unverified' }), 'bottom-left')
+    map.addControl(new AttributionControl({ compact: true, customAttribution: [
+      'Demo · unit data unverified',
+      'Music: <a href="https://www.scottbuckley.com.au/library/vanguard/" target="_blank" rel="noopener noreferrer">Vanguard — Scott Buckley</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> (web mix/loop)',
+    ] }), 'bottom-left')
 
     /* style fallback: if the primary style never loads, swap to CARTO once */
     let styleLoaded = false
@@ -341,7 +436,18 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     map.on('style.load', () => {
       // fires again after a fallback swap: re-create the journey layers if an arc is on screen
       styleReady.current = true
+      storyLabelVisibility.current.clear()
+      map.setProjection({ type: 'vertical-perspective' })
+      setProjection(String(map.getProjection().type))
+      setWorldCopies(map.getRenderWorldCopies())
+      map.setSky({
+        'sky-color': '#020c18',
+        'horizon-color': '#62d6ed',
+        'sky-horizon-blend': 0.15,
+        'atmosphere-blend': 0.82,
+      })
       applyChartPalette(map)
+      syncStoryLabels(map)
       applyArc(map)
     })
     map.on('error', (e: ErrorEvent) => {
@@ -369,20 +475,31 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         ev.stopPropagation()
         onSelectRef.current(u.id)
       })
-      const marker = new Marker({ element: el, anchor: 'center' }).setLngLat([u.lng, u.lat]).addTo(map)
+      const marker = new Marker({ element: el, anchor: 'center', opacityWhenCovered: 0 }).setLngLat([u.lng, u.lat]).addTo(map)
       markersRef.current.set(u.id, { marker, el })
     }
+    const markerAccessObserver = new MutationObserver(syncMarkerAccess)
+    markersRef.current.forEach(({ el }) => markerAccessObserver.observe(el, { attributes: true, attributeFilter: ['class'] }))
+    const disposeAtmosphere = installGlobeAtmosphere(map, prefersReducedMotion())
 
     /* declutter: nudge markers that collide on screen apart (New Orleans cluster at national zoom) */
-    const declutter = () => declutterMarkers(map, Array.from(markersRef.current.values()).filter(({ el }) => !el.hidden).map(({ marker }) => marker))
+    const declutter = () => declutterMarkers(map, Array.from(markersRef.current.values())
+      .filter(({ el }) => !el.hidden && !el.classList.contains('maplibregl-marker-covered'))
+      .map(({ marker }) => marker))
     map.on('move', declutter)
+    map.on('move', syncMarkerAccess)
+    map.on('moveend', syncMarkerAccess)
     map.once('load', declutter)
 
     return () => {
       window.clearTimeout(timeout)
+      disposeAtmosphere()
+      markerAccessObserver.disconnect()
       if (driftTimer.current !== null) window.clearTimeout(driftTimer.current)
       driftTimer.current = null
       map.off('move', declutter)
+      map.off('move', syncMarkerAccess)
+      map.off('moveend', syncMarkerAccess)
       markersRef.current.forEach(({ marker }) => marker.remove())
       markersRef.current.clear()
       journeyMarkersRef.current.forEach((m) => m.remove())
@@ -410,21 +527,11 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
 
   /* ---------- marker emphasis: selection, orders highlight, cinematic isolation ---------- */
   useEffect(() => {
+    syncMarkerAccess()
+    const map = mapRef.current
+    if (map) syncStoryLabels(map)
     markersRef.current.forEach(({ el }, id) => {
       const offered = !!highlightIds && highlightIds.includes(id)
-      const hiddenForStory = !active || cinematic
-      // Keep the same marker instances for exploration. Hidden map controls must
-      // leave keyboard and accessibility navigation while the story owns the view.
-      el.hidden = hiddenForStory
-      el.style.display = hiddenForStory ? 'none' : ''
-      if (hiddenForStory) {
-        el.setAttribute('aria-hidden', 'true')
-        el.tabIndex = -1
-        if (document.activeElement === el) el.blur()
-      } else {
-        el.removeAttribute('aria-hidden')
-        el.removeAttribute('tabindex')
-      }
       el.classList.toggle('is-selected', id === selectedId)
       el.classList.toggle('is-offered', offered && id !== selectedId)
       el.classList.toggle(
@@ -477,7 +584,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   }, [jump])
 
   return (
-    <div className={`map-root ${cinematic ? 'is-cinematic' : ''}`} data-testid="map">
+    <div className={`map-root globe-map ${cinematic ? 'is-cinematic' : ''}`} data-testid="map" data-projection={projection} data-world-copies={worldCopies === undefined ? 'loading' : String(worldCopies)}>
       <div ref={containerRef} className="map-canvas" />
       <div className="map-vignette" />
       {basemap === 'loading' && <div className="map-status">Loading basemap…</div>}

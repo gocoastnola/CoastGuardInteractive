@@ -1,0 +1,12 @@
+Vanguard
+Music by Scott Buckley — https://www.scottbuckley.com.au/
+Official track: https://www.scottbuckley.com.au/library/vanguard/
+Licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Original download:
+https://www.scottbuckley.com.au/library/wp-content/uploads/2023/07/Vanguard.mp3
+
+Adaptation for this project: transcoded to 128 kbps MP3 for web streaming;
+adaptive volume, playback cued at 45 seconds and repeated excerpt playback.
+No endorsement by the composer is implied.
