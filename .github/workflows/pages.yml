@@ -1,23 +1,24 @@
-name: Deploy to GitHub Pages
+name: Validate and deploy GitHub Pages
 
 on:
   push:
     branches: [master, main]
   pull_request:
-    branches: [main]
+    branches: [main, codex/zip-first-foundation-20261117-063137Z]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# A pull request must never cancel a production run. Updated PR runs can replace
+# older runs for that same PR; main/master publication runs are not cancelled.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
+  validate:
+    name: Validate existing experience
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,26 +27,45 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Validate demo data
+        run: npm run validate:data
       - name: Run unit tests
         run: npm test
-      - name: Build for project subpath
-        run: |
-          npx tsc -b
-          npx vite build --base=/CoastGuardInteractive/
-          # App uses root-absolute asset URLs in source; rewrite them for the project subpath.
-          find dist -type f \( -name '*.js' -o -name '*.html' \) -print0 | xargs -0 sed -i \
-            -e 's#"/media/#"/CoastGuardInteractive/media/#g' \
-            -e "s#'/media/#'/CoastGuardInteractive/media/#g" \
-            -e 's#"/data/#"/CoastGuardInteractive/data/#g' \
-            -e "s#'/data/#'/CoastGuardInteractive/data/#g"
+      - name: Build for the production project subpath
+        run: npm run build -- --base=/CoastGuardInteractive/
+      - name: Install Chromium and its system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Verify the ZIP-first journey and responsive recovery paths
+        run: npm run test:e2e
+      - name: Verify production asset paths and browser startup
+        run: npm run test:e2e -- --grep @production
+        env:
+          E2E_PRODUCTION: '1'
+      - name: Retain browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-evidence
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
       - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'pull_request'
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         with:
           path: dist
 
   deploy:
-    needs: build
-    if: github.event_name != 'pull_request'
+    name: Deploy approved production branch
+    needs: validate
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages-production
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -1,56 +1,50 @@
-# CoastGuard Interactive — HANDOFF (generated 2026-10-19, refreshed 2026-10-27)
+# CoastGuard Interactive — current handoff (2026-11-17)
 
-Single-file briefing for anyone (human or AI assistant) picking this project up. Everything below also lives in the repo docs; this is the consolidated version.
+This is the current entry point. The active work is the bounded story-locked visual update described in [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md). The appendices below preserve older development reports; their URLs, counts, date-picker statements and hosting assumptions are historical, not current verification.
 
-## What it is
-A cinematic, interactive map website of U.S. Coast Guard units, built to pitch to Coast Guard recruiting. Owner: Head-Honcho. Built with OpenClaw/Claude on a Mac mini.
-- Geography: continental USA + Alaska + Puerto Rico + Guam only.
-- Priority: design and interaction. All Coast Guard facts are PLACEHOLDER (every record flagged `demo-unverified`) until the owner fact-checks them.
-- Independent educational demo; not affiliated with or endorsed by the USCG.
+## Project and fixed product decisions
 
-## Current state (done, tested, running)
-- Phase 1 foundation + 1.5 adventure + 1.6 Polar Star phase + 1.7 date-first landing are complete.
-- Flow (2026-10-20): landing **"Pick your basic training date"** (8 Tuesday ship-date cards ≥ 14 days out, demo schedule, native date fallback, Begin/Enter) → **Act 1 "Report to Cape May"**: camera flies national view → Training Center Cape May while a days counter ticks to the ship date, then a Week 1 → Week 8 bar fills under 5 text beats (graduation = ship date + 8 weeks) → "Orders are in" slot board (always USCGC Polar Star) → arc to Seattle → ship intro card → world patrol cinematic → station panel with "Your first unit" ribbon → free explore. Esc quietly advances any cinematic. The old ZIP landing/hometown arc is retained but unused (DECISIONS.md).
-- 17 demo units (6 Gulf Coast). Narration = browser text-to-speech stub. Images = procedural placeholders.
-- Tests: build clean · Vitest 55/55 · Playwright 6/6.
-- Repo (private): https://github.com/solairstreamline-cyber/CoastGuardInteractive
-- Local: ~/Documents/CoastGuardInteractive · `npm install && npm run dev` → http://127.0.0.1:5174 · production build shared via a Cloudflare quick tunnel.
-- **Live demo (refreshed 2026-10-27, tested 200 before sending):** https://retrieved-forecast-impression-enrollment.trycloudflare.com — unlisted, no login. Served from the owner's Mac mini by two launch agents (`ai.coastguard.demo.server`, `ai.coastguard.demo.tunnel`). Caveats: it is a Cloudflare quick tunnel, so the URL changes if the tunnel restarts, and it only works while the Mac mini is awake and online. A permanent URL needs either a public repo (GitHub Pages) or a free Cloudflare account with a named tunnel or Pages project.
+- Repository: https://github.com/gocoastnola/CoastGuardInteractive
+- Existing app: Vite + React 18 + TypeScript + MapLibre + GSAP + plain CSS. Do not rebuild or replace the map engine during stabilization.
+- Opening: **“Enter your ZIP code and start your journey.”** ZIP entry is final.
+- Flow: ZIP → hometown travel and approximate miles → Cape May training weeks 1–8 → graduation → illustrative Polar Star assignment → Seattle travel → exterior ship introduction → full patrol → Polar Star unit panel and free exploration.
+- Patrol order: Seattle → Honolulu → Hobart → Wellington → **McMurdo Station → Punta Arenas (Patagonia)** → Cape Horn → Rio → Panama Canal → Seattle. Preserve the cumulative route and wide geographic context.
+- Keep exterior/moored/icebreaking ship photographs and Antarctic station/environment/research context. Authentic training and graduation photography are intentional.
+- Independent educational demonstration; no affiliation or endorsement. Unit facts and itinerary remain demo-unverified and assignments illustrative.
 
-## Working on it with two assistants
-One source of truth: the GitHub repo. Neither assistant edits the other's live copy.
-- **OpenAI (ChatGPT / Codex):** connect GitHub once (Settings → Connectors → GitHub → only this repo). Codex works on a cloud copy and opens pull requests. Review and merge those PRs.
-- **OpenClaw (Chief Sinbad):** works on the Mac mini checkout, runs the build, hosts the live demo, and pushes commits.
-- **Coordination rule:** pull before you start, work on a branch for anything large, and do not work on the same file in both places at the same time. Merge conflicts happen only when both edit the same lines.
-- Anyone sharing the demo link should re-check it first; links from quick tunnels can go stale.
+## Recovery and current work
 
-## Stack and why
-Vite 6 · React 18 · TypeScript · MapLibre GL 6 (keyless OpenFreeMap dark tiles, CARTO fallback — chosen over Mapbox: no key, no billing, no lock-in) · GSAP 3.15 (free for commercial use) · zod · @fontsource/inter · Vitest · Playwright. Node 22. Zero paid services, zero API keys, nothing public except the temporary share tunnel.
+See [docs/RECOVERY.md](docs/RECOVERY.md). Original recovery tag and freshly fetched main both identify `013fff722014729f4e044b0ce4060dbdfc3bbd57`; the development branch starts from that verified baseline. The separate hosted benchmark repository is not modified by this repair task.
 
-## Where things live
-- `src/data/units.json` — THE data file; append a record to add a unit (schema in `src/data/schema.ts`; `npm run validate:data`).
-- `src/journey/copy.ts` — every line of journey narration text. Edit words here.
-- `src/journey/` — state machine (`dateEntry→act1→orders→act2→shipIntro→patrol→explore`), `dates.ts` ship-date helpers, arc/haversine math, ZIP loader (unused), orders picker, Cape May constant (approx coords, demo-unverified).
-- `src/components/Adventure/DateEntry.tsx` (landing), `TrainingAct.tsx` + `DaysCounter.tsx` (Act 1). `ZipEntry.tsx`/`MilesCounter.tsx` remain for Act 2 / future hometown step.
-- `src/components/Adventure/` — ZipEntry, JourneyOverlay, MilesCounter, OrdersDeck.
-- `src/components/` — MapView (markers, flyTo, arc layer), StationPanel, Narration, Directory, Hud.
-- `public/data/zips.json` — ZIP centroids (U.S. Census 2020 ZCTA Gazetteer, public domain), built by `npm run build:zips`.
-- Docs: README, PROJECT_BRIEF, AGENTS (dev rules), PLANS (phases), PROGRESS, DECISIONS, SOURCES, ASSET_LICENSES, SECURITY, .env.example.
+The technical-repair foundation is commit `b37975c2a604d59f0f375c358c796794a4d81458`. The owner subsequently approved **scoped visual/sound changes with the story locked**, on the separate branch `codex/long-watch-visual-20261117`, stacked above that repair commit. Preserve the original four-photo ZIP opening/form, avoid early assignment/destination spoilers, retain every scene/arrival and the existing map engine/score.
 
-## Known gaps
-- New Orleans markers overlap at national zoom (clustering/declutter = Phase 2 #1).
-- Journey headline text can sit over map labels in busy regions (needs a scrim).
-- Orders are illustrative (hash of ZIP), not real assignments; could be biased toward the recruit's region.
-- Cape May coordinates and "eight weeks" need owner confirmation.
+Current presentation work includes an ocean/teal/ice chart, amber cumulative route, larger approved training/exterior photography, a dispatch-style assignment reel and responsive port staging. It does not authorize new journey branches, altered destinations or new outcomes. Read [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md) before further changes. Its visual-branch ledger records 65 unit tests, 18 data records, the production-subpath build, 13 development browser cases and 5 later production-preview cases as **PASS**. The browser runs cover 14 distinct cases in total, not one full 14-case run. Those browser runs preceded a later real mobile chart-fit failure found in full live captures. The scoped camera repair now pre-commits absolute patrol insets, allows zoom −2 and clears padding on exit. Build/unit checks pass after the scoped camera correction. The final mobile patrol capture then confirms first-port fitting, route-aligned unwrapped markers, McMurdo clearance, all nine arrivals and exploration. Final desktop camera capture/result remains pending; do not describe earlier 13+5 browser runs as one full final-candidate suite. The final 2-case production regression rerun passes after the camera/marker repair. Actual selected screenshots belong in [docs/evidence/visual/README.md](docs/evidence/visual/README.md). Live captures recorded no HTTP/JavaScript errors but did include tile cancellations, an upstream sprite warning and software-GPU warnings, so do not claim a clean console. WebKit is **BLOCKED** by missing native libraries, and actual listening/physical-device checks are **NOT RUN**. [docs/VERIFICATION.md](docs/VERIFICATION.md) is the earlier repair report, not certification of this visual branch.
 
-## Next phases (from PLANS.md)
-2 Cinematic polish (declutter, intro camera sweep, panel micro-animations, ambient sound behind the audio switch) → 3 Real narration audio (pre-rendered, server-side keys only) → 4 Verified content + licensed imagery (DVIDS API planned: public-domain USCG photos with credits) → 5 Content admin → 6 QA/accessibility → 7 Hosting (Cloudflare Pages, unlisted) and release checklist.
+Do not merge, deploy or move recovery tags. The hosted backup remains unchanged. Keep current pointers in [PROGRESS.md](PROGRESS.md); none of the historical appendix results certify current work. Actual listening and physical-device checks are not implied by browser assertions or screenshots.
 
-## Rules for whoever continues
-- Keep the DEMO labelling until the owner verifies a record; never invent history.
-- No secrets in client code; never commit .env.
-- Don't bind port 4173 (another app on the owner's Mac mini).
-- Update the matching doc in the same commit as any behaviour change; keep `npm run build`, `npm test`, `npm run test:e2e` green.
+## Local workflow
+
+Use Node.js 22 and the existing `package-lock.json`: `npm ci`, `npm run build`, `npm test`, `npm run validate:data`, `npm run test:e2e`. Dev uses `127.0.0.1:5174`; production preview uses `5175`. Never use or stop port 4173. Do not touch the owner’s Mac or other projects.
+
+No money, accounts, keys or paid services. Nothing secret in client source. `VITE_*` values must be public. GitHub Pages project-subpath assets need production verification, not just a development-server pass.
+
+## Source guide
+
+- `src/App.tsx`: flow and transitions. The historical `dateEntry` identifier renders `Adventure/ZipEntry.tsx`.
+- `src/journey/machine.ts`: reducer, including separate `travel` before `act1`.
+- `JourneyOverlay.tsx`: hometown and Seattle travel; `TrainingAct.tsx` / `DaysCounter.tsx`: training and graduation.
+- `SlotMachine.tsx`, `ShipIntro.tsx`, `PatrolOverlay.tsx`: assignment, ship, full patrol.
+- `src/journey/patrol.ts`: ordered stops and antimeridian-safe route math.
+- `src/lib/audio.ts`: synthesized adaptive score, ambient bed and SFX. Journey audio starts after a gesture; current audio behavior has no journey mute. Narration’s separate UI gate is not a global mute.
+- `src/data/units.json`: unit data; only owner can mark records verified.
+- `public/data/zips.json`: live lazy-loaded Census ZIP centroid table.
+- `public/media/` and `ASSET_LICENSES.md`: bundled media and source records. Current training/ports also use remote Commons/DVIDS images; network failures must be distinguished from code defects.
+
+## Coordination and limits
+
+Fetch before work; use an isolated branch/worktree and do not overwrite another assistant’s changes. Keep browser fixtures separate from live external-media checks. Mobile viewports and desktop WebKit are emulation, not real iPhone Safari. Do not claim actual listening without listening. Required-check enforcement is an owner-controlled branch rule; CI alone does not block merging.
+
+## Historical appendices (not current instructions)
 
 ---
 # Appendix A — PROGRESS.md

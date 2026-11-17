@@ -1,3 +1,4 @@
+import { SafeImage } from '../SafeImage'
 /**
  * Landing-page mission collage — four FULL-BLEED action photo panels behind the
  * hero (helicopter ops, a live rescue, a vessel fire response, Antarctic
@@ -31,7 +32,7 @@ const TILES = [
     img: '/media/mission-ice.jpg',
     label: 'Go farther',
     sub: 'Polar Operations',
-    alt: 'USCGC Polar Star carving a channel through Antarctic ice',
+    alt: 'Coast Guard icebreaking operations',
   },
 ] as const
 
@@ -40,7 +41,7 @@ export function MissionMosaic() {
     <div className="mission-mosaic" aria-hidden="false">
       {TILES.map((t, i) => (
         <figure className={`mosaic-tile mosaic-tile--${i}`} key={t.sub}>
-          <img src={t.img} alt={t.alt} loading="eager" />
+          <SafeImage src={t.img} alt={t.alt} loading="eager" />
           <figcaption className="mosaic-label">
             <span className="mosaic-verb">{t.label}</span>
             <span className="mosaic-sub">{t.sub}</span>

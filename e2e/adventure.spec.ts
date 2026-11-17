@@ -1,189 +1,195 @@
 import { test, expect } from '@playwright/test'
+import { beginZip, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, imageLoaded, noAssignmentSpoilers, noHorizontalOverflow, noOverlap, observeJourney, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
 
-const SHOTS = 'docs/screenshots'
 const POLAR_STAR = 'USCGC Polar Star (WAGB-10)'
+// Explicit intended itinerary: deleting or reordering a destination must fail.
+const PORTS = ['honolulu', 'hobart', 'wellington', 'mcmurdo', 'punta-arenas', 'cape-horn', 'rio', 'panama', 'home-seattle']
+test.beforeEach(async ({ page }) => deterministicMedia(page))
 
-test.describe('Start Your Adventure — Polar Star phase', () => {
-  test('pick a ship date → Act 1 countdown → slot board lands on Polar Star → ship intro → patrol → explore panel', async ({ page }) => {
-    await page.goto('/')
-
-    // Landing: mission mosaic + 8 ship-date cards (next Tuesdays ≥ 14 days out), first card autofocused
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Pick your')
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('basic training date')
-    await expect(page.getByText('Independent educational demonstration')).toBeVisible()
-    await expect(page.getByTestId('date-schedule-label')).toContainText('Demo schedule')
-    await expect(page.locator('.mosaic-tile')).toHaveCount(4)
-    const cards = page.getByTestId('date-card')
-    await expect(cards).toHaveCount(8)
-    await expect(cards.first()).toBeFocused()
-    await expect(cards.first()).toHaveAttribute('aria-checked', 'true')
-    const isos = await cards.evaluateAll((els) => els.map((el) => el.getAttribute('data-iso')))
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    for (const iso of isos) {
-      const [y, m, d] = iso!.split('-').map(Number)
-      const date = new Date(y, m - 1, d)
-      expect(date.getDay()).toBe(2) // Tuesday
-      expect((date.getTime() - today.getTime()) / 86_400_000).toBeGreaterThanOrEqual(14)
-    }
-    // Native fallback is reachable
-    await page.getByTestId('date-other').click()
-    await expect(page.getByTestId('date-input')).toBeVisible()
-    await page.waitForTimeout(1200) // entrance stagger
-    await page.screenshot({ path: `${SHOTS}/07-start-adventure.png` })
-
-    // Pick the first card → Begin
-    await cards.first().click()
-    await page.getByTestId('date-begin').click()
-    const act1 = page.getByTestId('journey-act1')
-    await expect(act1).toBeVisible()
-    await expect(page.getByTestId('landing')).toBeHidden()
-    await expect(page.getByTestId('journey-marker-bootcamp')).toBeAttached()
-
-    // Days counter: "Ships in N days · Tue, Mon D", then the Week 1 → Week 8 bar
-    const counter = page.getByTestId('days-counter')
-    await expect(counter).toContainText('Ships in')
-    await expect(page.getByTestId('ship-date')).toContainText('Tue,')
-    await expect(act1).toContainText('Cape May')
-    await page.waitForTimeout(4600) // countdown landed, training under way
-    await expect(counter).toContainText('Week')
-    await expect(counter).toContainText('Cape May')
-    await page.screenshot({ path: `${SHOTS}/08-training-countdown.png` })
-
-    // Skip → assignment slot board
-    await page.keyboard.press('Escape')
-    const slot = page.getByTestId('slot')
-    await expect(slot).toBeVisible()
-    await expect(slot).toContainText('Orders are in')
+for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  test(`complete ZIP-first journey at normal timing — ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
+    // Original measured baseline ~118 s; approved training/graduate holds add6.6 s.
+    test.setTimeout(160_000)
+    await page.setViewportSize(viewport)
+    const errors: string[] = []
+    page.on('pageerror', error => errors.push(error.message))
+    await openLanding(page)
+    await fourCornerPhotographs(page)
+    await observeJourney(page)
+    await controlInViewport(page, page.getByTestId('zip-begin'))
+    await noHorizontalOverflow(page)
+    await beginZip(page)
+    await noAssignmentSpoilers(page)
+    await opaque(page.locator('.journey-counter'))
+    await expect(page.getByTestId('miles-counter')).toContainText('Cape May')
+    await expect(page.getByTestId('miles-note')).toContainText(/approximate.*straight.line/i)
+    await expect.poll(async () => Number((await page.getByTestId('miles-value').innerText()).replaceAll(',', ''))).toBeGreaterThan(0)
+    await screenshot(page, testInfo, 'hometown-to-cape-may')
+    await phase(page, 'act1')
+    await noAssignmentSpoilers(page)
+    await expect(page.getByTestId('journey-marker-home')).toHaveCount(0)
+    await expect(page.getByTestId('journey-marker-bootcamp')).toHaveCount(1)
+    await expect(page.locator('.training-photo')).toHaveCount(6)
+    await expect(page.getByTestId('week-value')).toContainText('Week', { timeout: 10_000 })
+    await imageLoaded(page.locator('.training-photo.is-active img'))
+    await screenshot(page, testInfo, 'training')
+    await expect(page.getByTestId('week-value')).toHaveText('Graduated', { timeout: 12_000 })
+    await expect(page.getByTestId('weeks-bar')).toHaveAttribute('aria-valuenow', '100')
+    await screenshot(page, testInfo, 'graduation')
+    expect(await page.evaluate(() => window.__journeyObserved.weeks)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
+    await phase(page, 'orders')
+    await noAssignmentSpoilers(page, true)
+    await expect(page.getByTestId('slot')).toContainText(/illustrative|demo/i)
     await page.getByTestId('slot-spin').click()
-    // The reel always lands on Polar Star (owner decision)
-    const landed = page.getByTestId('slot-landed')
-    await expect(landed).toBeVisible({ timeout: 8000 })
-    await expect(landed).toContainText(POLAR_STAR)
-    await expect(landed).toContainText('Seattle, WA')
-    await page.screenshot({ path: `${SHOTS}/09-orders.png` })
-
-    // Report aboard → Act 2 arc to Seattle
+    await opaque(page.getByTestId('slot-landed'))
+    await expect(page.getByTestId('slot-landed')).toContainText(POLAR_STAR)
+    await expect(page.getByTestId('slot-landed')).toContainText('Seattle, WA')
+    await expect(page.getByTestId('slot-final')).toContainText(POLAR_STAR)
+    const reelWindow = (await page.locator('.slot-window').boundingBox())!
+    const finalRow = (await page.getByTestId('slot-final').boundingBox())!
+    // A translated, clipped row is considered "visible" by Playwright; verify geometry.
+    expect(finalRow.y).toBeGreaterThanOrEqual(reelWindow.y - 1)
+    expect(finalRow.y + finalRow.height).toBeLessThanOrEqual(reelWindow.y + reelWindow.height + 1)
+    await controlInViewport(page, page.getByTestId('slot-report'))
     await page.getByTestId('slot-report').click()
-    await expect(page.getByTestId('journey-act2')).toBeVisible()
+    await phase(page, 'act2')
     await expect(page.getByTestId('miles-counter')).toContainText(POLAR_STAR)
-    await page.keyboard.press('Escape')
-
-    // Ship intro card
-    const ship = page.getByTestId('ship-intro')
-    await expect(ship).toBeVisible()
-    await expect(ship).toContainText('USCGC Polar Star')
-    await expect(ship).toContainText('Heavy Polar Icebreaker')
-    await page.waitForTimeout(1700) // entrance reveal settles
-    await page.screenshot({ path: `${SHOTS}/11-ship-intro.png` })
-
-    // Set sail → patrol cinematic; Esc ends it quietly
+    await phase(page, 'shipIntro')
+    await expect(page.getByTestId('ship-intro')).toContainText('Heavy Polar Icebreaker')
+    await imageLoaded(page.locator('.ship-hero img'))
+    await opaque(page.locator('.ship-hero img'))
+    await expect(page.locator('.ship-hero img')).toHaveAttribute('src', /media\/polar-star-hero\.jpg$/)
+    await expect(page.locator('.ship-gallery img').first()).toHaveAttribute('src', /media\/mission-ice\.jpg$/)
+    await expect(page.locator('.ship-intro img[src*="polar-star-crew"]')).toHaveCount(0)
+    await controlInViewport(page, page.getByTestId('ship-begin'))
+    await opaque(page.getByTestId('ship-begin'))
+    await screenshot(page, testInfo, 'polar-star-exterior')
     await page.getByTestId('ship-begin').click()
-    const patrol = page.getByTestId('patrol')
-    await expect(patrol).toBeVisible()
-    await expect(patrol).toContainText('First patrol')
-    await page.waitForTimeout(6500) // first leg underway
-    await page.screenshot({ path: `${SHOTS}/12-patrol.png` })
-    await page.keyboard.press('Escape')
-
-    // Explore: station panel for Polar Star with the first-unit ribbon
-    const panel = page.getByTestId('station-panel')
-    await expect(panel).toBeVisible()
+    await phase(page, 'patrol')
+    await expect(page.getByTestId('map')).toHaveClass(/is-cinematic/)
+    await explorationMarkers(page, true)
+    await opaque(page.locator('.patrol-counter'))
+    await expect(page.locator('.patrol-counter')).toBeInViewport()
+    await expect(page.getByTestId('miles-note')).toContainText(/approximate|illustrative/i)
+    for (const id of PORTS) {
+      const card = page.getByTestId(`port-${id}`)
+      await opaque(card, 20_000)
+      if (viewport.width === 390 && ['honolulu', 'hobart', 'mcmurdo'].includes(id)) await patrolGeography(page, id)
+      await expect(card.locator('.port-name')).not.toBeEmpty()
+      await expect.poll(() => card.locator('.port-body').evaluate(body => body.scrollHeight <= body.clientHeight + 1), { message: `${id}: portrait/desktop port caption must fit without hidden overflow` }).toBe(true)
+      const cardBox = (await card.boundingBox())!
+      const mileageBox = (await page.locator('.patrol-counter').boundingBox())!
+      noOverlap(cardBox, mileageBox, `${id}: port card must not obscure cumulative mileage`)
+      await noHorizontalOverflow(page)
+      if (id === 'mcmurdo') {
+        await expect(card).toContainText(/research|science/i)
+        await expect(card.locator('.antarctic-slide')).toHaveCount(4)
+        await screenshot(page, testInfo, 'mcmurdo-before-patagonia')
+      }
+      if (id === 'home-seattle') await screenshot(page, testInfo, 'homecoming')
+    }
+    await phase(page, 'explore')
+    await explorationMarkers(page, false)
     await expect(page.getByTestId('panel-title')).toHaveText(POLAR_STAR)
     await expect(page.getByTestId('panel-ribbon')).toContainText('Your first unit')
-    await expect(page.getByTestId('directory-toggle')).toBeVisible()
-    await page.waitForTimeout(3000) // flyTo settle
-    await page.screenshot({ path: `${SHOTS}/10-first-unit.png` })
-
-    // Back to map → national view, HUD present; Restart → landing
-    await page.getByTestId('back-to-map').click()
-    await expect(panel).toBeHidden()
-    await expect(page.getByTestId('jump-gulf')).toBeVisible()
-    await page.getByTestId('restart-adventure').click()
-    await expect(page.getByTestId('landing')).toBeVisible()
-    await expect(page.getByTestId('date-card').first()).toBeFocused()
+    await expect(page.locator('[data-testid^="journey-marker-"]')).toHaveCount(0)
+    expect(await page.evaluate(() => window.__journeyObserved.phases)).toEqual(['dateEntry', 'travel', 'act1', 'orders', 'act2', 'shipIntro', 'patrol', 'explore'])
+    expect(await page.evaluate(() => window.__audioContexts.length)).toBe(1)
+    expect(await page.evaluate(() => window.__audioContexts[0].state)).toBe('running')
+    expect(errors).toEqual([])
   })
+}
 
-  test('Enter on a focused date card begins; the board always lands on Polar Star, for any date', async ({ page }) => {
-    for (const cardIndex of [0, 3]) {
-      await page.goto('/')
-      const cards = page.getByTestId('date-card')
-      await expect(cards.first()).toBeFocused()
-      if (cardIndex > 0) await cards.nth(cardIndex).click()
-      await page.keyboard.press('Enter')
-      await expect(page.getByTestId('journey-act1')).toBeVisible()
-      await expect(page.getByTestId('days-counter')).toContainText('Ships in')
-      await expect(page.getByTestId('journey-act1')).toBeVisible()
-      await page.keyboard.press('Escape')
-      await page.getByTestId('slot-spin').click()
-      const landed = page.getByTestId('slot-landed')
-      await expect(landed).toBeVisible({ timeout: 8000 })
-      await expect(landed).toContainText(POLAR_STAR)
-    }
+test('ZIP errors remain recoverable: missing, invalid, unsupported, failed lookup and retry', async ({ page }) => {
+  await openLanding(page)
+  await page.getByTestId('zip-begin').click()
+  await expect(page.getByTestId('zip-error')).toContainText('5-digit')
+  await expect(page.getByTestId('zip-input')).toBeFocused()
+  await page.getByTestId('zip-input').fill('12abc')
+  await expect(page.getByTestId('zip-input')).toHaveValue('12')
+  await page.getByTestId('zip-begin').click()
+  await expect(page.getByTestId('zip-error')).toContainText('5-digit')
+  await page.getByTestId('zip-input').fill('00000')
+  await page.getByTestId('zip-begin').click()
+  await expect(page.getByTestId('zip-error')).toContainText('don’t know that ZIP')
+  await expect(page.getByTestId('zip-begin')).toBeEnabled()
+  // A new document clears the cached ZIP table; fail only its first request.
+  await page.reload()
+  let zipRequests = 0
+  await page.route('**/data/zips.json', async route => {
+    zipRequests++
+    if (zipRequests === 1) await route.fulfill({ status: 503, body: 'Intentional ZIP-lookup outage fixture' })
+    else await route.continue()
   })
+  await page.getByTestId('zip-input').fill('70130')
+  await page.getByTestId('zip-begin').click()
+  await expect(page.getByTestId('zip-error')).toContainText('Could not load the ZIP table')
+  await expect(page.getByTestId('zip-begin')).toBeEnabled()
+  await page.getByTestId('zip-begin').click()
+  await phase(page, 'travel')
+  expect(zipRequests).toBe(2)
+})
 
-  test('reduced motion: static beats, instant slot, port list + Continue', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' })
-    await page.goto('/')
-    await page.getByTestId('date-card').nth(1).click()
-    await page.getByTestId('date-begin').click()
-    const act1 = page.getByTestId('journey-act1')
-    await expect(act1).toBeVisible()
-    await expect(page.getByTestId('journey-beat')).toHaveCount(5)
-    await expect(page.getByTestId('journey-beat').first()).toBeVisible()
-    await expect(page.getByTestId('journey-beat').nth(4)).toContainText('Graduation:')
-    await expect(page.getByTestId('days-value')).toContainText('Ships in')
-    await page.getByTestId('journey-continue').click()
+test('reduced motion preserves training, graduation and all patrol stops @production', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await openLanding(page)
+  await beginZip(page)
+  await expect(page.getByTestId('miles-counter')).toContainText('Cape May')
+  // Census fixture 70130 [29.94,-90.07] → demo Cape May [38.9325,-74.915],
+  // independently calculated spherical straight-line distance, rounded statute miles.
+  await expect(page.getByTestId('miles-value')).toHaveText('1,061')
+  await page.getByTestId('journey-continue').click()
+  await phase(page, 'act1')
+  await expect(page.getByTestId('training-static')).toBeVisible()
+  await expect(page.getByTestId('training-week')).toHaveCount(8)
+  await expect(page.getByTestId('training-week').first()).toContainText('Week 1')
+  await expect(page.getByTestId('training-week').last()).toContainText('Week 8')
+  await expect(page.getByTestId('training-graduation')).toContainText(/graduat/i)
+  await expect(page.locator('.training-photo')).toHaveCount(6)
+  await imageLoaded(page.locator('.training-photo img').first())
+  await screenshot(page, testInfo, 'reduced-motion-training')
+  await page.getByTestId('journey-continue').click()
+  await phase(page, 'orders')
+  await noAssignmentSpoilers(page, true)
+  await page.getByTestId('slot-spin').click()
+  await expect(page.getByTestId('slot-landed')).toContainText(POLAR_STAR)
+  await page.getByTestId('slot-report').click()
+  await phase(page, 'act2')
+  await page.getByTestId('journey-continue').click()
+  await phase(page, 'shipIntro')
+  await page.getByTestId('ship-begin').click()
+  await phase(page, 'patrol')
+  await explorationMarkers(page, true)
+  await opaque(page.locator('.patrol-counter'))
+  const stops = page.locator('.patrol-static-list li')
+  await expect(stops).toHaveCount(9)
+  const texts = await stops.allTextContents()
+  expect(texts.findIndex(text => text.includes('McMurdo'))).toBeLessThan(texts.findIndex(text => text.includes('Patagonia')))
+  await expect(stops.first()).toContainText('Honolulu')
+  await expect(stops.last()).toContainText('Seattle')
+  await expect(stops.filter({ hasText: 'McMurdo' })).toContainText(/research|science/i)
+  await page.getByTestId('journey-continue').click()
+  await phase(page, 'explore')
+  await explorationMarkers(page, false)
+  await expect(page.getByTestId('panel-ribbon')).toBeVisible()
+})
 
-    // Slot lands instantly under reduced motion
-    const landed = page.getByTestId('slot-landed')
-    await expect(landed).toBeVisible()
-    await expect(landed).toContainText(POLAR_STAR)
-    await page.getByTestId('slot-report').click()
-    await page.getByTestId('journey-continue').click()
-
-    // Ship intro → patrol static list + Continue
-    await page.getByTestId('ship-begin').click()
-    const patrol = page.getByTestId('patrol')
-    await expect(patrol).toBeVisible()
-    await expect(patrol.locator('.patrol-static-list li')).toHaveCount(8)
-    await page.getByTestId('journey-continue').click()
-    await expect(page.getByTestId('panel-ribbon')).toBeVisible()
-  })
-
-  test('mobile: date cards, slot board, and port flow fit a phone width', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/')
-    const begin = page.getByTestId('date-begin')
-    await begin.scrollIntoViewIfNeeded()
-    const box = await begin.boundingBox()
-    expect(box).not.toBeNull()
-    expect(box!.x + box!.width).toBeLessThanOrEqual(390)
-    const last = page.getByTestId('date-card').last()
-    const lb = await last.boundingBox()
-    expect(lb!.x + lb!.width).toBeLessThanOrEqual(390)
-    await page.getByTestId('date-card').nth(2).click()
-    await begin.click()
-    await expect(page.getByTestId('journey-act1')).toBeVisible()
+test('Escape, restart and repeated visits preserve a single map and audio context', async ({ page }) => {
+  await openLanding(page)
+  for (let visit = 0; visit < 2; visit++) {
+    await reachShipBySkip(page)
     await page.keyboard.press('Escape')
-
-    // Slot board fits
-    const frame = page.locator('.slot-frame')
-    await expect(frame).toBeVisible()
-    const fb = await frame.boundingBox()
-    expect(fb!.x).toBeGreaterThanOrEqual(0)
-    expect(fb!.x + fb!.width).toBeLessThanOrEqual(390)
-    await page.getByTestId('slot-spin').click()
-    await expect(page.getByTestId('slot-landed')).toBeVisible({ timeout: 8000 })
-    await page.getByTestId('slot-report').click()
-    await page.keyboard.press('Escape') // skip act 2
-    await expect(page.getByTestId('ship-intro')).toBeVisible()
-    await page.getByTestId('ship-begin').click()
-    await expect(page.getByTestId('patrol')).toBeVisible()
-    await page.keyboard.press('Escape') // end patrol
+    await phase(page, 'patrol')
+    await page.keyboard.press('Escape')
+    await phase(page, 'explore')
     await expect(page.getByTestId('panel-ribbon')).toBeVisible()
-    // HUD chips must not clip off the right edge on narrow widths
-    const dir = await page.getByTestId('directory-toggle').boundingBox()
-    expect(dir!.x + dir!.width).toBeLessThanOrEqual(390)
-  })
+    await expect(page.locator('.maplibregl-canvas')).toHaveCount(1)
+    await expect(page.locator('[data-testid^="journey-marker-"]')).toHaveCount(0)
+    await page.getByTestId('back-to-map').click()
+    await expect(page.getByTestId('station-panel')).toBeHidden()
+    await page.getByTestId('restart-adventure').click()
+    await phase(page, 'dateEntry')
+    await expect(page.getByTestId('zip-input')).toBeFocused()
+  }
+  expect(await page.evaluate(() => window.__audioContexts.length)).toBe(1)
 })

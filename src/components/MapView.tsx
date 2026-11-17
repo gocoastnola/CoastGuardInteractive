@@ -11,6 +11,7 @@ import {
   type PaddingOptions,
 } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import '../styles/long-watch-map.css'
 // MapLibre ≥5 loads its worker as a separate module relative to import.meta.url, which breaks under
 // Vite's dep pre-bundling. Let Vite bundle/serve the worker and hand MapLibre the resulting URL.
 import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
@@ -22,7 +23,7 @@ import { prefersReducedMotion } from '../lib/motion'
 import { arcPrefix, boundsOf, type LngLat } from '../journey/arc'
 
 /** Keyless vector styles. Primary = OpenFreeMap; fallback = CARTO Dark Matter (both attribution-required). */
-export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/bright'
+export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/dark'
 export const FALLBACK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
 
 export interface JumpRequest {
@@ -41,6 +42,8 @@ export interface JourneyMarker {
 
 export interface FitOptions {
   padding?: number | PaddingOptions
+  /** Keep viewport insets during fitting so Mercator constrains the free chart area. */
+  absolutePadding?: boolean
   pitch?: number
   bearing?: number
   duration?: number
@@ -68,9 +71,9 @@ interface Props {
   selectedId: string | null
   /** False while the landing hero is up; flips true to trigger the national intro move. */
   active: boolean
-  /** True while an adventure act owns the camera: intro/national framing is suppressed, unit markers muted. */
+  /** True while an adventure act owns the camera; unrelated exploration markers are hidden. */
   cinematic?: boolean
-  /** When set, only these unit markers are lit (orders deck); all others dim. */
+  /** Orders-board markers to emphasize; unrelated markers remain hidden during the story. */
   highlightIds?: string[] | null
   /** Whether the station panel currently occupies screen space (affects camera padding). */
   panelOpen: boolean
@@ -111,6 +114,32 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         : { top: 80, bottom: 80, left: 60, right: 440 + 40 }
       : NATIONAL_VIEW.padding
 
+  /* Retain the provider's geographic data while giving the voyage a rich ocean chart. */
+  const applyChartPalette = (map: MLMap) => {
+    const layers = map.getStyle().layers ?? []
+    for (const layer of layers) {
+      if (layer.type === 'background') map.setPaintProperty(layer.id, 'background-color', '#204e60')
+      if (layer.type === 'fill') {
+        const sourceLayer = layer['source-layer']
+        if (sourceLayer === 'water') map.setPaintProperty(layer.id, 'fill-color', '#06385b')
+        else if (/ice_shelf|glacier/.test(layer.id)) map.setPaintProperty(layer.id, 'fill-color', '#9ac4d3')
+        else if (/wood|park/.test(layer.id)) map.setPaintProperty(layer.id, 'fill-color', '#1d514f')
+        else if (/residential|building/.test(layer.id)) map.setPaintProperty(layer.id, 'fill-color', '#234754')
+      }
+      if (layer.type === 'line') {
+        if (layer['source-layer'] === 'waterway') map.setPaintProperty(layer.id, 'line-color', '#2b7fa0')
+        else if (layer['source-layer'] === 'boundary') map.setPaintProperty(layer.id, 'line-color', '#6596a6')
+      }
+      if (layer.type === 'symbol' && layer.layout?.['text-field']) {
+        map.setPaintProperty(layer.id, 'text-color', layer['source-layer'] === 'water_name' ? '#72b6cf' : '#b7d1da')
+        map.setPaintProperty(layer.id, 'text-halo-color', '#103347')
+        map.setPaintProperty(layer.id, 'text-halo-width', 1.2)
+      }
+    }
+    // Do not outline tiled water polygons: their clipped edges include tile and
+    // antimeridian seams, which would draw false meridians through the ocean.
+  }
+
   /* ---------- journey arc layers (idempotent; re-run after a style swap) ---------- */
   const ensureArcLayers = (map: MLMap) => {
     if (!styleReady.current || map.getSource(ARC_SRC)) return
@@ -121,26 +150,26 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       type: 'line',
       source: ARC_SRC,
       layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#0077f6', 'line-width': 20, 'line-opacity': 0.52, 'line-blur': 12 },
+      paint: { 'line-color': '#28c4e0', 'line-width': 9, 'line-opacity': 0.35, 'line-blur': 4 },
     })
     map.addLayer({
       id: 'journey-arc-line',
       type: 'line',
       source: ARC_SRC,
       layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#ffcb3d', 'line-width': 4.2, 'line-opacity': 1 },
+      paint: { 'line-color': '#f4bd56', 'line-width': 3, 'line-opacity': 1 },
     })
     map.addLayer({
       id: 'journey-head-halo',
       type: 'circle',
       source: HEAD_SRC,
-      paint: { 'circle-radius': 18, 'circle-color': '#ffb900', 'circle-opacity': 0.55, 'circle-blur': 1 },
+      paint: { 'circle-radius': 12, 'circle-color': '#44d9ec', 'circle-opacity': 0.35, 'circle-blur': 0.85 },
     })
     map.addLayer({
       id: 'journey-head-dot',
       type: 'circle',
       source: HEAD_SRC,
-      paint: { 'circle-radius': 5, 'circle-color': '#ffffff', 'circle-stroke-color': '#0077f6', 'circle-stroke-width': 2 },
+      paint: { 'circle-radius': 4, 'circle-color': '#fff0cd', 'circle-stroke-color': '#f4bd56', 'circle-stroke-width': 1.3 },
     })
   }
 
@@ -181,9 +210,9 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         journeyMarkersRef.current = []
         const map = mapRef.current
         if (!map) return
-        for (const jm of markers) {
+        for (const [index, jm] of markers.entries()) {
           const el = document.createElement('div')
-          el.className = `journey-marker journey-marker--${jm.kind}`
+          el.className = `journey-marker journey-marker--${jm.kind}${index === markers.length - 1 ? ' is-current' : ''}`
           el.dataset.testid = `journey-marker-${jm.kind}`
           el.innerHTML =
             `<span class="jm-pulse"></span><span class="jm-ring"></span><span class="jm-dot"></span>` +
@@ -196,8 +225,17 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         const map = mapRef.current
         if (!map || points.length === 0) return
         map.stop()
+        const padding = opts.padding ?? { top: 140, bottom: 160, left: 80, right: 80 }
+        // Commit the scene insets before calculating the first fitted camera.
+        // Otherwise Mercator's constraint can calculate against the previous scene.
+        if (opts.absolutePadding) {
+          map.setPadding(typeof padding === 'number'
+            ? { top: padding, bottom: padding, left: padding, right: padding }
+            : padding)
+        }
         map.fitBounds(boundsOf(points) as LngLatBoundsLike, {
-          padding: opts.padding ?? { top: 140, bottom: 160, left: 80, right: 80 },
+          padding,
+          absolutePadding: opts.absolutePadding ?? false,
           pitch: opts.pitch ?? 0,
           bearing: opts.bearing ?? 0,
           maxZoom: opts.maxZoom ?? 8,
@@ -229,6 +267,10 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         map.easeTo({ ...opts, essential: true })
       },
       stop() {
+        if (driftTimer.current !== null) {
+          window.clearTimeout(driftTimer.current)
+          driftTimer.current = null
+        }
         mapRef.current?.stop()
       },
       getMap() {
@@ -271,7 +313,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       zoom: 2.4,
       pitch: 35,
       bearing: -8,
-      minZoom: 0.2,
+      // A padded phone chart can need zoom < 0 to retain both Seattle and McMurdo.
+      minZoom: -2,
       maxZoom: 16,
       maxPitch: 62,
       // World copies let journey arcs to Guam cross the antimeridian; DOM markers smart-wrap so none duplicate.
@@ -298,6 +341,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     map.on('style.load', () => {
       // fires again after a fallback swap: re-create the journey layers if an arc is on screen
       styleReady.current = true
+      applyChartPalette(map)
       applyArc(map)
     })
     map.on('error', (e: ErrorEvent) => {
@@ -330,12 +374,14 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     }
 
     /* declutter: nudge markers that collide on screen apart (New Orleans cluster at national zoom) */
-    const declutter = () => declutterMarkers(map, Array.from(markersRef.current.values()).map((m) => m.marker))
+    const declutter = () => declutterMarkers(map, Array.from(markersRef.current.values()).filter(({ el }) => !el.hidden).map(({ marker }) => marker))
     map.on('move', declutter)
     map.once('load', declutter)
 
     return () => {
       window.clearTimeout(timeout)
+      if (driftTimer.current !== null) window.clearTimeout(driftTimer.current)
+      driftTimer.current = null
       map.off('move', declutter)
       markersRef.current.forEach(({ marker }) => marker.remove())
       markersRef.current.clear()
@@ -362,10 +408,23 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     })
   }, [active])
 
-  /* ---------- marker emphasis: selection, orders highlight, cinematic mute ---------- */
+  /* ---------- marker emphasis: selection, orders highlight, cinematic isolation ---------- */
   useEffect(() => {
     markersRef.current.forEach(({ el }, id) => {
       const offered = !!highlightIds && highlightIds.includes(id)
+      const hiddenForStory = !active || cinematic
+      // Keep the same marker instances for exploration. Hidden map controls must
+      // leave keyboard and accessibility navigation while the story owns the view.
+      el.hidden = hiddenForStory
+      el.style.display = hiddenForStory ? 'none' : ''
+      if (hiddenForStory) {
+        el.setAttribute('aria-hidden', 'true')
+        el.tabIndex = -1
+        if (document.activeElement === el) el.blur()
+      } else {
+        el.removeAttribute('aria-hidden')
+        el.removeAttribute('tabindex')
+      }
       el.classList.toggle('is-selected', id === selectedId)
       el.classList.toggle('is-offered', offered && id !== selectedId)
       el.classList.toggle(
@@ -373,7 +432,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         (!!selectedId && id !== selectedId) || (!!highlightIds && !offered) || (cinematic && !highlightIds && !selectedId),
       )
     })
-  }, [selectedId, highlightIds, cinematic])
+  }, [selectedId, highlightIds, cinematic, active])
 
   /* ---------- selection camera ---------- */
   useEffect(() => {

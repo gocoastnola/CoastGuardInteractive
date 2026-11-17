@@ -40,7 +40,7 @@ Every third-party library, font, tile source and asset used by the app, with its
 | `public/favicon.svg`, inline SVG header art, icons in `src/components/Icons.tsx`, landing artwork | Created for this project; owned by the project owner. |
 | Unit text, narration scripts | Placeholder demo text authored for this project; to be replaced/verified (SOURCES.md). |
 
-No photographs or external images are included in Phase 1. When imagery is added, record `src`, `alt`, `license`, `attribution` in the unit's `images[]` entry **and** here.
+Historical Phase 1 used no photography. Current photography is documented below; bundled and remote assets must be distinguished. When imagery is added, record source, alt text, license and attribution in its data/component record and here.
 
 ## Data
 | Asset | Source | License | Use |
@@ -93,3 +93,10 @@ These are **public-domain U.S. Coast Guard photographs** published on DVIDS; pho
 | Cape May graduation, J-209 (Sept. 2026), photograph two | [9939061](https://www.dvidshub.net/image/9939061) | SN Juliana Thornton / USCG Training Center Cape May |
 
 DVIDS photo URLs use the site's CDN thumbnail pattern. Check network loading in the live browser before using in an official recruiting presentation.
+
+
+## 2026-11-17 stabilization media policy
+
+No replacement imagery or soundtrack is authorized in this technical pass. Preserve the approved exterior ship, moored/icebreaking, Antarctic station/environment/research, authentic training/graduation and penguin imagery. Existing remote photographs are a documented historical exception to AGENTS.md’s default no-hot-link rule, not permission to add new remote assets. Technical fallback fixes must retain provenance and must not label a generic fallback as a photograph of a different event or destination.
+
+The score/SFX in `src/lib/audio.ts` are project-generated WebAudio, not downloaded recordings. Listing a library license or an existing source URL does not constitute a new verification of photographic identity, current URL availability or every Commons license condition. Live checks and proposed media replacements must report those separately.

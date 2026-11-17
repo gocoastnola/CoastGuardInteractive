@@ -1,12 +1,18 @@
 # PLANS.md
 
-## Phase overview
+## Current assignment (2026-11-17)
+
+ZIP entry is final. Stabilize the existing hometown → Cape May training/graduation → illustrative Polar Star → full Antarctic patrol → exploration story. Preserve all stops, McMurdo before Patagonia, exterior imagery, wide geographic context, cumulative route and existing owner-directed audio behavior. Deliver a repair PR and a separate cinematic proposal. Major redesign, merge and deployment are not approved.
+
+The phase tables and roadmap below are historical planning context; incomplete work is not evidence of a defect and is not authorization to add new scenes or branches.
+
+## Historical phase overview
 
 | Phase | Goal | Status |
 | --- | --- | --- |
 | 1 | Foundation: running local site, map + markers + panel + directory + narration fallback, data model, tests, docs, private repo | **Done** (2026-10-18) |
 | 1.5 | Adventure mode: ZIP → arc to Cape May (miles counter, text beats) → orders deck → first unit | **Done** (2026-10-18); superseded by 1.7 |
-| 1.7 | Date-first landing: pick a basic-training ship date → Act 1 Cape May countdown + Week 1→8 progression (ZIP retained, unused) | **Done** (2026-10-20) |
+| 1.7 | Date-first landing: pick a basic-training ship date → Act 1 Cape May countdown + Week 1→8 progression (ZIP retained, unused) | **Historical, superseded by ZIP-first flow** (2026-11-17) |
 | 2 | Cinematic polish: intro camera choreography, marker clustering/declutter, ambient map motion, panel micro-interactions, sound design hooks | Next |
 | 3 | Narration audio: pre-rendered studio/TTS audio per unit (server-side generation, never client keys), captions synced to audio timestamps | Planned |
 | 4 | Verified content: owner fact-checks every record, fills `sourceUrls`/`lastVerified`, adds licensed imagery with attribution; flips records to `verified` | Planned |
@@ -65,7 +71,9 @@ months at a real unit, not blind at a recruiter's desk).
 - **Phase E — Non-rate program explainer:** the "choose your rate with your eyes
   open" message woven through the journey end-cap.
 
-## Ideas queued after the date-first landing (2026-10-20)
+## Historical ideas after date-first landing (2026-10-20; superseded)
+
+The optional hometown/date-calendar ideas below describe the old date-first plan. Hometown ZIP is now the live opening and does not require owner reconsideration.
 - Optional hometown step after the date pick (re-use `ZipEntry` + the arc branch of `JourneyOverlay`).
 - Real ship-date calendar: replace `nextShipDates()` with owner-supplied dates once verified (SOURCES.md).
 - A-school choice phase (OrdersDeck) still queued.

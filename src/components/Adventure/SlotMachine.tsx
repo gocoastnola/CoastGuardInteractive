@@ -25,6 +25,8 @@ const SPIN_S = 4.6
 export function SlotMachine({ units, onReport }: Props) {
   const root = useRef<HTMLDivElement>(null)
   const strip = useRef<HTMLDivElement>(null)
+  const spinTween = useRef<gsap.core.Tween | null>(null)
+  const hornTimer = useRef<number | null>(null)
   const [state, setState] = useState<'ready' | 'spinning' | 'landed'>('ready')
   const reduced = prefersReducedMotion()
 
@@ -55,15 +57,34 @@ export function SlotMachine({ units, onReport }: Props) {
     return () => ctx.revert()
   }, [reduced])
 
-  // Reduced motion: no spin — land instantly.
+  useEffect(() => () => {
+    spinTween.current?.kill()
+    if (hornTimer.current !== null) window.clearTimeout(hornTimer.current)
+  }, [])
+
+  // Animate the result after React has mounted it, not in the reel's completion callback.
   useEffect(() => {
-    if (reduced) setState('landed')
-  }, [reduced])
+    if (state !== 'landed' || reduced || !root.current) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.slot-frame', { boxShadow: '0 0 0 2px rgba(243,194,90,0.0)' }, {
+        boxShadow: '0 0 60px 6px rgba(243,194,90,0.35)', duration: 0.5, yoyo: true, repeat: 1,
+      })
+      gsap.fromTo('.slot-landed-card', { opacity: 0, y: 26, scale: 0.96 }, {
+        opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)', delay: 0.15,
+      })
+    }, root)
+    return () => ctx.revert()
+  }, [state, reduced])
 
   const spin = () => {
     if (state !== 'ready') return
     sound.enable()
     sound.ambient()
+    if (reduced) {
+      sound.lock()
+      setState('landed')
+      return
+    }
     setState('spinning')
     if (!strip.current) {
       setState('landed')
@@ -74,7 +95,7 @@ export function SlotMachine({ units, onReport }: Props) {
     let lastRow = 0
     sound.whoosh()
     sound.slotSpin()
-    gsap.to(proxy, {
+    spinTween.current = gsap.to(proxy, {
       i: finalIndex,
       duration: SPIN_S,
       ease: 'power4.out',
@@ -89,17 +110,8 @@ export function SlotMachine({ units, onReport }: Props) {
       },
       onComplete: () => {
         sound.lock()
-        window.setTimeout(() => sound.horn(), 500)
+        hornTimer.current = window.setTimeout(() => sound.horn(), 500)
         setState('landed')
-        if (root.current) {
-          gsap.fromTo('.slot-frame', { boxShadow: '0 0 0 2px rgba(243,194,90,0.0)' }, {
-            boxShadow: '0 0 60px 6px rgba(243,194,90,0.35)',
-            duration: 0.5,
-            yoyo: true,
-            repeat: 1,
-          })
-          gsap.fromTo('.slot-landed-card', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)', delay: 0.15 })
-        }
       },
     })
   }
@@ -109,7 +121,7 @@ export function SlotMachine({ units, onReport }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       if (state === 'ready' || state === 'spinning') {
-        gsap.killTweensOf('*')
+        spinTween.current?.kill()
         setState('landed')
       }
     }
@@ -121,9 +133,10 @@ export function SlotMachine({ units, onReport }: Props) {
   const target = reel.items[reel.target]
 
   return (
-    <div className="slot" ref={root} role="dialog" aria-labelledby="slot-title" data-testid="slot">
+    <div className={`slot long-watch-orders ${landed ? 'has-assignment' : ''}`} ref={root} role="dialog" aria-labelledby="slot-title" data-testid="slot">
       <SoundToggle />
       <div className="slot-head" data-slot-reveal>
+        <p className="scene-kicker"><span>03</span> The next chapter</p>
         <div className="orders-eyebrow">{SLOT.demoNote}</div>
         <h2 id="slot-title" className="orders-title">
           {SLOT.title}
@@ -131,15 +144,16 @@ export function SlotMachine({ units, onReport }: Props) {
         <p className="orders-sub">{SLOT.sub}</p>
       </div>
 
+      <div className="orders-record" data-slot-reveal><span>UNIT ASSIGNMENT</span><span>ILLUSTRATIVE / 001</span></div>
       <div className={`slot-frame ${landed ? 'is-landed' : ''} ${state === 'spinning' ? 'is-spinning' : ''}`} data-slot-reveal>
         <div className="slot-window" style={{ height: ROW_H }}>
           {landed ? (
-            <div className="slot-row is-final" data-testid="slot-final">
+            <div key="final" className="slot-row is-final" data-testid="slot-final">
               <span className="slot-name">{target.name}</span>
               <span className="slot-place">{target.place}</span>
             </div>
           ) : (
-            <div className="slot-strip" ref={strip} data-testid="slot-strip">
+            <div key="reel" className="slot-strip" ref={strip} data-testid="slot-strip">
               {rows.map((r) => (
                 <div className="slot-row" key={r.key} style={{ height: ROW_H }}>
                   <span className="slot-name">{r.name}</span>

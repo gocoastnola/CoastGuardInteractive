@@ -1,3 +1,4 @@
+import { SafeImage } from '../SafeImage'
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import type { Unit } from '../../data/schema'
@@ -40,8 +41,6 @@ export function ShipIntro({ unit, onBegin }: Props) {
 
   const begin = () => {
     sound.enable()
-    sound.horn()
-    sound.whoosh()
     onBegin()
   }
 
@@ -49,10 +48,15 @@ export function ShipIntro({ unit, onBegin }: Props) {
     <div className="ship-intro" ref={root} role="dialog" aria-labelledby="ship-title" data-testid="ship-intro">
       <div className="ship-card">
         <div className="ship-hero" data-ship-reveal>
-          <img src="/media/polar-star-hero.jpg" alt={`${unit.name} underway`} />
+          <SafeImage src="/media/polar-star-hero.jpg" alt={`${unit.name} underway`} />
           <div className="ship-hero-scrim" />
-          <div className="ship-hero-text">
-            <div className="ship-eyebrow">{SHIP.eyebrow}</div>
+          <div className="ship-photo-caption">POLAR STAR / ANTARCTIC OPERATIONS</div>
+          <a className="ship-photo-credit" href="https://www.dvidshub.net/image/8230207" target="_blank" rel="noopener noreferrer">USCG photo · source</a>
+        </div>
+
+        <div className="ship-body">
+          <div className="ship-hero-text" data-ship-reveal>
+            <div className="ship-eyebrow">04 / {SHIP.eyebrow}</div>
             <h2 id="ship-title" className="ship-name">
               {SHIP.name} <span className="ship-hull">{SHIP.hull}</span>
             </h2>
@@ -60,9 +64,6 @@ export function ShipIntro({ unit, onBegin }: Props) {
               {SHIP.klass} · {SHIP.homeport}
             </div>
           </div>
-        </div>
-
-        <div className="ship-body">
           <p className="ship-summary" data-ship-reveal>
             {SHIP.summary}
           </p>
@@ -75,8 +76,8 @@ export function ShipIntro({ unit, onBegin }: Props) {
             ))}
           </ul>
           <div className="ship-gallery" data-ship-reveal>
-            <img src="/media/mission-ice.jpg" alt="Polar Star crew on the Antarctic ice" loading="lazy" />
-            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Emperor_penguins.jpg?width=1000" alt="Emperor penguins on Antarctic sea ice" loading="lazy" />
+            <figure><SafeImage src="/media/mission-ice.jpg" alt="USCGC Polar Star carving a channel through Antarctic sea ice" loading="lazy" /><figcaption>The work / Icebreaking</figcaption></figure>
+            <figure><SafeImage src="https://commons.wikimedia.org/wiki/Special:FilePath/Emperor_penguins.jpg?width=1000" alt="Emperor penguins on Antarctic sea ice" loading="lazy" /><figcaption>The world / Antarctica</figcaption></figure>
           </div>
           <div className="ship-foot" data-ship-reveal>
             <span className="ship-demo-note">{SHIP.demoNote}</span>

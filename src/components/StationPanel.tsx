@@ -1,3 +1,4 @@
+import { SafeImage } from './SafeImage'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import type { Unit } from '../data/schema'
@@ -228,7 +229,7 @@ export function StationPanel({ unit, isNarrow, audioEnabled, onEnableAudio, ribb
               ) : (
                 <div className="gallery">
                   {unit.images.map((img) => (
-                    <img key={img.src} src={img.src} alt={img.alt} className="gallery-tile" />
+                    <SafeImage key={img.src} src={img.src} alt={img.alt} className="gallery-tile" />
                   ))}
                 </div>
               )}

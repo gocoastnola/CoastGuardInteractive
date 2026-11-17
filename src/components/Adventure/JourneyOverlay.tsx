@@ -34,17 +34,19 @@ interface Beat {
 /** Keeps the arc clear of the beat text (top) and the miles counter (bottom). */
 function framePadding(staticBeats = false) {
   const narrow = window.innerWidth <= 860
-  if (staticBeats) return narrow ? { top: 300, bottom: 140, left: 60, right: 60 } : { top: 360, bottom: 190, left: 160, right: 160 }
-  return narrow
-    ? { top: 180, bottom: 150, left: 84, right: 84 }
-    : { top: 220, bottom: 190, left: 120, right: 120 }
+  const padding = staticBeats
+    ? narrow ? { top: 300, bottom: 140, left: 60, right: 60 } : { top: 360, bottom: 190, left: 160, right: 160 }
+    : narrow ? { top: 180, bottom: 150, left: 84, right: 84 } : { top: 220, bottom: 190, left: 120, right: 120 }
+  // A landscape phone must retain a positive map viewport after padding.
+  const scale = Math.min(1, Math.max(0, window.innerHeight - 80) / (padding.top + padding.bottom))
+  return { ...padding, top: Math.floor(padding.top * scale), bottom: Math.floor(padding.bottom * scale) }
 }
 
 /**
  * Cinematic arc act: frames both points, draws the great-circle arc with a travelling
- * head, ticks the miles counter, and plays timed text beats. Used for Act 2
- * (Cape May → first unit). The `act === 1` branch is the legacy hometown arc
- * (ZIP landing, retained but unused — the live Act 1 is TrainingAct.tsx). One GSAP timeline is
+ * head, ticks the miles counter, and plays timed text beats. Act 1 handles the
+ * current hometown → Cape May travel phase before TrainingAct; Act 2 travels
+ * Cape May → first unit. One GSAP timeline is
  * the master clock (its ticker is requestAnimationFrame-driven), so Skip/Esc can
  * tear everything down in one call. Camera moves go through MapLibre via the map
  * handle — never GSAP (see AGENTS.md).

@@ -1,89 +1,105 @@
 import { test, expect } from '@playwright/test'
+import { controlInViewport, deterministicMedia, noHorizontalOverflow, noOverlap, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
+test.beforeEach(async ({ page }) => deterministicMedia(page))
 
-const SHOTS = 'docs/screenshots'
+test('free explore, directory, marker selection, narration gate and Escape', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await openLanding(page)
+  await page.getByTestId('explore').click()
+  await phase(page, 'explore')
+  await expect(page.getByTestId('marker')).toHaveCount(18)
+  await page.getByTestId('jump-gulf').click()
+  const grandIsle = page.locator('[data-unit-id="station-grand-isle"]')
+  await grandIsle.focus()
+  await expect(grandIsle).toBeFocused()
+  await grandIsle.press('Enter')
+  await expect(page.getByTestId('panel-title')).toHaveText('Station Grand Isle')
+  await expect(grandIsle).toHaveClass(/is-selected/)
+  await page.getByRole('tab', { name: 'Narration' }).click()
+  await expect(page.getByTestId('transcript')).toContainText('Station Grand Isle')
+  await expect(page.getByTestId('narration-play')).toBeDisabled()
+  await page.getByTestId('enable-audio').click()
+  await expect(page.getByTestId('narration-play')).toBeEnabled()
+  await page.keyboard.press('Escape')
+  await expect(page.getByTestId('station-panel')).toBeHidden()
+  await page.getByTestId('directory-toggle').click()
+  await expect(page.getByTestId('directory-search')).toBeFocused()
+  await page.getByTestId('directory-search').fill('kodiak')
+  await expect(page.getByTestId('directory-item')).toHaveCount(1)
+  await page.getByTestId('directory-item').click()
+  await expect(page.getByTestId('panel-title')).toHaveText('Air Station Kodiak')
+  await page.keyboard.press('Escape')
+  await expect(page.getByTestId('station-panel')).toBeHidden()
+})
 
-test.describe('CoastGuard Interactive — smoke', () => {
-  test('landing → explore → select unit → panel → Esc closes', async ({ page }) => {
-    await page.goto('/')
-
-    // Landing
-    const landing = page.getByTestId('landing')
-    await expect(landing).toBeVisible()
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Pick your')
-    await expect(page.getByText('Independent educational demonstration')).toBeVisible()
-    await page.waitForTimeout(1500) // let GSAP entrance settle + basemap begin loading
-    await page.screenshot({ path: `${SHOTS}/01-landing.png` })
-
-    // Free explore (quiet secondary link) — no journey, straight to the national map
-    await page.getByTestId('explore').click()
-    await expect(landing).toBeHidden()
-    await expect(page.getByTestId('directory-toggle')).toBeVisible()
-
-    // Markers rendered
-    const markers = page.getByTestId('marker')
-    await expect(markers.first()).toBeAttached()
-    expect(await markers.count()).toBeGreaterThanOrEqual(15)
-    await page.waitForTimeout(3000) // national intro fly
-    await page.screenshot({ path: `${SHOTS}/02-national-map.png` })
-
-    // Zoom to the Gulf so nearby Louisiana markers no longer overlap, then hover a marker
-    await page.getByTestId('jump-gulf').click()
-    await page.waitForTimeout(2500)
-    const grandIsle = page.locator('[data-unit-id="station-grand-isle"]')
-    await grandIsle.hover()
-    await expect(grandIsle.locator('.marker-tip')).toContainText('Station Grand Isle')
-
-    // Click marker → panel with unit name
-    await grandIsle.click()
+for (const viewport of [{ width: 360, height: 800 }, { width: 844, height: 390 }]) {
+  test(`narrow/landscape controls remain usable — ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
+    await page.setViewportSize(viewport)
+    await openLanding(page)
+    await noHorizontalOverflow(page)
+    await controlInViewport(page, page.getByTestId('zip-input'))
+    await controlInViewport(page, page.getByTestId('zip-begin'))
+    await screenshot(page, testInfo, 'opening-layout')
+    await reachShipBySkip(page)
+    await noHorizontalOverflow(page)
+    const shipTop = await page.locator('.ship-card').evaluate(card => card.getBoundingClientRect().top)
+    expect(shipTop).toBeGreaterThanOrEqual(-1)
+    await controlInViewport(page, page.getByTestId('ship-begin'))
+    await screenshot(page, testInfo, 'ship-layout')
+    await page.getByTestId('ship-begin').click()
+    await phase(page, 'patrol')
+    const firstPort = page.getByTestId('port-honolulu')
+    await opaque(firstPort)
+    const portBox = await firstPort.boundingBox()
+    const headingBox = await page.locator('.patrol-head').boundingBox()
+    noOverlap(portBox!, headingBox!, 'Port photography must not obscure the chapter heading')
+    expect(portBox!.y + portBox!.height).toBeLessThanOrEqual(viewport.height)
+    const counterBox = (await page.locator('.patrol-counter').boundingBox())!
+    noOverlap(portBox!, counterBox, 'Port photography must not obscure cumulative mileage')
+    const body = firstPort.locator('.port-body')
+    const bodySize = await body.evaluate(el => ({ height: el.clientHeight, content: el.scrollHeight, overflow: getComputedStyle(el).overflowY }))
+    if (bodySize.content > bodySize.height + 1) {
+      // A deliberately scrollable short-screen card is usable; hidden overflow is not.
+      expect(['auto', 'scroll']).toContain(bodySize.overflow)
+      await body.hover()
+      await page.mouse.wheel(0, bodySize.content)
+      await expect.poll(() => body.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+      await expect.poll(() => body.evaluate(el => el.scrollTop + el.clientHeight >= el.scrollHeight - 1)).toBe(true)
+      const bodyBox = (await body.boundingBox())!
+      const captionBox = (await firstPort.locator('.port-blurb').boundingBox())!
+      expect(captionBox.y + captionBox.height).toBeLessThanOrEqual(bodyBox.y + bodyBox.height + 1)
+    }
+    await screenshot(page, testInfo, 'port-layout')
+    await page.keyboard.press('Escape')
+    await phase(page, 'explore')
+    await controlInViewport(page, page.getByTestId('directory-toggle'))
     const panel = page.getByTestId('station-panel')
     await expect(panel).toBeVisible()
-    await expect(page.getByTestId('panel-title')).toHaveText('Station Grand Isle')
-    await expect(grandIsle).toHaveClass(/is-selected/)
-    await page.waitForTimeout(3500) // flyTo settle
-    await page.screenshot({ path: `${SHOTS}/03-station-panel.png` })
-
-    // Narration tab shows transcript; play disabled until audio enabled
-    await page.getByRole('tab', { name: 'Narration' }).click()
-    await expect(page.getByTestId('transcript')).toContainText('Station Grand Isle')
-    await expect(page.getByTestId('narration-play')).toBeDisabled()
-    await page.getByTestId('enable-audio').click()
-    await expect(page.getByTestId('narration-play')).toBeEnabled()
-    await page.screenshot({ path: `${SHOTS}/04-narration.png` })
-
-    // Esc closes
-    await page.keyboard.press('Escape')
-    await expect(panel).toBeHidden()
-
-    // Directory → select behaves like marker click
-    await page.getByTestId('directory-toggle').click()
-    const search = page.getByTestId('directory-search')
-    await expect(search).toBeFocused()
-    await search.fill('kodiak')
-    const item = page.getByTestId('directory-item')
-    await expect(item).toHaveCount(1)
-    await item.click()
-    await expect(page.getByTestId('panel-title')).toHaveText('Air Station Kodiak')
-    await page.waitForTimeout(2500)
-    await page.screenshot({ path: `${SHOTS}/05-directory-and-panel.png` })
-
-    await page.keyboard.press('Escape')
-    await expect(page.getByTestId('station-panel')).toBeHidden()
+    expect((await panel.boundingBox())!.width).toBeGreaterThan(viewport.width - 10)
+    await screenshot(page, testInfo, 'mobile-sheet')
   })
+}
 
-  test('mobile: panel becomes bottom sheet', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/')
-    await page.getByTestId('explore').click()
-    await page.getByTestId('directory-toggle').click()
-    await page.getByTestId('directory-search').fill('new orleans')
-    await page.getByTestId('directory-item').first().click()
-    const panel = page.getByTestId('station-panel')
-    await expect(panel).toBeVisible()
-    const box = await panel.boundingBox()
-    expect(box).not.toBeNull()
-    expect(box!.width).toBeGreaterThan(380) // full-width sheet
-    expect(box!.y).toBeGreaterThan(100) // anchored to bottom, not top
-    await page.waitForTimeout(2500)
-    await page.screenshot({ path: `${SHOTS}/06-mobile-sheet.png` })
-  })
+test('short portrait active McMurdo caption supports real wheel scrolling @portrait-scroll', async ({ page }, testInfo) => {
+  test.setTimeout(55_000)
+  await page.setViewportSize({ width: 360, height: 600 })
+  await openLanding(page)
+  await reachShipBySkip(page)
+  await page.getByTestId('ship-begin').click()
+  await phase(page, 'patrol')
+  const card = page.getByTestId('port-mcmurdo')
+  await opaque(card, 35_000)
+  const body = card.locator('.port-body')
+  await expect(body).toHaveCSS('pointer-events', 'auto')
+  await expect.poll(() => page.locator('.port-card[aria-hidden="true"] .port-body').evaluateAll(elements => elements.every(el => getComputedStyle(el).pointerEvents === 'none'))).toBe(true)
+  const dimensions = await body.evaluate(el => ({ content: el.scrollHeight, visible: el.clientHeight }))
+  expect(dimensions.content).toBeGreaterThan(dimensions.visible)
+  await body.hover()
+  await page.mouse.wheel(0, dimensions.content)
+  await expect.poll(() => body.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+  await expect.poll(() => body.evaluate(el => el.scrollTop + el.clientHeight >= el.scrollHeight - 1)).toBe(true)
+  const bodyBox = (await body.boundingBox())!
+  const captionBox = (await card.locator('.port-blurb').boundingBox())!
+  expect(captionBox.y + captionBox.height).toBeLessThanOrEqual(bodyBox.y + bodyBox.height + 1)
+  await screenshot(page, testInfo, 'short-portrait-mcmurdo-scrolled-caption')
 })

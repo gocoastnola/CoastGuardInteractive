@@ -13,7 +13,7 @@ Phase 1 has no backend. When narration audio or any keyed service is introduced:
 
 1. A separate `server/` package (or offline script) performs API calls using secrets from the host environment or a secrets manager.
 2. It writes **static outputs** (e.g. `public/narration/<unit-id>.mp3`) that the client loads by URL — the `narrationAudio` field in `units.json`.
-3. The client bundle continues to have zero secrets and zero third-party API calls other than map tiles.
+3. The client bundle continues to have zero secrets. Current public requests include map resources and remotely hosted photographic assets; any future keyed API must remain server-side.
 4. Outputs are generated locally; nothing is hosted publicly without an explicit owner decision.
 
 ## Dependency hygiene
@@ -23,7 +23,9 @@ Phase 1 has no backend. When narration audio or any keyed service is introduced:
 
 ## Privacy
 
-- No analytics, no cookies, no tracking, no external fonts. The only network calls are to the keyless tile host(s) listed in ASSET_LICENSES.md.
+- No analytics or application tracking is implemented; Inter fonts are bundled locally. Runtime requests also load keyless map resources and remote Wikimedia/DVIDS photography listed in ASSET_LICENSES.md. These hosts receive normal network request information; do not describe the app as fully offline or as making map-only requests.
+- ZIP lookup loads the bundled Census table and runs in the browser; no applicant form or backend is added by this task.
+- Recovery tags preserve Git content, not external images, service uptime, host settings or browser policies. See docs/RECOVERY.md.
 
 ## Data sourcing guidelines
 

@@ -1,8 +1,48 @@
 # PROGRESS.md
 
-_Last updated: 2026-10-18 (Phase 1 complete)_
+_Current work: story-locked visual branch, 2026-11-17. Prior repair and historical reports remain below._
 
-## What works
+## Current visual update — not deployed
+
+The owner has approved scoped visual/sound development in `codex/long-watch-visual-20261117`, based on the separately tested technical-repair commit `b37975c2a604d59f0f375c358c796794a4d81458`. This supersedes the earlier proposal-only limit for this bounded visual pass; it does not authorize a new storyline, replacement map engine, merge or deployment.
+
+The familiar four-photo ZIP opening and controls remain locked. Supporting text and accessible image description avoid naming the eventual assignment before orders. Source changes stage training/exterior photography more prominently, introduce an ocean/teal/ice chart with amber cumulative route, restyle the assignment reel, and adapt port cards to remain alongside the geographic context. The same complete itinerary, McMurdo before Patagonia, nine arrivals, disclaimers and unverified data remain. Existing WebAudio sound sources are retained.
+
+See [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md) for the actual change scope, locked story, confirmed source refinements, visual evidence provenance and verification ledger. Current measured checks: **65 unit tests PASS**, **18 demo-data records PASS**, production-subpath build **PASS**, **13 development browser cases PASS** (including complete normal-timing desktop/mobile journeys), then **5 production-preview cases PASS** after the final caption hit-testing/legend refinement. Four browser cases overlap, for **14 distinct cases across the runs—not a single 14-case full run**. Runtime is actual Node 22.23.5/npm 11.9.0; package inputs are unchanged.
+
+Initial live desktop/mobile runs completed the full voyage with 23 captures each and observed loaded media, no HTTP failures and no JavaScript errors. They nevertheless exposed a **genuine mobile chart-fit defect and McMurdo label/mileage collision**. Patrol fitting now uses scoped absolute insets, pre-commits scene padding, permits minimum zoom −2 and clears those insets before exploration. The production build and 65 unit tests pass after that camera-source correction; final mobile camera/marker capture now passes its scoped all-nine-arrival review through exploration. The first Honolulu cumulative line fits its reserved chart from arrival, Hobart’s marker follows the route’s unwrapped world copy, and McMurdo’s label clears the port card/mileage area. Final desktop scoped capture also passes all nine arrivals, all four McMurdo slides and exploration; measured cumulative route samples fit the protected chart at every stop on both viewports. The earlier 13+5 browser passes precede that correction and must not be described as a complete final-candidate suite. The final 2-case production regression rerun passes after the camera/marker repair. The later final mobile capture is a patrol-specific run; it does not claim another complete final ZIP-to-end rerun.
+
+Live console limitations remain: each full run had six cancelled tile requests, an upstream `circle-11` sprite warning and software-GPU ReadPixels warnings. Initial local-preview performance measurements are recorded with their limits in the visual update; they are not real-phone or GPU-memory benchmarks. WebKit is **BLOCKED** by known missing native libraries and was not rerun for the visual branch. Actual listening and real-device testing are **NOT RUN**. Earlier foundation passes and superseded development captures are not substituted for this branch’s evidence.
+
+Final screenshot selections will be retained in [docs/evidence/visual/README.md](docs/evidence/visual/README.md); only current patrol-camera captures should represent the final voyage. The hosted backup and original recovery tag are unchanged. No main merge or production deployment is performed by this visual task.
+
+## Technical-repair foundation — prior verification context
+
+ZIP-first is the current product decision. The exact original recovery tag is remotely verified; see [docs/RECOVERY.md](docs/RECOVERY.md). The separate repair branch starts from freshly fetched main `013fff722014729f4e044b0ce4060dbdfc3bbd57`. At the technical-repair stage, major visual implementation, merge and deployment were not authorized; the later bounded visual approval is described above. Merge and deployment remain unapproved.
+
+Baseline measured on Node.js **22.23.5**, npm **11.9.0** before application behavior changes:
+
+| Check | Baseline result | Scope / limit |
+| --- | --- | --- |
+| Locked dependency install (`npm ci`) | PASS | Existing lockfile, no broad dependency upgrade |
+| Production build | PASS | TypeScript + Vite; runtime checks remain separate |
+| Unit tests | PASS — 55 tests, 8 files | Does not verify rendered UI or actual listening |
+| Data validation | PASS — 18 records | All 18 remain demo-unverified |
+| Existing browser suite | FAIL — 1 passed, 5 failed (6 total) | All five failing tests expected the superseded date-first headline/cards/controls; the current landing is ZIP entry |
+
+A normal-timing live Chromium desktop run traversed the full story and all nine patrol arrivals to exploration in **117.999 seconds**. This is rendered-browser evidence, not a real-device check or an actual listening assessment. Its console/network observations are retained in the delivery evidence; remote-image rate limits and map request cancellations must be classified separately from stale date-picker assertions.
+
+Baseline inspection also confirmed a hidden training-photo state in reduced motion and landscape ship-layout clipping. These are genuine defects to repair and compare at the same viewport; the outdated tests do not excuse them.
+
+Final repair verification is recorded in [docs/VERIFICATION.md](docs/VERIFICATION.md), with the acceptance map in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Historical test counts below do not certify the repaired branch. Distinguish deterministic browser tests (fixtures), rendered live external-resource checks, emulated viewports, WebKit availability, actual listening and physical-device testing.
+
+Current source facts: ZIP → hometown travel → training/graduation → illustrative Polar Star orders → ship intro → full nine-leg patrol, including McMurdo before Patagonia → exploration. Unit data has 18 records; all remain demo-unverified. Training/ports mix bundled and remote authentic photography; the existing score/SFX are synthesized WebAudio. These source observations are not claims of runtime or listening success.
+
+## Historical verification archive
+
+The sections below record earlier phases, including the superseded date-first product. Historical “What works” and checkmarks refer to those earlier reports. Date-picker expectations must not be restored to make old tests pass.
+
+## Historical Phase 1 — what worked
 
 | Area | Status | How verified |
 | --- | --- | --- |
@@ -73,7 +113,7 @@ Known gaps: text beats can collide with map labels on busy regions (add a scrim)
 Demo/approx: route, port blurbs and ship facts are illustrative (labelled in UI); owner will supply verified details.
 Full diff summary: CHANGES-2026-10-19.md.
 
-## Phase 1.7 — Date-first landing + Cape May countdown (2026-10-20) ✅
+## Phase 1.7 — Historical date-first landing (2026-10-20; superseded)
 | Area | Status | How verified |
 | --- | --- | --- |
 | "Pick your basic training date" landing: 8 Tuesday ship-date cards (≥ 14 days out), native date fallback, Begin (Enter works), arrow-key roving, autofocus first card, "or explore the map", photo wall, DEMO badge, disclaimer | ✅ | `07-start-adventure.png`; e2e asserts 8 cards, Tuesdays, ≥14 days, focus, fallback |
