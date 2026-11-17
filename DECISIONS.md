@@ -2,6 +2,14 @@
 
 Format: date · decision · why · alternatives · consequences.
 
+## 2026-11-17 · Faster calls and a completed-patrol globe overview
+
+- Owner: “Please speed up the port calls just a bit. It should touch and go … until back to Seattle and then a rotating view of everywhere you went encompassing the entire patrol.”
+- Use brief port holds (ordinary 1.4s, McMurdo 2.4s, Panama 1.8s, Seattle 2.2s). These supersede the previous hold-preservation rule; preserve the actual destinations, order, sea route, imagery, credits and illustrative mileage.
+- After Seattle, retain the full cumulative route and turn the native globe through all longitudes. Keep the completed overview until Explore or Escape, with all nine stops available for paused photo review. Reduced motion uses the static itinerary.
+- Use existing MapLibre camera easing in bounded longitude quarter turns, with cleanup before native stop events. Keep the current globe engine, atmosphere, audio, four-photo ZIP opening and complete pre-patrol story.
+- The owner explicitly requested skipping further recovery checks. Do not create or verify additional recovery tags, bundles or backup copies for this revision; leave existing references and the separately hosted benchmark untouched.
+
 ## 2026-11-17 · Owner-requested spherical globe and motivational audio revision
 
 - The owner rejected the preceding subtle restyling and its repeated Mercator worlds, oversized port photographs and ambient/click-heavy audio. The current instruction explicitly calls for one real globe on an axis, visible voyage progress, moving oceans/clouds, energetic background music and new arrival/orders effects.

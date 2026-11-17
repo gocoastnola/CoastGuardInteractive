@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { writeFile } from 'node:fs/promises'
-import { attributionUsable, beginZip, controlInViewport, deterministicMedia, imageLoaded, noHorizontalOverflow, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
+import { PATROL_STOPS } from '../src/journey/patrol'
+import { attributionUsable, beginZip, controlInViewport, deterministicMedia, fullPatrolRecap, imageLoaded, nativeOrbitSamples, nativePatrolState, noHorizontalOverflow, opaque, openLanding, PATROL_PORTS, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
 
 test('user gesture initializes actual WebAudio; interruption does not create another context @production', async ({ page }) => {
   await deterministicMedia(page)
@@ -226,4 +227,85 @@ test('primary-style outage uses the existing map fallback without disabling expl
   await page.getByTestId('directory-search').fill('kodiak')
   await page.getByTestId('directory-item').click()
   await expect(page.getByTestId('panel-title')).toHaveText('Air Station Kodiak')
+})
+
+test('completed patrol rotates through every hemisphere, keeps all port galleries and exits on request @production', async ({ page }, testInfo) => {
+  // Full authored patrol,360° native observation,9requested galleries and breakpoint reflows.
+  test.setTimeout(130_000)
+  await deterministicMedia(page)
+  await page.setViewportSize({ width: 390, height: 664 })
+  await openLanding(page)
+  await reachShipBySkip(page)
+  await page.getByTestId('ship-begin').click()
+  await expect(page.getByTestId('patrol')).toHaveAttribute('data-patrol-stage', 'recap', { timeout: 50_000 })
+  await fullPatrolRecap(page)
+  await expect.poll(async () => Math.abs((await nativePatrolState(page)).lat + 20)).toBeLessThan(0.1)
+  const samples = await nativeOrbitSamples(page, 18_000, 360)
+  await testInfo.attach('actual-native-orbit-centers', { body: JSON.stringify(samples, null, 2), contentType: 'application/json' })
+  expect(samples.length, 'Observe native centers throughout the entire orbit').toBeGreaterThanOrEqual(24)
+  const longitudeSteps = samples.slice(1).map((sample, index) => (sample.lng - samples[index].lng + 540) % 360 - 180)
+  expect(Math.max(...longitudeSteps.map(Math.abs)), 'Native samples resolve the orbit continuously, within30°').toBeLessThan(30)
+  const longitudeTravel = longitudeSteps.reduce((sum, step) => sum + step, 0)
+  expect(Math.abs(longitudeTravel), 'The sphere turns through 360° of native longitude, beyond the American route').toBeGreaterThan(350)
+  const quadrants = new Set(samples.map(sample => Math.floor(((sample.lng % 360 + 360) % 360) / 90)))
+  expect([...quadrants].sort()).toEqual([0, 1, 2, 3])
+  const bearings = samples.map(sample => sample.bearing)
+  expect(Math.max(...bearings) - Math.min(...bearings), 'The orbit changes native longitude while keeping camera bearing steady').toBeLessThan(0.1)
+  await phase(page, 'patrol')
+  await fullPatrolRecap(page)
+  await screenshot(page, testInfo, 'completed-patrol-stays-in-overview')
+
+  for (const id of PATROL_PORTS) {
+    const trigger = page.getByTestId(`recap-port-${id}`)
+    const expectedName = PATROL_STOPS.find(stop => stop.id === id)!.name
+    await trigger.click()
+    const dialog = page.getByTestId('voyage-details')
+    await expect(dialog).toHaveAttribute('aria-modal', 'true')
+    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(expectedName)
+    await expect(page.getByTestId('gallery-close')).toBeFocused()
+    const photos = page.getByTestId('gallery-grid').locator('figure')
+    await expect(photos).toHaveCount(id === 'mcmurdo' ? 4 : 1)
+    await imageLoaded(photos.first().locator('img'))
+    if (id === 'mcmurdo') {
+      const paused = await nativePatrolState(page)
+      const pausedSamples = await nativeOrbitSamples(page, 1800)
+      expect(pausedSamples.every(sample => Math.abs(sample.lng - paused.lng) < 1e-6 && Math.abs(sample.lat - paused.lat) < 1e-6 && !sample.moving), 'Opening any recap gallery pauses the actual native orbit').toBe(true)
+      await page.setViewportSize({ width: 932, height: 430 })
+      await expect.poll(async () => {
+        const state = await nativePatrolState(page)
+        return state.canvas.width === 932 && state.canvas.height === 430 && state.centerError < 2 && !state.moving
+      }).toBe(true)
+      await fullPatrolRecap(page)
+      await noHorizontalOverflow(page)
+      await screenshot(page, testInfo, 'recap-gallery-landscape-paused')
+      await page.setViewportSize({ width: 390, height: 664 })
+      await expect.poll(async () => {
+        const state = await nativePatrolState(page)
+        return state.canvas.width === 390 && state.canvas.height === 664 && state.centerError < 2 && !state.moving
+      }).toBe(true)
+      await fullPatrolRecap(page)
+      await page.keyboard.press('Escape')
+    } else await page.getByTestId('gallery-close').click()
+    await expect(dialog).toHaveCount(0)
+    await expect(trigger).toBeFocused()
+    await phase(page, 'patrol')
+  }
+  const resumed = await nativePatrolState(page)
+  await expect.poll(async () => Math.abs((await nativePatrolState(page)).lng - resumed.lng), { message: 'The completed route resumes native rotation after closing details' }).toBeGreaterThan(3)
+  await page.setViewportSize({ width: 932, height: 430 })
+  await expect.poll(async () => {
+    const state = await nativePatrolState(page)
+    return state.canvas.width === 932 && state.canvas.height === 430 && state.centerError < 2
+  }).toBe(true)
+  await fullPatrolRecap(page)
+  await screenshot(page, testInfo, 'completed-patrol-landscape-rotating')
+  await page.keyboard.press('Escape')
+  await phase(page, 'explore')
+  await expect(page.getByTestId('patrol')).toHaveCount(0)
+  await expect(page.getByTestId('panel-ribbon')).toContainText('Your first unit')
+  await page.getByTestId('back-to-map').click()
+  await expect.poll(async () => (await nativePatrolState(page)).moving).toBe(false)
+  const exited = await nativePatrolState(page)
+  const exitedSamples = await nativeOrbitSamples(page, 1000)
+  expect(exitedSamples.every(sample => Math.abs(sample.lng - exited.lng) < 1e-6 && !sample.moving), 'Exiting clears the recurring overview animation').toBe(true)
 })

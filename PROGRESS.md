@@ -1,8 +1,14 @@
 # PROGRESS.md
 
-_Current work: native globe and adventure audio revision, 2026-11-17. Prior reports remain as history._
+_Current work: touch-and-go port calls and completed-patrol overview, 2026-11-17. Prior reports remain as history._
 
-## Current globe/audio revision
+## Current patrol-pacing revision
+
+The owner requested shorter calls and a rotating whole-patrol view after Seattle. Work starts at freshly fetched main `2cec276dc08bde643577a6e0f1e0261b124472ce` on `codex/patrol-touch-and-go-20261117-210100Z`. Ordinary holds are 1.4s, McMurdo 2.4s, Panama 1.8s and Seattle 2.2s; every stop, sea waypoint, image, credit and mileage calculation is retained. The completed route remains on a broad globe rotating through all longitudes until Explore or Escape. All nine stops can reopen their galleries, which pause/resume the orbit. Reduced motion remains static.
+
+Final evidence: local Node 22.23.5 and CI Node 22.23.4; **89 unit tests**, build/data validation, **18 Chromium** and **eight production cases PASS** in GitHub Actions run #27. The focused native WebKit recap passes too. Real production-build desktop/phone captures retain all nine arrivals, four McMurdo photos, the full route and all galleries; native camera longitude turns through every hemisphere and survives 932↔390 reflow. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) and [genuine evidence](docs/evidence/patrol-recap/README.md). [PR #8](https://github.com/gocoastnola/CoastGuardInteractive/pull/8) records final publication/hosted checks. Further recovery checks are skipped at the owner's request; no backup/tag changes are made.
+
+## Published globe/audio revision
 
 The owner requested a genuine native globe as the main voyage stage, smaller optional photos, motivational recorded music, stronger arrivals and an assignment reveal without repeated clicks. Work is on `codex/globe-and-adventure-audio-20261117-162137Z`, from freshly fetched main `481c4c98b31451541c6ceae26158b9f08f122571`. The verified pre-globe tag/bundle, original recovery tag and untouched benchmark are recorded in [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md).
 

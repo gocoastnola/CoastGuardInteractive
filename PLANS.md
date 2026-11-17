@@ -1,6 +1,10 @@
 # PLANS.md
 
-## Current owner-authorized revision (2026-11-17)
+## Current requested refinement (2026-11-17)
+
+Shorten port calls while preserving their order and route, then show a continuous broad globe overview of the complete patrol after Seattle. Keep the view until Explore/Escape, with paused photo review for every visited stop and a static reduced-motion alternative. Preserve the four-photo ZIP opening, training, surprise orders, music and all approved assets. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) for timing and current verification. The owner requested skipping further recovery checks; do not touch backup repositories or recovery tags.
+
+## Published globe/audio revision (2026-11-17)
 
 Implement and verify a genuine native MapLibre globe, a globe-led voyage with compact optional destination photography, the CC BY 4.0 Vanguard recording by Scott Buckley with authored fallback music and purposeful arrival/orders cues. Preserve the existing four-photo ZIP opening, storyline, all nine arrivals, route geometry, approved authentic imagery and demo labels. No new engine, dependency, account, key or paid service. Implementation and checks are complete. The owner explicitly approved merging PR #7 and deploying to the existing GitHub Pages site on 2026-11-17, resolving the earlier automatic-review hold. Publish through the normal validation pipeline and verify the hosted result.
 

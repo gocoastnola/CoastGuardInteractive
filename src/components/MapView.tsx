@@ -23,7 +23,7 @@ import { UNIT_TYPE_COLORS } from '../lib/units'
 import { bearingFor, boundsFor, NATIONAL_VIEW, type JumpTarget } from '../lib/camera'
 import { prefersReducedMotion } from '../lib/motion'
 import { arcPrefix, boundsOf, type LngLat } from '../journey/arc'
-import { globeOverviewZoom, voyageMidpoint } from '../lib/globe'
+import { globeOverviewZoom, PATROL_OVERVIEW_LATITUDE, startPatrolOverviewCamera, voyageMidpoint } from '../lib/globe'
 import { installGlobeAtmosphere } from '../lib/globe-atmosphere'
 
 /** Keyless vector styles. Primary = OpenFreeMap; fallback = CARTO Dark Matter (both attribution-required). */
@@ -64,6 +64,8 @@ export interface MapHandle {
   fitPoints(points: LngLat[], opts?: FitOptions): void
   /** Rotate one physical, broad-view sphere toward the current sea leg. */
   frameVoyageLeg(points: LngLat[], opts?: { duration?: number; reflow?: boolean }): void
+  /** Keep the completed patrol on one broad sphere while every longitude rotates into view. */
+  startPatrolOverview(opts?: { reflow?: boolean; paused?: boolean }): void
   /** Same cinematic fly-in the station panel uses. */
   flyToUnit(unitId: string, opts?: { duration?: number }): void
   flyToPlace(lngLat: LngLat, opts?: { zoom?: number; pitch?: number; bearing?: number; duration?: number }): void
@@ -114,6 +116,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   const activeRef = useRef(active)
   activeRef.current = active
   const driftTimer = useRef<number | null>(null)
+  const cancelPatrolOverview = useRef<(() => void) | null>(null)
   const [basemap, setBasemap] = useState<Basemap>('loading')
   const [projection, setProjection] = useState('loading')
   const [worldCopies, setWorldCopies] = useState<boolean | undefined>(undefined)
@@ -124,6 +127,17 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         ? { top: 40, bottom: Math.round(window.innerHeight * 0.6), left: 20, right: 20 }
         : { top: 80, bottom: 80, left: 60, right: 440 + 40 }
       : NATIONAL_VIEW.padding
+
+  const stopCamera = (map = mapRef.current) => {
+    // Native stop emits moveend. Remove the orbit continuation before it can restart.
+    cancelPatrolOverview.current?.()
+    cancelPatrolOverview.current = null
+    if (driftTimer.current !== null) {
+      window.clearTimeout(driftTimer.current)
+      driftTimer.current = null
+    }
+    map?.stop()
+  }
 
   const syncMarkerAccess = () => {
     const map = mapRef.current
@@ -281,7 +295,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       fitPoints(points, opts = {}) {
         const map = mapRef.current
         if (!map || points.length === 0) return
-        map.stop()
+        stopCamera(map)
         const padding = opts.padding ?? { top: 140, bottom: 160, left: 80, right: 80 }
         // Commit the scene insets before calculating the first fitted camera.
         // Otherwise Mercator's constraint can calculate against the previous scene.
@@ -303,37 +317,35 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       frameVoyageLeg(points, opts = {}) {
         const map = mapRef.current
         if (!map || !points.length) return
-        const canvas = map.getContainer().getBoundingClientRect()
-        const stage = document.querySelector('.voyage-globe-stage')?.getBoundingClientRect()
-        const slot = stage && stage.width > 0 && stage.height > 0 ? stage : canvas
         const center = voyageMidpoint(points)
-        const diameter = Math.min(slot.width, slot.height) * 0.92
-        const padding = {
-          top: Math.max(0, slot.top - canvas.top),
-          bottom: Math.max(0, canvas.bottom - slot.bottom),
-          left: Math.max(0, slot.left - canvas.left),
-          right: Math.max(0, canvas.right - slot.right),
-        }
-        map.stop()
+        stopCamera(map)
         if (opts.reflow) {
           // Rotation changes the layout immediately. Retain geographic position,
           // fit the sphere now, then continue the remaining passage below.
           map.jumpTo({
-            padding,
-            zoom: globeOverviewZoom(diameter, canvas.height, map.getCenter().lat, map.getVerticalFieldOfView()),
+            ...voyageGlobeFrame(map, map.getCenter().lat),
             bearing: -18,
             pitch: 0,
           })
         }
         const camera = {
           center,
-          zoom: globeOverviewZoom(diameter, canvas.height, center[1], map.getVerticalFieldOfView()),
+          ...voyageGlobeFrame(map, center[1]),
           bearing: -18,
           pitch: 0,
-          padding,
         }
         if (prefersReducedMotion()) map.jumpTo(camera)
         else map.easeTo({ ...camera, duration: opts.duration ?? 2200, essential: true })
+      },
+      startPatrolOverview(opts = {}) {
+        const map = mapRef.current
+        if (!map) return
+        stopCamera(map)
+        cancelPatrolOverview.current = startPatrolOverviewCamera(
+          map,
+          voyageGlobeFrame(map, PATROL_OVERVIEW_LATITUDE),
+          { ...opts, reducedMotion: prefersReducedMotion() },
+        )
       },
       flyToUnit(unitId, opts = {}) {
         const map = mapRef.current
@@ -344,7 +356,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       flyToPlace(lngLat, opts = {}) {
         const map = mapRef.current
         if (!map) return
-        map.stop()
+        stopCamera(map)
         const target = { center: lngLat, zoom: opts.zoom ?? 7, pitch: opts.pitch ?? 40, bearing: opts.bearing ?? 0 }
         if (prefersReducedMotion()) map.jumpTo(target)
         else map.flyTo({ ...target, duration: opts.duration ?? 2500, curve: 1.4, essential: true })
@@ -352,6 +364,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       easeTo(opts) {
         const map = mapRef.current
         if (!map) return
+        stopCamera(map)
         if (prefersReducedMotion()) {
           map.jumpTo({ center: opts.center, zoom: opts.zoom, pitch: opts.pitch, bearing: opts.bearing })
           return
@@ -359,11 +372,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         map.easeTo({ ...opts, essential: true })
       },
       stop() {
-        if (driftTimer.current !== null) {
-          window.clearTimeout(driftTimer.current)
-          driftTimer.current = null
-        }
-        mapRef.current?.stop()
+        stopCamera()
       },
       getMap() {
         return mapRef.current
@@ -374,13 +383,9 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   )
 
   const flyToUnitCamera = (map: MLMap, unit: Unit, padding: PaddingOptions, duration = 2800) => {
-    if (driftTimer.current) {
-      window.clearTimeout(driftTimer.current)
-      driftTimer.current = null
-    }
+    stopCamera(map)
     const bearing = bearingFor(unit.id)
     const target = { center: [unit.lng, unit.lat] as [number, number], zoom: 10.6, pitch: 52, bearing, padding }
-    map.stop()
     if (prefersReducedMotion()) {
       map.jumpTo(target)
       return
@@ -492,11 +497,10 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     map.once('load', declutter)
 
     return () => {
+      stopCamera(map)
       window.clearTimeout(timeout)
       disposeAtmosphere()
       markerAccessObserver.disconnect()
-      if (driftTimer.current !== null) window.clearTimeout(driftTimer.current)
-      driftTimer.current = null
       map.off('move', declutter)
       map.off('move', syncMarkerAccess)
       map.off('moveend', syncMarkerAccess)
@@ -515,7 +519,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !active || cinematicRef.current) return
-    map.stop()
+    stopCamera(map)
     map.fitBounds(NATIONAL_VIEW.bounds, {
       padding: NATIONAL_VIEW.padding,
       pitch: 0,
@@ -550,12 +554,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     if (unit) {
       flyToUnitCamera(map, unit, cameraPadding())
     } else {
-      if (driftTimer.current) {
-        window.clearTimeout(driftTimer.current)
-        driftTimer.current = null
-      }
       if (cinematicRef.current) return // the act controls the camera
-      map.stop()
+      stopCamera(map)
       map.fitBounds(NATIONAL_VIEW.bounds, {
         padding: NATIONAL_VIEW.padding,
         pitch: 0,
@@ -571,7 +571,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !jump) return
-    map.stop()
+    stopCamera(map)
     map.fitBounds(boundsFor(jump.target), {
       padding: cameraPadding(),
       pitch: jump.target === 'conus' ? 0 : 30,
@@ -594,6 +594,23 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     </div>
   )
 })
+
+/** Fit the physical sphere into the voyage's current responsive scene slot. */
+function voyageGlobeFrame(map: MLMap, latitude: number): { zoom: number; padding: PaddingOptions } {
+  const canvas = map.getContainer().getBoundingClientRect()
+  const stage = document.querySelector('.voyage-globe-stage')?.getBoundingClientRect()
+  const slot = stage && stage.width > 0 && stage.height > 0 ? stage : canvas
+  const diameter = Math.min(slot.width, slot.height) * 0.92
+  return {
+    zoom: globeOverviewZoom(diameter, canvas.height, latitude, map.getVerticalFieldOfView()),
+    padding: {
+      top: Math.max(0, slot.top - canvas.top),
+      bottom: Math.max(0, canvas.bottom - slot.bottom),
+      left: Math.max(0, slot.left - canvas.left),
+      right: Math.max(0, canvas.right - slot.right),
+    },
+  }
+}
 
 /**
  * Greedy screen-space declutter. Markers whose projected positions fall within

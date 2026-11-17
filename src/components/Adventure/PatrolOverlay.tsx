@@ -14,11 +14,18 @@ interface Props {
   onDone: (opts: { skipped: boolean }) => void
 }
 
-// Preserve the authored itinerary and arrival holds. Details pause this clock.
-const CARD_LIFE_S = 3.8
-const CANAL_LIFE_S = 4.4
-const ANTARCTIC_LIFE_S = 10.2
-const FRAME_S = 0.55
+// Touch-and-go calls; full photographs remain available in Details and the recap.
+const CARD_LIFE_S = 1.4
+const CANAL_LIFE_S = 1.8
+const ANTARCTIC_LIFE_S = 2.4
+const HOMECOMING_LIFE_S = 2.2
+const CARD_FADE_S = 0.22
+const FRAME_S = 0.35
+const RECAP_NAMES: Record<string, string> = {
+  honolulu: 'Honolulu', hobart: 'Hobart', wellington: 'Wellington',
+  mcmurdo: 'McMurdo', 'punta-arenas': 'Patagonia', 'cape-horn': 'Cape Horn',
+  rio: 'Rio', panama: 'Panama', 'home-seattle': 'Seattle',
+}
 
 function CanalLocks() {
   return <svg className="canal-locks" viewBox="0 0 220 64" aria-hidden="true">
@@ -34,6 +41,9 @@ function CanalLocks() {
 
 /** The globe owns the stage; destination photographs expand only by request. */
 export function PatrolOverlay({ map, onDone }: Props) {
+  // Responsive MapView wrappers can change identity without replacing the map.
+  // Scene setup follows map availability so a breakpoint never replays the patrol.
+  const mapAvailable = map !== null
   const root = useRef<HTMLDivElement>(null)
   const done = useRef(false)
   const onDoneRef = useRef(onDone)
@@ -50,6 +60,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   const [visited, setVisited] = useState(reduced ? legs.length : 0)
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const [activeSlide, setActiveSlide] = useState(0)
+  const [recap, setRecap] = useState(false)
+  const recapRef = useRef(false)
   const [detailsId, setDetailsId] = useState<string | null>(null)
   const detailsIdRef = useRef(detailsId)
   detailsIdRef.current = detailsId
@@ -65,10 +77,14 @@ export function PatrolOverlay({ map, onDone }: Props) {
     setDetailsId(null)
     const tl = timeline.current
     const camera = legCamera.current
-    if (tl && camera && camera.until > tl.time()) {
-      map?.frameVoyageLeg(camera.points, { duration: (camera.until - tl.time()) * 1000 })
+    if (recapRef.current) {
+      map?.startPatrolOverview()
+    } else {
+      if (tl && camera && camera.until > tl.time()) {
+        map?.frameVoyageLeg(camera.points, { duration: (camera.until - tl.time()) * 1000 })
+      }
+      tl?.resume()
     }
-    tl?.resume()
     window.requestAnimationFrame(() => {
       if (returnFocus.current?.isConnected) returnFocus.current.focus()
     })
@@ -84,6 +100,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   useEffect(() => {
     if (!map || !root.current) return
     done.current = false
+    recapRef.current = false
+    setRecap(false)
     sound.enable()
     sound.ambient()
     const markerFor = (i: number): JourneyMarker => ({
@@ -141,7 +159,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       }, t)
       t += dur
       const card = cards[k]
-      const life = stop.gallery ? ANTARCTIC_LIFE_S : stop.special === 'canal' ? CANAL_LIFE_S : CARD_LIFE_S
+      const life = stop.gallery ? ANTARCTIC_LIFE_S : stop.special === 'canal' ? CANAL_LIFE_S : stop.special === 'homecoming' ? HOMECOMING_LIFE_S : CARD_LIFE_S
       tl.call(() => {
         setActiveStop(stop.id)
         setActiveSlide(0)
@@ -153,44 +171,50 @@ export function PatrolOverlay({ map, onDone }: Props) {
       }, [], t)
       if (card && stop.gallery) {
         const slides = Array.from(card.querySelectorAll<HTMLElement>('[data-antarctic-slide]'))
+        const slideLife = life / slides.length
         slides.forEach((slide, index) => {
           tl.set(slide, { opacity: index === 0 ? 1 : 0 }, t + 0.02)
           if (index > 0) {
-            tl.call(() => setActiveSlide(index), [], t + 0.4 + index * 2.1)
-            tl.to(slide, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + index * 2.1)
+            tl.call(() => setActiveSlide(index), [], t + index * slideLife)
+            tl.to(slide, { opacity: 1, duration: 0.18, ease: 'power2.inOut' }, t + index * slideLife)
           }
-          if (index < slides.length - 1) tl.to(slide, { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + (index + 1) * 2.1)
+          if (index < slides.length - 1) tl.to(slide, { opacity: 0, duration: 0.18, ease: 'power2.inOut' }, t + (index + 1) * slideLife)
         })
       }
       if (card) {
-        tl.fromTo(card, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, t + 0.03)
+        tl.fromTo(card, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: CARD_FADE_S, ease: 'power2.out' }, t + 0.03)
         if (stop.special === 'canal') {
-          tl.fromTo(card.querySelectorAll('.canal-water'), { attr: { height: 10, y: 52 } }, { attr: { height: 40, y: 22 }, duration: 1.8, ease: 'power1.inOut', stagger: 0.35 }, t + 0.4)
-          tl.to(card.querySelector('.canal-ship'), { y: -26, duration: 2.1, ease: 'power1.inOut' }, t + 0.4)
+          tl.fromTo(card.querySelectorAll('.canal-water'), { attr: { height: 10, y: 52 } }, { attr: { height: 40, y: 22 }, duration: 0.65, ease: 'power1.inOut', stagger: 0.12 }, t + 0.2)
+          tl.to(card.querySelector('.canal-ship'), { y: -26, duration: 1.05, ease: 'power1.inOut' }, t + 0.2)
         }
-        tl.to(card, { opacity: 0, y: -8, duration: 0.4, ease: 'power2.in' }, t + life)
-        tl.call(() => setActiveStop(null), [], t + life + 0.4)
+        tl.to(card, { opacity: 0, y: -8, duration: CARD_FADE_S, ease: 'power2.in' }, t + life)
+        tl.call(() => setActiveStop(null), [], t + life + CARD_FADE_S)
       }
-      t += life + 0.55
+      t += life + 0.3
       samplesBefore += legSamples[k]
       milesBefore += leg.miles
     })
     tl.call(() => {
-      const points = [PATROL_STOPS.at(-1)!.lngLat]
-      legCamera.current = { points, until: t + 2.6 }
-      map.frameVoyageLeg(points, { duration: 2600 })
+      recapRef.current = true
+      setRecap(true)
+      setActiveStop(null)
+      setVisited(legs.length)
+      setMiles(totalMiles)
+      map.drawArc(fullPath, 1)
+      map.startPatrolOverview()
     }, [], t)
-    tl.call(() => finish(false), [], t + 3.2)
     return () => {
       tl.revert()
       timeline.current = null
+      recapRef.current = false
       map.stop()
       map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
       sound.stopAmbient()
     }
-    // Scene setup owns a single timeline. Current onDone is read through its ref.
+    // The native map stays mounted across responsive imperative-handle changes.
+    // Scene setup owns one timeline; current onDone is read through its ref.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map])
+  }, [mapAvailable])
 
   useEffect(() => {
     if (!map) return
@@ -201,6 +225,10 @@ export function PatrolOverlay({ map, onDone }: Props) {
         // Read the new CSS stage after rotation, then update the native camera.
         // A paused gallery stays paused; an underway leg retains its end time.
         map.getMap()?.resize()
+        if (recapRef.current) {
+          map.startPatrolOverview({ reflow: true, paused: !!detailsIdRef.current })
+          return
+        }
         const camera = legCamera.current
         const tl = timeline.current
         const points = camera?.points ?? (reduced ? [PATROL_STOPS[0].lngLat] : legs[0].points)
@@ -213,7 +241,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
       window.removeEventListener('resize', reframe)
       window.cancelAnimationFrame(frame)
     }
-  }, [map, legs, reduced])
+    // Keep the resize subscription across responsive handle wrappers too.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapAvailable, legs, reduced])
 
   useEffect(() => {
     if (!detailsId || !root.current) return
@@ -255,13 +285,13 @@ export function PatrolOverlay({ map, onDone }: Props) {
   }, [map, fullPath, totalMiles])
 
   return (
-    <div className={`patrol voyage-stage${reduced ? ' is-static' : ''}`} ref={root} data-testid="patrol" data-gallery-open={!!detailsId}>
+    <div className={`patrol voyage-stage${reduced ? ' is-static' : ''}${recap ? ' is-recap' : ''}`} ref={root} data-testid="patrol" data-gallery-open={!!detailsId} data-patrol-stage={reduced ? 'static' : recap ? 'recap' : 'voyage'}>
       <header className="voyage-header" aria-hidden={detailsId ? true : undefined}>
-        <div><p>{PATROL.eyebrow}</p><h2>{PATROL.title}</h2></div>
-        <span className="voyage-chapter">09 STOPS</span>
+        <div><p>{recap ? 'BACK IN SEATTLE' : PATROL.eyebrow}</p><h2>{recap ? 'Your first patrol, complete.' : PATROL.title}</h2></div>
+        {recap ? <button className="voyage-recap-continue" data-testid="patrol-explore" onClick={() => finish(false)}>Explore the map <span aria-hidden="true">→</span></button> : <span className="voyage-chapter">09 STOPS</span>}
       </header>
       <div className="voyage-globe-stage" data-testid="voyage-globe-stage" aria-hidden="true">
-        <p className="voyage-leg-status">{reduced ? 'The complete illustrative voyage' : `${legs[legIndex].from.name} → ${legs[legIndex].to.name}`}</p>
+        <p className="voyage-leg-status">{recap ? 'The complete patrol · every stop, one journey' : reduced ? 'The complete illustrative voyage' : `${legs[legIndex].from.name} → ${legs[legIndex].to.name}`}</p>
       </div>
       {reduced ? (
         <section className="patrol-static voyage-static-dock" aria-label="Voyage stops — scroll to read" aria-hidden={detailsId ? true : undefined}>
@@ -275,7 +305,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
         </section>
       ) : (
         <section className="voyage-dock-slot" aria-label="Current port" aria-live="polite" aria-hidden={detailsId ? true : undefined}>
-          <div className="voyage-underway" aria-hidden={!!activeStop}><span>UNDERWAY</span><strong>{legs[legIndex].to.name}</strong><small>The voyage continues</small></div>
+          {recap ? <div className="voyage-recap-ports" data-testid="patrol-recap" role="group" aria-label="Completed patrol — revisit any stop">
+            {PATROL_STOPS.slice(1).map(stop => <button key={stop.id} data-testid={`recap-port-${stop.id}`} onClick={event => openDetails(stop.id, event.currentTarget)} aria-haspopup="dialog" aria-label={`Photos and details: ${stop.name}`}>{RECAP_NAMES[stop.id]}</button>)}
+          </div> : <div className="voyage-underway" aria-hidden={!!activeStop}><span>UNDERWAY</span><strong>{legs[legIndex].to.name}</strong><small>The voyage continues</small></div>}
           {PATROL_STOPS.slice(1).map((stop, index) => {
             const shown = activeStop === stop.id
             const photo = stop.gallery?.[activeSlide]
