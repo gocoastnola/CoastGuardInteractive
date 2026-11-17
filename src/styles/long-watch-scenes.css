@@ -1,0 +1,290 @@
+/* The Long Watch: documentary chapters, authentic photography, a quiet wide chart. */
+.app .scene-kicker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 20px;
+  color: #a2b8bf;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.app .scene-kicker > span { color: #d7a44b; font-variant-numeric: tabular-nums; }
+
+/* Cape May: the photograph is the stage, rather than an ornament behind the copy. */
+.app .long-watch-training:not(.is-static) {
+  background: radial-gradient(ellipse at 2% 100%, #21687d80, transparent 65%), linear-gradient(100deg, #113b4a 0%, #0c2c3c 40%, #09151c8a 100%);
+}
+.app .training-scene-header { position: absolute; top: 7vh; left: 5vw; width: 31vw; z-index: 4; }
+.app .training-scene-title { margin: 0; color: #dde7e8; font-size: clamp(40px, 5.7vw, 84px); font-weight: 500; line-height: .97; letter-spacing: -.065em; }
+.app .training-scene-context { max-width: 240px; margin: 22px 0 0; color: #94aeb5; font-size: 11px; line-height: 1.6; }
+.app .long-watch-training:not(.is-static) .journey-beats { left: 5vw; right: auto; top: 47vh; width: 29vw; padding: 0; background: none; box-shadow: none; }
+.app .long-watch-training:not(.is-static) .journey-beat { width: 100%; max-width: 350px; color: #b6c9ce; font-size: clamp(18px, 2.1vw, 29px); font-weight: 400; line-height: 1.36; letter-spacing: -.025em; text-align: left; text-shadow: none; }
+.app .long-watch-training:not(.is-static) .training-gallery { left: 39vw; top: 7vh; width: 56vw; height: 86vh; transform: none; border: 0; border-radius: 0; box-shadow: none; background: #102933; }
+.app .long-watch-training .training-photo { transition: opacity 1s ease; }
+.app .long-watch-training .training-photo img { object-position: 50% 40%; filter: saturate(1.06) contrast(1.02); }
+.app .long-watch-training .training-photo::after { inset: 50% 0 0; background: linear-gradient(transparent, rgba(9,21,28,.9)); }
+.app .long-watch-training .training-photo-caption { left: 26px; right: 22px; bottom: 25px; color: #dde7e8; font-size: 11px; font-weight: 500; letter-spacing: .13em; }
+.app .long-watch-training .training-credit { margin-top: 9px; color: #b9cbd0; font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
+.app .long-watch-training:not(.is-static) .journey-counter { left: 5vw; bottom: 13vh; width: 29vw; transform: none; }
+.app .long-watch-training .days { min-width: 0; padding: 0; border: 0; border-radius: 0; background: none; backdrop-filter: none; box-shadow: none; }
+.app .long-watch-training .days-num { color: #dde7e8; font-size: 26px; font-weight: 500; letter-spacing: -.035em; }
+.app .long-watch-training .days-date { color: #a2b8bf; font-size: 11px; }
+.app .long-watch-training .days-readout { justify-content: flex-start; gap: 8px; flex-wrap: wrap; }
+.app .long-watch-training .weeks-bar { height: 3px; margin-top: 20px; background: #29414a; border-radius: 0; }
+.app .long-watch-training .weeks-fill { border-radius: 0; background: #d7a44b; box-shadow: none; }
+.app .long-watch-training .weeks-labels { margin-top: 12px; color: #819ca5; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+.app .long-watch-training.is-graduating .training-scene-title { color: #e8dfc8; }
+
+/* Orders: a deliberate reveal on a disciplined dispatch board. */
+.app .long-watch-orders { display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: 20px; padding: 44px 24px; overflow-y: auto; background: radial-gradient(ellipse at 50% 0, #23617b 0%, #123b50 42%, #091b28 100%); }
+.app .long-watch-orders .slot-head { width: min(680px, 100%); margin: 0; text-align: center; }
+.app .long-watch-orders .scene-kicker { justify-content: center; margin-bottom: 28px; }
+.app .long-watch-orders .orders-eyebrow { max-width: 500px; margin: 0 auto 16px; color: #9db5bd; font-size: 10px; letter-spacing: .025em; text-transform: none; }
+.app .long-watch-orders .orders-title { margin: 0; color: #dde7e8; font-size: clamp(44px, 6.6vw, 90px); font-weight: 500; line-height: 1; letter-spacing: -.065em; text-shadow: none; }
+.app .long-watch-orders .orders-sub { max-width: 410px; margin: 20px auto 0; color: #9cb4bc; font-size: 14px; line-height: 1.6; }
+.app .orders-record { display: flex; justify-content: space-between; width: min(680px, 100%); margin-top: 24px; color: #8fa9b2; font-size: 9px; letter-spacing: .15em; }
+.app .long-watch-orders .slot-frame { width: min(680px, 100%); margin: -9px 0 0; padding: 16px 24px; border: 0; border-top: 1px solid #fff9ed; border-bottom: 1px solid #d5c9af; border-radius: 0; background: #efe8d9; box-shadow: 0 24px 65px #04101933 !important; }
+.app .long-watch-orders .slot-row { justify-content: center; padding: 8px; }
+.app .long-watch-orders .slot-name { color: #14374c; font-size: clamp(16px, 2.1vw, 28px); font-weight: 500; letter-spacing: -.025em; }
+.app .long-watch-orders .slot-place { color: #49616d; font-size: 11px; }
+.app .long-watch-orders .slot-pointer { color: #986414; left: 6px; font-size: 14px; text-shadow: none; }
+.app .long-watch-orders .slot-pointer--right { left: auto; right: 6px; }
+.app .long-watch-orders .slot-frame.is-landed { border-color: #f4cf82; background: #fff2d4; box-shadow: 0 0 0 1px #e3b356, 0 0 55px #f5bd4d40, 0 26px 60px #04101940 !important; }
+.app .long-watch-orders .slot-landed-card { width: min(680px, 100%); padding: 0; border: 0; background: none; box-shadow: none; text-align: center; }
+.app .long-watch-orders .slot-landed-name, .app .long-watch-orders .slot-landed-place { display: none; }
+.app .long-watch-orders .slot-landed-eyebrow { margin: 0 0 18px; color: #b4c6cb; font-size: 10px; letter-spacing: .16em; }
+.app .long-watch-orders .btn-primary { min-height: 48px; padding: 14px 25px; border: 1px solid #d7a44b; border-radius: 2px; color: #09151c; background: #d7a44b; box-shadow: none; font-size: 13px; font-weight: 600; }
+.app .long-watch-orders .slot-status { margin: 0; color: #a2b8bf; font-size: 12px; }
+
+/* First unit: exterior scale paired with a clear identity and purposeful details. */
+.app .ship-intro { padding: 5vh 4vw; background: radial-gradient(ellipse at 0 0, #24617a, #0d2c3e 55%, #09151c); place-items: safe center; }
+.app .ship-card { display: grid; grid-template-columns: 1.25fr 1fr; width: min(1260px, 100%); border: 0; border-radius: 0; background: linear-gradient(145deg, #184b5d, #0d2a3a); box-shadow: 0 25px 90px #03131c55; }
+.app .ship-hero { height: auto; min-height: 660px; }
+.app .ship-hero img { object-position: 50% 50%; }
+.app .ship-hero-scrim { background: linear-gradient(180deg, transparent 65%, rgba(9,21,28,.82)); }
+.app .ship-photo-caption { position: absolute; bottom: 60px; left: 28px; right: 24px; color: #dde7e8; font-size: 10px; letter-spacing: .14em; }
+.app .ship-photo-credit { position: absolute; bottom: 28px; left: 28px; color: #bfced2; font-size: 10px; text-underline-offset: 3px; }
+.app .ship-body { display: flex; flex-direction: column; padding: 40px clamp(24px, 3vw, 48px); }
+.app .ship-hero-text { position: static; margin: 0 0 24px; }
+.app .ship-eyebrow { margin-bottom: 23px; color: #d7a44b; font-size: 10px; font-weight: 500; letter-spacing: .15em; }
+.app .ship-name { color: #dde7e8; font-size: clamp(36px, 4.2vw, 59px); font-weight: 500; line-height: 1.02; letter-spacing: -.055em; }
+.app .ship-hull { display: block; margin-top: 11px; color: #8fb2bf; font-size: 11px; letter-spacing: .2em; }
+.app .ship-class { margin-top: 19px; color: #9db8c1; font-size: 12px; line-height: 1.5; }
+.app .ship-summary { color: #c2d1d5; font-size: 13px; line-height: 1.8; }
+.app .ship-missions { grid-template-columns: 1fr; gap: 9px; margin: 2px 0 24px; padding-top: 18px; border-top: 1px solid #29434d; }
+.app .ship-missions li { color: #b3c9d1; font-size: 11px; line-height: 1.5; }
+.app .ship-mission-dot { width: 3px; height: 3px; border-radius: 0; background: #d7a44b; box-shadow: none; }
+.app .ship-gallery { gap: 12px; margin: auto 0 24px; }
+.app .ship-gallery figure { margin: 0; min-width: 0; }
+.app .ship-gallery img, .app .ship-gallery .media-unavailable { height: 100px; border: 0; border-radius: 0; }
+.app .ship-gallery figcaption { margin-top: 8px; color: #8faab4; font-size: 9px; letter-spacing: .04em; }
+.app .ship-foot { flex-direction: column; align-items: stretch; gap: 15px; }
+.app .ship-demo-note { color: #8faab4; font-size: 10px; line-height: 1.5; }
+.app .ship-foot .btn-primary { justify-content: space-between; min-height: 48px; padding: 13px 20px; border: 1px solid #d7a44b; border-radius: 2px; background: #d7a44b; color: #09151c; box-shadow: none; font-size: 12px; }
+
+/* Voyage: the card sits alongside the chart; it never becomes the whole world. */
+.app .long-watch-patrol .patrol-head { top: 30px; left: 40px; right: 40px; text-align: left; }
+.app .long-watch-patrol .scene-kicker { margin-bottom: 14px; }
+.app .long-watch-patrol .patrol-eyebrow { color: #a5bbc2; font-size: 10px; letter-spacing: .14em; }
+.app .long-watch-patrol .patrol-title { max-width: 620px; margin-top: 6px; padding: 0; color: #dde7e8; font-size: clamp(27px, 3.1vw, 44px); font-weight: 500; line-height: 1.08; letter-spacing: -.045em; text-shadow: none; }
+.app .long-watch-patrol .patrol-beat { top: 170px; left: 40px; right: auto; color: #a5bec8; font-size: 11px; text-align: left; text-shadow: none; }
+.app .long-watch-patrol .patrol-head::before { left: -40px; right: -40px; bottom: -40px; background: linear-gradient(#09151cf2, #09151cba 60%, transparent); }
+.app .long-watch-patrol .port-card { left: auto; right: 40px; bottom: 140px; width: 390px; height: auto; min-height: 0; max-height: calc(100% - 300px); transform: none; border: 1px solid #2f4d59; border-radius: 0; background: linear-gradient(145deg, #17465a, #0c2839); box-shadow: 0 18px 40px #02090e55; backdrop-filter: none; }
+.app .long-watch-patrol .port-img, .app .long-watch-patrol .antarctic-gallery { height: 235px; flex: 0 0 235px; min-height: 0; }
+.app .long-watch-patrol .port-body { flex: 1 1 auto; overflow-y: auto; padding: 21px 24px 23px; }
+.app .long-watch-patrol .port-card[aria-hidden='false'] .port-body { pointer-events: auto; }
+.app .long-watch-patrol .port-card[aria-hidden='true'] .port-body { pointer-events: none; }
+.app .port-sequence { margin-bottom: 16px; color: #d7a44b; font-size: 12px; font-variant-numeric: tabular-nums; }
+.app .port-sequence span { margin-left: 6px; color: #7697a5; font-size: 8px; letter-spacing: .14em; }
+.app .long-watch-patrol .port-eyebrow { margin-bottom: 9px; color: #c4d9e2; font-size: 11px; letter-spacing: .18em; }
+.app .long-watch-patrol .port-name { display: block; color: #dde7e8; font-size: 26px; font-weight: 500; line-height: 1.15; letter-spacing: -.04em; }
+.app .long-watch-patrol .port-flag { margin-right: 8px; font-size: 15px; }
+.app .long-watch-patrol .port-country { display: block; margin-top: 9px; color: #b8ced8; font-size: 11px; font-weight: 400; letter-spacing: .04em; }
+.app .long-watch-patrol .port-blurb { margin-top: 13px; color: #d0dfe5; font-size: 12px; line-height: 1.65; }
+.app .long-watch-patrol .port-credit { top: 208px; right: 12px; border-radius: 0; background: #09151cc9; font-size: 10px; }
+.app .long-watch-patrol .antarctic-credit { top: 12px; right: 12px; border-radius: 0; background: #09151cc9; font-size: 10px; }
+.app .long-watch-patrol .antarctic-caption { left: 18px; bottom: 17px; right: 18px; font-size: 11px; font-weight: 500; letter-spacing: .1em; }
+.app .long-watch-patrol .canal-locks { height: 50px; margin-top: 15px; opacity: .7; }
+.app .long-watch-patrol .patrol-counter { left: auto; right: 40px; bottom: 25px; width: 390px; transform: none; }
+.app .long-watch-patrol .miles { min-width: 0; padding: 0; border: 0; border-radius: 0; background: none; backdrop-filter: none; box-shadow: none; }
+.app .long-watch-patrol .miles-readout { justify-content: flex-start; gap: 9px; }
+.app .long-watch-patrol .miles-num { color: #dde7e8; font-size: 30px; font-weight: 500; letter-spacing: -.04em; }
+.app .long-watch-patrol .miles-label { color: #b5cbd4; font-size: 11px; }
+.app .long-watch-patrol .miles-note { max-width: none; margin: 8px 0 12px; color: #b0c9d4; font-size: 11px; text-align: left; }
+.app .long-watch-patrol .miles-bar { height: 2px; border-radius: 0; background: #29414c; }
+.app .long-watch-patrol .miles-bar > span { background: #d7a44b; box-shadow: none; }
+.app .patrol-chart-label { position: absolute; left: 40px; bottom: 70px; display: flex; align-items: center; gap: 9px; color: #9ab6c3; font-size: 8px; letter-spacing: .13em; }
+.app .chart-key { width: 24px; height: 2px; background: #d7a44b; }
+
+/* Portrait phones: clear chapter, generous photo, and an always-visible chart above the port. */
+@media (max-width: 860px) {
+  .app .training-scene-header { top: 28px; left: 24px; right: 24px; width: auto; }
+  .app .training-scene-header .scene-kicker { margin-bottom: 14px; font-size: 9px; }
+  .app .training-scene-title { max-width: 290px; font-size: clamp(40px, 11vw, 57px); }
+  .app .training-scene-title br { display: none; }
+  .app .training-scene-context { margin-top: 13px; max-width: none; font-size: 9px; }
+  .app .long-watch-training:not(.is-static) .training-gallery { left: 20px; top: 27vh; width: calc(100% - 40px); height: 43vh; }
+  .app .long-watch-training:not(.is-static) .journey-beats { left: 24px; right: 24px; top: 73vh; width: auto; }
+  .app .long-watch-training:not(.is-static) .journey-beat { max-width: none; font-size: 17px; line-height: 1.35; }
+  .app .long-watch-training:not(.is-static) .journey-counter { left: 24px; bottom: 24px; width: calc(100% - 48px); }
+  .app .long-watch-training .days-num { font-size: 20px; }
+  .app .long-watch-training .days-date { font-size: 9px; }
+  .app .long-watch-training .weeks-bar { margin-top: 10px; }
+  .app .long-watch-training .weeks-labels { margin-top: 8px; }
+  .app .long-watch-training .training-photo-caption { left: 17px; bottom: 18px; font-size: 9px; }
+  .app .long-watch-training .training-credit { font-size: 9px; }
+  .app .long-watch-orders { padding: 32px 22px; gap: 18px; }
+  .app .long-watch-orders .scene-kicker { margin-bottom: 30px; }
+  .app .long-watch-orders .orders-title { font-size: 52px; }
+  .app .long-watch-orders .orders-sub { max-width: 300px; font-size: 12px; }
+  .app .long-watch-orders .slot-frame { padding: 12px 15px; }
+  .app .long-watch-orders .slot-name { font-size: 17px; }
+  .app .long-watch-orders .slot-place { font-size: 10px; }
+  .app .ship-intro { padding: 0; }
+  .app .ship-card { display: block; width: 100%; }
+  .app .ship-hero { height: 38vh; min-height: 220px; }
+  .app .ship-photo-caption { bottom: 44px; left: 24px; font-size: 8px; }
+  .app .ship-photo-credit { bottom: 22px; left: 24px; font-size: 9px; }
+  .app .ship-body { padding: 28px 25px 32px; }
+  .app .ship-hero-text { margin-bottom: 18px; }
+  .app .ship-eyebrow { margin-bottom: 18px; font-size: 9px; }
+  .app .ship-name { font-size: 44px; }
+  .app .ship-class { font-size: 11px; }
+  .app .ship-summary { font-size: 12px; }
+  .app .ship-gallery { margin: 0 0 22px; }
+  .app .ship-gallery img, .app .ship-gallery .media-unavailable { height: 95px; }
+  .app .long-watch-patrol .patrol-head { top: 22px; left: 24px; right: 24px; }
+  .app .long-watch-patrol .scene-kicker { margin-bottom: 10px; font-size: 8px; }
+  .app .long-watch-patrol .patrol-eyebrow { font-size: 8px; }
+  .app .long-watch-patrol .patrol-title { max-width: 320px; margin-top: 7px; font-size: 29px; }
+  .app .long-watch-patrol .patrol-beat { top: 146px; left: 24px; font-size: 10px; }
+  .app .long-watch-patrol .port-card { left: 18px; right: 18px; bottom: 128px; width: auto; max-height: calc(100% - 315px); height: auto; min-height: 0; }
+  .app .long-watch-patrol .port-img, .app .long-watch-patrol .antarctic-gallery { height: clamp(135px, 22vh, 200px); flex-basis: clamp(135px, 22vh, 200px); }
+  .app .long-watch-patrol .port-body { padding: 15px 18px 18px; }
+  .app .port-sequence { margin-bottom: 11px; font-size: 10px; }
+  .app .long-watch-patrol .port-name { font-size: 25px; }
+  .app .long-watch-patrol .port-country { margin-top: 7px; font-size: 11px; }
+  .app .long-watch-patrol .port-blurb { margin-top: 10px; font-size: 12px; line-height: 1.6; }
+  .app .long-watch-patrol .port-credit { top: calc(clamp(135px, 22vh, 200px) - 26px); font-size: 10px; }
+  .app .long-watch-patrol .antarctic-caption { font-size: 10px; }
+  .app .long-watch-patrol .patrol-counter { left: 24px; right: 24px; bottom: 23px; width: auto; }
+  .app .long-watch-patrol .miles-num { font-size: 26px; }
+  .app .long-watch-patrol .miles-note { font-size: 11px; }
+  .app .patrol-chart-label { left: auto; right: 24px; bottom: 107px; font-size: 6px; gap: 6px; }
+  .app .chart-key { width: 15px; }
+}
+@media (max-width: 380px) and (min-height: 600px) {
+  .app .training-scene-title { font-size: 43px; }
+  .app .long-watch-training:not(.is-static) .journey-beat { font-size: 15px; }
+  .app .long-watch-patrol .port-name { font-size: 22px; }
+  .app .long-watch-patrol .port-body { padding: 13px 15px 15px; }
+  .app .long-watch-patrol .port-blurb { font-size: 11px; }
+}
+
+/* Short landscapes use a photo/copy split and allow intrinsic content to scroll. */
+@media (max-height: 520px) and (min-width: 600px) {
+  .app .training-scene-header { top: 25px; left: 24px; width: 34%; }
+  .app .training-scene-header .scene-kicker { margin-bottom: 10px; font-size: 8px; }
+  .app .training-scene-title { font-size: 35px; }
+  .app .training-scene-context { margin-top: 10px; font-size: 8px; }
+  .app .long-watch-training:not(.is-static) .training-gallery { left: 43%; top: 24px; width: 53%; height: calc(100% - 48px); }
+  .app .long-watch-training:not(.is-static) .journey-beats { top: 165px; left: 24px; right: auto; width: 34%; }
+  .app .long-watch-training:not(.is-static) .journey-beat { font-size: 15px; }
+  .app .long-watch-training:not(.is-static) .journey-counter { left: 24px; bottom: 25px; width: 34%; }
+  .app .long-watch-training .days-num { font-size: 18px; }
+  .app .long-watch-training .days-date { font-size: 8px; }
+  .app .long-watch-orders { justify-content: flex-start; padding: 24px; gap: 14px; }
+  .app .long-watch-orders .scene-kicker { margin-bottom: 12px; }
+  .app .long-watch-orders .orders-title { font-size: 42px; }
+  .app .long-watch-orders .orders-sub { margin-top: 12px; font-size: 11px; }
+  .app .orders-record { margin-top: 8px; }
+  .app .long-watch-patrol .patrol-head { top: 22px; left: 24px; width: 39%; }
+  .app .long-watch-patrol .patrol-title { font-size: 25px; }
+  .app .long-watch-patrol .patrol-beat { top: 145px; left: 24px; width: 36%; font-size: 9px; }
+  .app .long-watch-patrol .port-card { left: 44%; right: 20px; top: 25px; bottom: 103px; width: auto; max-height: none; flex-direction: row; }
+  .app .long-watch-patrol .port-img, .app .long-watch-patrol .antarctic-gallery { width: 43%; height: 100%; flex: 0 0 43%; }
+  .app .long-watch-patrol .port-body { padding: 13px; overflow-y: auto; }
+  .app .port-sequence { margin-bottom: 10px; font-size: 9px; }
+  .app .port-sequence span { font-size: 6px; letter-spacing: .08em; }
+  .app .long-watch-patrol .port-name { font-size: 19px; }
+  .app .long-watch-patrol .port-blurb { font-size: 11px; }
+  .app .long-watch-patrol .port-credit { top: auto; bottom: 10px; right: 60%; max-width: 38%; font-size: 7px; }
+  .app .long-watch-patrol .antarctic-credit { font-size: 7px; right: 7px; top: 7px; }
+  .app .long-watch-patrol .antarctic-caption { left: 9px; right: 9px; bottom: 10px; font-size: 7px; }
+  .app .long-watch-patrol .patrol-counter { left: 44%; right: 20px; bottom: 15px; }
+  .app .long-watch-patrol .miles-num { font-size: 22px; }
+  .app .long-watch-patrol .miles-note { margin: 5px 0 8px; font-size: 10px; }
+  .app .patrol-chart-label { left: 24px; right: auto; bottom: 24px; font-size: 6px; }
+}
+
+/* The same chapter language, with no timed reading or moving photographs. */
+.app .long-watch-training.is-static { padding: 30px 22px 40px; background: linear-gradient(135deg, #123c4d, #091c29); }
+.app .long-watch-training.is-static .training-scene-header { position: static; width: min(900px, 100%); margin: 0 auto 30px; }
+.app .long-watch-training.is-static .training-scene-title { max-width: none; font-size: clamp(38px, 7vw, 66px); }
+.app .long-watch-training.is-static .training-scene-title br { display: none; }
+.app .long-watch-training.is-static .training-scene-context { max-width: none; }
+.app .long-watch-training.is-static .journey-beats { position: static; width: 100%; padding: 20px 0; border: 0; border-top: 1px solid #29434d; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; }
+.app .long-watch-training.is-static .journey-beat { color: #b5cbd2; text-align: left; font-size: 18px; font-weight: 400; }
+.app .long-watch-training.is-static .training-static-weeks { padding: 16px 0; border-top: 1px solid #29434d; border-bottom: 1px solid #29434d; color: #d7a44b; font-size: 11px; }
+.app .long-watch-training.is-static .training-gallery { gap: 16px; }
+.app .long-watch-training.is-static .training-photo { border-radius: 0; transition: none; }
+.app .long-watch-training.is-static .journey-counter { margin-top: 25px; }
+.app .long-watch-training.is-static .training-graduation { padding-top: 20px; color: #d7a44b; font-size: 18px; text-align: left; }
+.app .long-watch-training.is-static .journey-continue { margin-left: 0; padding: 13px 23px; border: 1px solid #d7a44b; border-radius: 2px; background: #d7a44b; color: #09151c; box-shadow: none; }
+.app .long-watch-patrol.is-static .patrol-static { top: 190px; left: 40px; right: 40px; bottom: 135px; width: auto; transform: none; border: 1px solid #29434d; border-radius: 0; background: linear-gradient(145deg, #17465af5, #0c2839f5); }
+.app .long-watch-patrol.is-static .patrol-static-list { color: #d1dee2; font-size: 12px; }
+.app .long-watch-patrol.is-static .patrol-static-list li { padding: 10px 0; border-bottom: 1px solid #29434d; }
+.app .long-watch-patrol.is-static .patrol-static-blurb { color: #9db9c5; font-size: 11px; line-height: 1.6; }
+.app .long-watch-patrol.is-static .patrol-static .journey-continue { padding: 12px 22px; border: 1px solid #d7a44b; border-radius: 2px; background: #d7a44b; color: #09151c; box-shadow: none; }
+@media (max-width: 860px) {
+  .app .long-watch-patrol.is-static .patrol-static { left: 20px; right: 20px; top: 180px; }
+}
+@media (max-height: 520px) and (min-width: 600px) {
+  .app .long-watch-patrol.is-static .patrol-static { left: 44%; right: 20px; top: 25px; bottom: 103px; }
+}
+
+/* On a portrait phone, keep the geographic chart as a real part of the scene. */
+@media (max-width: 860px) and (min-height: 521px) {
+  .app .long-watch-patrol .patrol-head { top: 20px; }
+  .app .long-watch-patrol .patrol-head .scene-kicker { display: none; }
+  .app .long-watch-patrol .patrol-title { max-width: 320px; font-size: 25px; }
+  .app .long-watch-patrol .patrol-beat { top: 110px; }
+  .app .long-watch-patrol .port-img,
+  .app .long-watch-patrol .antarctic-gallery { height: 160px; flex-basis: 160px; }
+  .app .long-watch-patrol .port-credit { top: 134px; font-size: 10px; }
+  .app .long-watch-patrol .port-sequence { float: right; margin: 1px 0 0 10px; font-size: 10px; }
+  .app .long-watch-patrol .port-sequence span { font-size: 8px; letter-spacing: .08em; }
+  .app .long-watch-patrol .port-eyebrow { min-height: 14px; margin-bottom: 10px; font-size: 10px; }
+  .app .long-watch-patrol .port-name { clear: both; }
+}
+.app .long-watch-orders .slot-name { text-shadow: none; }
+
+/* Static mode is a complete, scrollable story, with no inherited scene offsets. */
+.app .long-watch-patrol.is-static { display: block; overflow-y: auto; padding: 30px 24px 35px; pointer-events: auto; background: linear-gradient(145deg, #123e50f5, #091c2aed); }
+.app .long-watch-patrol.is-static .patrol-head { position: relative; top: auto; left: auto; right: auto; bottom: auto; width: min(900px, 100%); margin: 0 auto 28px; }
+.app .long-watch-patrol.is-static .patrol-static { position: relative; inset: auto; width: min(900px, 100%); max-height: none; height: auto; margin: 0 auto; overflow: visible; transform: none; }
+.app .long-watch-patrol.is-static .patrol-counter { position: relative; inset: auto; width: min(900px, 100%); margin: 24px auto 0; transform: none; }
+.app .long-watch-patrol.is-static .patrol-chart-label { display: none; }
+.app .long-watch-training:not(.is-static) .training-scene-title { font-size: clamp(40px, 4.6vw, 70px); }
+@media (max-width: 860px) { .app .long-watch-training:not(.is-static) .training-scene-title { font-size: clamp(40px, 11vw, 57px); } }
+@media (max-height: 520px) and (min-width: 600px) { .app .long-watch-training:not(.is-static) .training-scene-title { font-size: 35px; } }
+
+/* Leave space for the map's mandatory attribution, including after scrolling. */
+@media (max-width: 860px) {
+  .app .ship-body { padding-bottom: 100px; }
+  .app .long-watch-training:not(.is-static) .journey-counter { bottom: 70px; }
+  .app .long-watch-patrol:not(.is-static) .patrol-counter { bottom: 66px; }
+  .app .long-watch-patrol:not(.is-static) .port-card { bottom: 172px; }
+  .app .long-watch-patrol:not(.is-static) .patrol-chart-label { bottom: 151px; }
+}
+@media (max-height: 520px) and (min-width: 600px) {
+  .app .long-watch-training:not(.is-static) .journey-counter { bottom: 58px; }
+  .app .long-watch-patrol:not(.is-static) .port-card { bottom: 137px; }
+  .app .long-watch-patrol:not(.is-static) .patrol-counter { bottom: 49px; }
+  .app .long-watch-patrol:not(.is-static) .patrol-chart-label { bottom: 62px; }
+}
+.app .long-watch-training.is-static { padding-bottom: 110px; }
+.app .long-watch-patrol.is-static { padding-bottom: 100px; }

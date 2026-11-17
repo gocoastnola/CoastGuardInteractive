@@ -54,6 +54,7 @@ test('remote-photo outage yields honest placeholders rather than rejected imager
   await expect(page.locator('img[src*="port-wellington"],img[src*="port-rio"],img[src*="polar-star-crew"]')).toHaveCount(0)
   await page.getByTestId('journey-continue').click()
   await phase(page, 'orders')
+  await page.getByTestId('slot-spin').click()
   await page.getByTestId('slot-report').click()
   await phase(page, 'act2')
   await page.getByTestId('journey-continue').click()

@@ -1,6 +1,6 @@
 # CoastGuard Interactive — current handoff (2026-11-17)
 
-This is the current entry point. The appendices below preserve older development reports; their URLs, counts, date-picker statements and hosting assumptions are historical, not current verification.
+This is the current entry point. The active work is the bounded story-locked visual update described in [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md). The appendices below preserve older development reports; their URLs, counts, date-picker statements and hosting assumptions are historical, not current verification.
 
 ## Project and fixed product decisions
 
@@ -16,7 +16,11 @@ This is the current entry point. The appendices below preserve older development
 
 See [docs/RECOVERY.md](docs/RECOVERY.md). Original recovery tag and freshly fetched main both identify `013fff722014729f4e044b0ce4060dbdfc3bbd57`; the development branch starts from that verified baseline. The separate hosted benchmark repository is not modified by this repair task.
 
-Current work is a technical-repair pull request plus a **separate proposal**. Do not merge, deploy, move recovery tags or implement the major cinematic redesign without owner approval. Current verification results belong in [PROGRESS.md](PROGRESS.md); none of the historical appendix results certify this branch.
+The technical-repair foundation is commit `b37975c2a604d59f0f375c358c796794a4d81458`. The owner subsequently approved **scoped visual/sound changes with the story locked**, on the separate branch `codex/long-watch-visual-20261117`, stacked above that repair commit. Preserve the original four-photo ZIP opening/form, avoid early assignment/destination spoilers, retain every scene/arrival and the existing map engine/score.
+
+Current presentation work includes an ocean/teal/ice chart, amber cumulative route, larger approved training/exterior photography, a dispatch-style assignment reel and responsive port staging. It does not authorize new journey branches, altered destinations or new outcomes. Read [docs/VISUAL-UPDATE.md](docs/VISUAL-UPDATE.md) before further changes. Its visual-branch ledger records 65 unit tests, 18 data records, the production-subpath build, 13 development browser cases and 5 later production-preview cases as **PASS**. The browser runs cover 14 distinct cases in total, not one full 14-case run. Those browser runs preceded a later real mobile chart-fit failure found in full live captures. The scoped camera repair now pre-commits absolute patrol insets, allows zoom −2 and clears padding on exit. Build/unit checks pass after the scoped camera correction. The final mobile patrol capture then confirms first-port fitting, route-aligned unwrapped markers, McMurdo clearance, all nine arrivals and exploration. Final desktop camera capture/result remains pending; do not describe earlier 13+5 browser runs as one full final-candidate suite. The final 2-case production regression rerun passes after the camera/marker repair. Actual selected screenshots belong in [docs/evidence/visual/README.md](docs/evidence/visual/README.md). Live captures recorded no HTTP/JavaScript errors but did include tile cancellations, an upstream sprite warning and software-GPU warnings, so do not claim a clean console. WebKit is **BLOCKED** by missing native libraries, and actual listening/physical-device checks are **NOT RUN**. [docs/VERIFICATION.md](docs/VERIFICATION.md) is the earlier repair report, not certification of this visual branch.
+
+Do not merge, deploy or move recovery tags. The hosted backup remains unchanged. Keep current pointers in [PROGRESS.md](PROGRESS.md); none of the historical appendix results certify current work. Actual listening and physical-device checks are not implied by browser assertions or screenshots.
 
 ## Local workflow
 

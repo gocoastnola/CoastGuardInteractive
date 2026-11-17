@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { controlInViewport, deterministicMedia, noHorizontalOverflow, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
+import { controlInViewport, deterministicMedia, noHorizontalOverflow, noOverlap, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
 test.beforeEach(async ({ page }) => deterministicMedia(page))
 
 test('free explore, directory, marker selection, narration gate and Escape', async ({ page }) => {
@@ -52,10 +52,10 @@ for (const viewport of [{ width: 360, height: 800 }, { width: 844, height: 390 }
     await opaque(firstPort)
     const portBox = await firstPort.boundingBox()
     const headingBox = await page.locator('.patrol-head').boundingBox()
-    expect(portBox!.y).toBeGreaterThanOrEqual(headingBox!.y + headingBox!.height)
+    noOverlap(portBox!, headingBox!, 'Port photography must not obscure the chapter heading')
     expect(portBox!.y + portBox!.height).toBeLessThanOrEqual(viewport.height)
     const counterBox = (await page.locator('.patrol-counter').boundingBox())!
-    expect(portBox!.y + portBox!.height).toBeLessThanOrEqual(counterBox.y + 1)
+    noOverlap(portBox!, counterBox, 'Port photography must not obscure cumulative mileage')
     const body = firstPort.locator('.port-body')
     const bodySize = await body.evaluate(el => ({ height: el.clientHeight, content: el.scrollHeight, overflow: getComputedStyle(el).overflowY }))
     if (bodySize.content > bodySize.height + 1) {
@@ -79,3 +79,27 @@ for (const viewport of [{ width: 360, height: 800 }, { width: 844, height: 390 }
     await screenshot(page, testInfo, 'mobile-sheet')
   })
 }
+
+test('short portrait active McMurdo caption supports real wheel scrolling @portrait-scroll', async ({ page }, testInfo) => {
+  test.setTimeout(55_000)
+  await page.setViewportSize({ width: 360, height: 600 })
+  await openLanding(page)
+  await reachShipBySkip(page)
+  await page.getByTestId('ship-begin').click()
+  await phase(page, 'patrol')
+  const card = page.getByTestId('port-mcmurdo')
+  await opaque(card, 35_000)
+  const body = card.locator('.port-body')
+  await expect(body).toHaveCSS('pointer-events', 'auto')
+  await expect.poll(() => page.locator('.port-card[aria-hidden="true"] .port-body').evaluateAll(elements => elements.every(el => getComputedStyle(el).pointerEvents === 'none'))).toBe(true)
+  const dimensions = await body.evaluate(el => ({ content: el.scrollHeight, visible: el.clientHeight }))
+  expect(dimensions.content).toBeGreaterThan(dimensions.visible)
+  await body.hover()
+  await page.mouse.wheel(0, dimensions.content)
+  await expect.poll(() => body.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+  await expect.poll(() => body.evaluate(el => el.scrollTop + el.clientHeight >= el.scrollHeight - 1)).toBe(true)
+  const bodyBox = (await body.boundingBox())!
+  const captionBox = (await card.locator('.port-blurb').boundingBox())!
+  expect(captionBox.y + captionBox.height).toBeLessThanOrEqual(bodyBox.y + bodyBox.height + 1)
+  await screenshot(page, testInfo, 'short-portrait-mcmurdo-scrolled-caption')
+})

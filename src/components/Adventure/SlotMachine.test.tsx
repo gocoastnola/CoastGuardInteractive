@@ -16,9 +16,20 @@ vi.mock('../../lib/audio', () => ({ sound: {
 } }))
 
 beforeEach(() => vi.clearAllMocks())
-afterEach(() => vi.useRealTimers())
+afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks() })
 
 describe('assignment animation lifecycle', () => {
+  it('keeps the assignment concealed in reduced motion until the applicant spins', () => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ ...media, matches: true })
+    render(<SlotMachine units={UNITS} onReport={() => {}} />)
+    expect(screen.queryByTestId('slot-final')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('slot-spin'))
+    expect(screen.getByTestId('slot-final')).toHaveTextContent('USCGC Polar Star')
+    expect(gsap.to).not.toHaveBeenCalled()
+    expect(sound.lock).toHaveBeenCalledOnce()
+  })
+
   it('Escape cancels the owned reel tween and resolves the board without global cancellation', () => {
     render(<SlotMachine units={UNITS} onReport={() => {}} />)
     fireEvent.click(screen.getByTestId('slot-spin'))

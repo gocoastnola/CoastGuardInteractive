@@ -22,7 +22,7 @@ export const LANDING = {
   },
   footnote: 'Ship dates are demo placeholders — real Cape May class dates are not verified. Basic training shown as 8 weeks (demo).',
   /** Current ZIP-first landing copy; date-picker fields above are historical. */
-  zipSub: 'Your journey starts at home. Watch the miles to Cape May, conquer eight weeks of boot camp, receive your orders, and see the world aboard Polar Star.',
+  zipSub: 'Your journey starts at home. Watch the miles to Cape May, conquer eight weeks of boot camp, receive your orders, and discover what comes next.',
   zipLabel: 'Your hometown ZIP code',
   zipPlaceholder: '5-digit ZIP',
   checking: 'Checking…',

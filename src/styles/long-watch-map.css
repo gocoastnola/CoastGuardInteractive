@@ -1,0 +1,67 @@
+/* Long Watch: a vivid ocean chart, with the cumulative voyage kept in view. */
+.map-root .journey-marker .jm-dot {
+  width: 8px;
+  height: 8px;
+  background: #c4e1e8;
+  box-shadow: 0 0 0 3px rgba(36, 176, 208, 0.14);
+}
+
+.map-root .journey-marker .jm-ring {
+  border-width: 1px;
+  opacity: 0.5;
+}
+
+.map-root .journey-marker .jm-pulse {
+  animation: none;
+  opacity: 0;
+}
+
+.map-root .journey-marker .jm-label {
+  padding: 7px 10px;
+  border: 1px solid rgba(92, 201, 223, 0.3);
+  border-radius: 3px;
+  background: rgba(5, 30, 45, 0.94);
+  color: #e5f2f5;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
+}
+
+.map-root .journey-marker .jm-label strong {
+  font-weight: 600;
+}
+
+.map-root .journey-marker .jm-label small {
+  color: #efbf69;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.map-root .journey-marker.is-current .jm-dot {
+  width: 10px;
+  height: 10px;
+  background: #ffe0a3;
+  box-shadow: 0 0 0 4px rgba(36, 176, 208, 0.2), 0 0 18px rgba(60, 199, 223, 0.5);
+}
+
+.app.phase-patrol .map-root .journey-marker:not(.is-current) .jm-label {
+  display: none;
+}
+
+.app.phase-patrol .map-root .journey-marker:not(.is-current) .jm-ring {
+  opacity: 0.28;
+}
+
+/* Provider credits remain reachable above cinematic panels on every viewport. */
+.app .map-root.is-cinematic .maplibregl-ctrl-bottom-left {
+  position: fixed;
+  left: 6px;
+  bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 60;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.app .map-root.is-cinematic .maplibregl-ctrl-attrib {
+  border: 1px solid rgba(102, 176, 199, 0.28);
+  background: rgba(5, 24, 37, 0.92);
+  pointer-events: auto;
+}

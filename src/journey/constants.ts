@@ -30,12 +30,12 @@ export const CAPE_MAY: Waypoint = {
   coordsVerified: false,
 }
 
-/** Act 1 timing (seconds). Total ≈ 12 s before the orders board appears. */
+/** Act 1 timing (seconds). Total ≈ 19 s before the orders board appears. */
 export const ACT1 = {
   countdown: 3.2, // days counter ticks today → ship date while the camera begins its fly-in
   fly: 4.6, // slow cinematic flyTo national view → Cape May (overlaps countdown + weeks)
-  weeks: 5.4, // Week 1 → Week 8 bar fills
-  graduate: 2.6, // last beat holds before the board
+  weeks: 10.4, // Week 1 → Week 8 bar fills
+  graduate: 4.2, // last beat holds before the board
 } as const
 
 /** Hometown → Cape May travel timing, before the separate boot-camp progression. */
