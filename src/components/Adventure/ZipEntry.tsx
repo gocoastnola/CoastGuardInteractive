@@ -78,6 +78,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
     try {
       const home = await lookupZip(value)
       if (!home) {
+        sound.stopScore() // Cancel the muted recording prime when no journey starts.
         setError(LANDING.zipErrors.unknown)
         input.current?.select()
         return
@@ -86,6 +87,7 @@ export function ZipEntry({ onBegin, onExplore, initialZip = '' }: Props) {
       sound.chime()
       exit(() => onBegin(home))
     } catch (err) {
+      sound.stopScore()
       console.warn('[adventure] ZIP lookup failed:', err)
       setError(LANDING.zipErrors.offline)
     } finally {

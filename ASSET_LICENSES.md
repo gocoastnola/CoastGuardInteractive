@@ -35,6 +35,23 @@ Every third-party library, font, tile source and asset used by the app, with its
 
 ## Project-authored assets
 
+The 2026-11-17 globe/audio revision adds project-authored procedural ocean/cloud graphics, new WebAudio effects and an energetic synthesized fallback arrangement (`src/lib/audioScore.ts`, `src/lib/audio.ts`, `src/lib/globe-atmosphere.ts`). Cloud graphics are illustrative animation, not live meteorological data. Offline synthesized WAV previews exercise those same fallback/effect builders; they are not recordings of an orchestra or evidence of subjective listening. No new external photograph, satellite texture, weather service, API key, account or paid dependency is introduced.
+
+### Recorded soundtrack — Vanguard
+
+| Item | Source / terms |
+| --- | --- |
+| Work and creator | **Vanguard — Scott Buckley** |
+| Official track and license statement | https://www.scottbuckley.com.au/library/vanguard/ |
+| Composer licensing information | https://www.scottbuckley.com.au/library/licensing/ |
+| Original download | https://www.scottbuckley.com.au/library/wp-content/uploads/2023/07/Vanguard.mp3 |
+| License | **Creative Commons Attribution 4.0 International** — https://creativecommons.org/licenses/by/4.0/ |
+| Bundled file | `public/media/music/vanguard-scott-buckley.mp3` |
+| Web adaptation | Transcoded to 128 kbps stereo MP3 (3,754,020 bytes); playback starts and loops at 45 seconds, with gain adaptation. No new melody is attributed to the project. |
+| In-app attribution | The accessible native map information control includes the work, composer, track link, license link and web-mix/loop notice. A text copy is bundled beside the MP3. |
+
+The official track page expressly permits free use, including commercial projects, with attribution. The recording was downloaded without an account, payment or API key. Bundling it avoids hot-linking the composer's audio server. The composer does not endorse this educational Coast Guard demonstration. Track selection is based on the composer's description, “driving, epic hybrid orchestral”; it is not represented as a completed subjective listening assessment.
+
 | Asset | Licence |
 | --- | --- |
 | `public/favicon.svg`, inline SVG header art, icons in `src/components/Icons.tsx`, landing artwork | Created for this project; owned by the project owner. |
@@ -95,8 +112,8 @@ These are **public-domain U.S. Coast Guard photographs** published on DVIDS; pho
 DVIDS photo URLs use the site's CDN thumbnail pattern. Check network loading in the live browser before using in an official recruiting presentation.
 
 
-## 2026-11-17 stabilization media policy
+## 2026-11-17 stabilization media policy (historical phase)
 
-No replacement imagery or soundtrack is authorized in this technical pass. Preserve the approved exterior ship, moored/icebreaking, Antarctic station/environment/research, authentic training/graduation and penguin imagery. Existing remote photographs are a documented historical exception to AGENTS.md’s default no-hot-link rule, not permission to add new remote assets. Technical fallback fixes must retain provenance and must not label a generic fallback as a photograph of a different event or destination.
+During the initial technical pass, replacement imagery and soundtrack were outside scope. The owner's subsequent globe/audio instruction supersedes that soundtrack restriction; the current recording is documented above. Preserve the approved exterior ship, moored/icebreaking, Antarctic station/environment/research, authentic training/graduation and penguin imagery. Existing remote photographs are a documented historical exception to AGENTS.md’s default no-hot-link rule, not permission to add new remote assets. Technical fallback fixes must retain provenance and must not label a generic fallback as a photograph of a different event or destination.
 
-The score/SFX in `src/lib/audio.ts` are project-generated WebAudio, not downloaded recordings. Listing a library license or an existing source URL does not constitute a new verification of photographic identity, current URL availability or every Commons license condition. Live checks and proposed media replacements must report those separately.
+The original score/SFX were project-generated WebAudio. The current revision uses the credited recording as its main score, with project-authored effects and a synthesized fallback. Listing a library license or an existing source URL does not constitute a new verification of photographic identity, current URL availability or every Commons license condition. Live checks and proposed media replacements must report those separately.

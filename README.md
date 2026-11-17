@@ -6,6 +6,12 @@ An existing ZIP-first recruiting journey: hometown → Training Center Cape May 
 
 All unit content in this build is placeholder (`contentReviewStatus: "demo-unverified"`). See [SOURCES.md](SOURCES.md).
 
+## Current globe and audio revision
+
+This revision uses a single native 3D globe, broad leg-by-leg orientation and a compact destination-photo dock. Tap **Details** for full photos, text and credits; the voyage pauses while the drawer is open. The original ZIP opening, training and all nine voyage arrivals remain. Primary music is the bundled **Vanguard — Scott Buckley**, licensed under **CC BY 4.0** and attributed in the information control. Authored fallback music and reveal/arrival cues need no paid service, account or API key.
+
+See [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md) for this revision’s measured status and recovery points. Current Node 22 build, 79 unit tests and 18 data records pass; final browser/live/CI/publication rows remain pending until entered there. Older reports do not certify current source.
+
 ## Quick start
 
 Requires **Node.js 22** and npm. Check `node --version` before installing; the runtime on another computer may differ. No API keys, accounts or paid services are needed.
@@ -72,9 +78,9 @@ Keyless vector tiles from [OpenFreeMap](https://openfreemap.org) (`https://tiles
 
 ## Current journey and media
 
-ZIP entry is final. The journey includes hometown travel before training, weeks 1–8 and graduation, an illustrative assignment to Polar Star, exterior ship photography, then Seattle → Honolulu → Hobart → Wellington → McMurdo Station → Punta Arenas (Patagonia) → Cape Horn → Rio → Panama Canal → Seattle. McMurdo precedes Patagonia. The wide world view and cumulative route are intentional.
+ZIP entry is final. The journey includes hometown travel before training, weeks 1–8 and graduation, an illustrative assignment to Polar Star, exterior ship photography, then Seattle → Honolulu → Hobart → Wellington → McMurdo Station → Punta Arenas (Patagonia) → Cape Horn → Rio → Panama Canal → Seattle. McMurdo precedes Patagonia. A broad native globe follows each leg. Cumulative route data and the visited-stop rail remain; the globe naturally occludes far-hemisphere sections rather than repeating flat world copies.
 
-The existing synthesized WebAudio score and sound effects start after a user gesture. They currently have no journey-wide mute control; the exploration audio gate controls narration. Accessibility changes to that product behavior require owner approval rather than an unrelated cleanup. Narration still uses browser `speechSynthesis`.
+The bundled Vanguard recording is streamed through one HTML audio element into the existing single WebAudio context after a user gesture, starting at its 45-second cue. The authored fallback score and nautical sound effects cover unavailable recording playback; an orders rise/reveal replaces repetitive row clicks. See [music attribution](public/media/music/ATTRIBUTION.txt) and [ASSET_LICENSES.md](ASSET_LICENSES.md) for the official track/license sources. No listening assessment is claimed by the automated checks. They currently have no journey-wide mute control; the exploration audio gate controls narration. Accessibility changes to that product behavior require owner approval rather than an unrelated cleanup. Narration still uses browser `speechSynthesis`.
 
 Remote Wikimedia and DVIDS photographs and keyless map hosts require network access. Git preserves bundled assets and source URLs, not external service availability or future image contents. Source and usage records are in [ASSET_LICENSES.md](ASSET_LICENSES.md). Unit facts, route details and assignments remain demo/unverified.
 
@@ -82,4 +88,4 @@ Remote Wikimedia and DVIDS photographs and keyless map hosts require network acc
 
 See [docs/RECOVERY.md](docs/RECOVERY.md) for the immutable original recovery tag, baseline SHA, portable-bundle limits and recovery-through-review instructions. [PROGRESS.md](PROGRESS.md) separates current verification from historical reports. [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md) maps the required behaviors to deterministic, live-resource and manual checks; [docs/VERIFICATION.md](docs/VERIFICATION.md) records the measured results.
 
-The existing Pages workflow validates pull requests without deploying them. Deployment remains restricted to reviewed main/master pushes or manual runs on those branches. A workflow alone does not enforce required status checks or prevent merging: the owner must configure branch rules if that enforcement is desired. Do not merge or deploy experimental repair work without explicit approval.
+The existing Pages workflow validates pull requests without deploying them. Deployment remains restricted to reviewed main/master pushes or manual runs on those branches. A workflow alone does not enforce required status checks or prevent merging: the owner must configure branch rules if that enforcement is desired. Owner authorization to publish the current concrete globe/audio revision is recorded in its report. Complete the checks and verify the actual deployment before reporting it live; do not treat that authorization as permission to change unrelated product scope or the frozen benchmark.

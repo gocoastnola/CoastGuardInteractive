@@ -1,6 +1,12 @@
 # PLANS.md
 
-## Current assignment (2026-11-17)
+## Current owner-authorized revision (2026-11-17)
+
+Implement and verify a genuine native MapLibre globe, a globe-led voyage with compact optional destination photography, the CC BY 4.0 Vanguard recording by Scott Buckley with authored fallback music and purposeful arrival/orders cues. Preserve the existing four-photo ZIP opening, storyline, all nine arrivals, route geometry, approved authentic imagery and demo labels. No new engine, dependency, account, key or paid service. The owner has approved publishing this concrete revision when its technical and rendered checks are complete; do not re-request the same authorization.
+
+See [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md) for the actual scope, recovery references, 372-pixel portrait globe/56-pixel credit budget, recorded-music license/playback, measured 79-unit/data/build checks, pending final browser/live/CI results and explicit listening/device limitations. WebKit engine startup is now available through bounded user-space dependencies; targeted application compatibility remains to be measured. Prior repair/visual reports are source-state history, not final revision results.
+
+## Historical repair assignment (2026-11-17)
 
 ZIP entry is final. Stabilize the existing hometown → Cape May training/graduation → illustrative Polar Star → full Antarctic patrol → exploration story. Preserve all stops, McMurdo before Patagonia, exterior imagery, wide geographic context, cumulative route and existing owner-directed audio behavior. Deliver a repair PR and a separate cinematic proposal. Major redesign, merge and deployment are not approved.
 

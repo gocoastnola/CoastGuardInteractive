@@ -1,0 +1,142 @@
+/* The voyage is a globe-led stage. No photograph expands without a request. */
+.app .patrol.voyage-stage {
+  position: absolute; inset: 0; z-index: 20; display: grid;
+  grid-template-rows: 52px minmax(0, 1fr) 104px 80px 24px;
+  width: 100%; height: 100%; min-height: 0; padding: 0;
+  overflow: hidden; align-items: stretch; color: #ebf5f6; background: transparent; pointer-events: none;
+}
+.app .voyage-stage .voyage-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 24px 0; min-width: 0; background: linear-gradient(#061a2ce6, #061a2c80); }
+.app .voyage-header p { margin: 0 0 2px; color: #a7c5ce; font-size: 9px; line-height: 1; letter-spacing: .15em; text-transform: uppercase; }
+.app .voyage-header h2 { margin: 0; color: #e8f3f4; font-size: 19px; font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.app .voyage-chapter { flex: 0 0 auto; color: #e8bc6c; font-size: 9px; letter-spacing: .09em; }
+.app .voyage-stage .voyage-globe-stage { position: relative; min-width: 0; min-height: 0; }
+.app .voyage-stage .voyage-leg-status { position: absolute; top: 12px; left: 24px; right: 24px; margin: 0; color: #c6e1e8; font-size: 11px; line-height: 1.4; letter-spacing: .025em; text-align: center; text-shadow: 0 2px 8px #03101c; }
+.app .voyage-stage .voyage-dock-slot { position: relative; width: min(860px, calc(100% - 48px)); height: 104px; min-width: 0; margin: 0 auto; pointer-events: none; }
+.app .voyage-stage .voyage-underway { position: absolute; inset: 8px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-top: 1px solid #74a8bb42; border-bottom: 1px solid #74a8bb42; background: linear-gradient(110deg, #0b2c3edf, #102c3ae8); }
+.app .voyage-underway > span { color: #d7ab63; font-size: 9px; letter-spacing: .16em; }
+.app .voyage-underway > strong { font-size: 17px; font-weight: 500; }
+.app .voyage-underway > small { color: #9fc0ca; font-size: 11px; }
+.app .voyage-stage .voyage-underway[aria-hidden='true'] { visibility: hidden; }
+.app .patrol.voyage-stage .port-card.voyage-port-dock {
+  position: absolute; inset: 8px 0; display: grid; grid-template-columns: 80px minmax(0, 1fr) 76px;
+  align-items: center; gap: 16px; width: 100%; height: 88px; min-height: 0; max-height: none;
+  padding: 11px 14px; margin: 0; border: 1px solid #70a6bb52; border-radius: 6px;
+  background: linear-gradient(110deg, #113d52f5, #0a2335f5); box-shadow: 0 10px 35px #020d1755;
+  backdrop-filter: blur(9px); transform: none; opacity: 0; overflow: hidden; pointer-events: none;
+}
+.app .patrol.voyage-stage .port-card[aria-hidden='true'] { visibility: hidden; }
+.app .patrol.voyage-stage .port-card[aria-hidden='false'] { visibility: visible; pointer-events: auto; }
+.app .voyage-stage .voyage-thumb { position: relative; width: 80px; height: 64px; flex: none; overflow: hidden; border-radius: 3px; background: #173c4c; }
+.app .voyage-stage .voyage-thumb > img, .app .voyage-stage .voyage-thumb .port-img,
+.app .voyage-stage .voyage-thumb .antarctic-slide img, .app .voyage-stage .voyage-thumb .media-unavailable { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: center; font-size: 8px; }
+.app .voyage-stage .voyage-thumb .antarctic-slide { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.app .voyage-stage .voyage-thumb .antarctic-slide::after { display: none; }
+.app .voyage-stage .voyage-thumb-credit { position: absolute; bottom: 0; left: 0; right: 0; padding: 3px 4px; color: #fff; background: #041723b8; font-size: 9px; line-height: 1.1; text-align: right; text-decoration: underline; }
+.app .voyage-stage .voyage-thumb .canal-locks { position: absolute; right: 3px; top: 3px; width: 40px; height: 15px; margin: 0; background: #051a2c99; }
+.app .voyage-port-identity { min-width: 0; }
+.app .voyage-port-identity p { margin: 0 0 5px; color: #efc57b; font-size: 9px; line-height: 1; letter-spacing: .1em; }
+.app .voyage-port-identity h3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; margin: 0; overflow: hidden; color: #f0f7f8; font-size: 19px; font-weight: 500; line-height: 1.12; letter-spacing: -.025em; }
+.app .voyage-port-identity > span { display: block; margin-top: 5px; overflow: hidden; color: #b5cbd4; font-size: 10px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+.app .voyage-details-button { display: flex; align-items: center; justify-content: center; gap: 5px; width: 76px; min-height: 44px; padding: 8px; border: 1px solid #8ac6d470; border-radius: 4px; color: #e6f5f7; background: #204f6370; font: inherit; font-size: 11px; cursor: pointer; }
+.app .voyage-stage button:focus-visible, .app .voyage-stage a:focus-visible { outline: 2px solid #ffd18c; outline-offset: 3px; }
+.app .voyage-stage .voyage-footer { width: min(860px, calc(100% - 48px)); min-width: 0; height: 80px; margin: 0 auto; padding: 0; }
+.app .voyage-stop-rail { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; height: 20px; margin: 0 0 2px; padding: 0; list-style: none; }
+.app .voyage-stop-rail li { position: relative; display: flex; align-items: center; gap: 5px; color: #7d9eac; font-size: 8px; font-variant-numeric: tabular-nums; }
+.app .voyage-stop-rail li::before { content: ''; flex: 1; height: 2px; background: #54768466; }
+.app .voyage-stop-rail li.is-visited { color: #f1c37c; }
+.app .voyage-stop-rail li.is-visited::before { background: #f1c37c; }
+.app .voyage-stop-rail li[aria-current='step']::before { background: #92e5ed; box-shadow: 0 0 8px #92e5ed66; }
+.app .voyage-stage .miles { min-width: 0; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; }
+.app .voyage-stage .miles-readout { display: flex; justify-content: center; gap: 8px; line-height: 1; }
+.app .voyage-stage .miles-num { color: #f4cf91; font-size: 25px; font-weight: 500; letter-spacing: -.04em; }
+.app .voyage-stage .miles-label { color: #c8dee5; font-size: 11px; }
+.app .voyage-stage .miles-note { max-width: none; margin: 5px 0 6px; color: #a7c3cd; font-size: 10px; line-height: 1.2; text-align: center; }
+.app .voyage-stage .miles-bar { height: 2px; margin: 0; border-radius: 0; background: #567b894d; }
+.app .voyage-stage .miles-bar > span { background: #eaba71; box-shadow: none; }
+.app .voyage-stage .voyage-credit-space { margin: 0; padding: 4px 16px 0; color: #86a9b9; font-size: 7px; line-height: 1; letter-spacing: .08em; text-align: right; }
+/* Reduced motion retains every stop and its full text, in a manual scroller. */
+.app .patrol.voyage-stage .patrol-static.voyage-static-dock { position: relative; inset: auto; width: min(860px, calc(100% - 48px)); height: 104px; max-height: none; margin: 0 auto; padding: 10px 14px; border: 1px solid #70a6bb52; border-radius: 6px; background: #0c2d40f2; transform: none; overflow: auto; pointer-events: auto; overscroll-behavior: contain; }
+.app .voyage-static-dock .patrol-static-list { margin: 0; padding: 0; list-style: none; }
+.app .voyage-static-dock .patrol-static-list li { margin: 0 0 14px; padding: 0 0 14px; border: 0; border-bottom: 1px solid #53758655; color: #dbecef; font-size: 12px; line-height: 1.5; }
+.app .voyage-static-dock .patrol-static-list li > span { display: block; color: #a6c7d1; font-size: 10px; }
+.app .voyage-static-dock .patrol-static-blurb { margin: 6px 0; color: #c6dce4; font-size: 12px; line-height: 1.5; }
+.app .voyage-static-dock button { min-height: 36px; padding: 7px 10px; border: 1px solid #7ab5c575; border-radius: 3px; background: transparent; color: #edd3a5; font: inherit; font-size: 11px; }
+.app .voyage-stage .journey-continue { display: flex; justify-content: center; width: min(300px, 100%); min-height: 44px; margin: 6px auto 0; padding: 10px 18px; border: 1px solid #e8bb6b; border-radius: 3px; color: #092236; background: #e8bb6b; pointer-events: auto; }
+/* Photography and full destination text appear only after an explicit Details tap. */
+.app .voyage-details-backdrop { position: fixed; inset: 0; z-index: 120; display: flex; align-items: flex-end; justify-content: center; padding: 24px; background: #020c18b8; backdrop-filter: blur(5px); pointer-events: auto; }
+.app .voyage-details { display: flex; flex-direction: column; width: min(1040px, 100%); max-height: 90%; border: 1px solid #6ca6bc85; border-radius: 12px 12px 5px 5px; color: #e8f2f5; background: #0d2b3e; box-shadow: 0 24px 100px #0008; overflow: hidden; }
+.app .voyage-details > header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 24px; border-bottom: 1px solid #628b9d45; }
+.app .voyage-details header p { margin: 0 0 6px; color: #c8ab78; font-size: 9px; letter-spacing: .11em; }
+.app .voyage-details h2 { margin: 0; font-size: 27px; font-weight: 500; line-height: 1.15; letter-spacing: -.03em; }
+.app .voyage-details header button { min-width: 80px; min-height: 44px; padding: 10px 12px; border: 1px solid #7ab5c575; border-radius: 4px; color: #e5f3f6; background: #234d6066; font: inherit; font-size: 12px; }
+.app .voyage-details-content { padding: 20px 24px 32px; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
+.app .voyage-details .port-blurb { margin: 0 0 20px; color: #cee0e7; font-size: 15px; line-height: 1.7; }
+.app .voyage-gallery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.app .voyage-gallery-grid figure { min-width: 0; margin: 0; }
+.app .voyage-gallery-grid img, .app .voyage-gallery-grid .media-unavailable { display: block; width: 100%; height: 250px; border-radius: 4px; object-fit: cover; }
+.app .voyage-gallery-grid figcaption { margin-top: 10px; color: #d1e4eb; font-size: 11px; line-height: 1.5; }
+.app .voyage-gallery-grid figcaption a { display: block; width: fit-content; margin-top: 5px; color: #f0c990; text-decoration: underline; }
+.app .voyage-details-note { margin: 24px 0 0; color: #9fc0cc; font-size: 11px; line-height: 1.6; }
+.app .voyage-details .canal-locks { width: min(300px, 100%); height: auto; margin: 0 0 20px; }
+@media (max-width: 600px) {
+  /* Keep expanded provider/music credits below every essential voyage readout. */
+  .app .patrol.voyage-stage { grid-template-rows: 52px minmax(0, 1fr) 104px 80px 56px; }
+  .app .voyage-stage .voyage-header { padding: 8px 16px 0; }
+  .app .voyage-header h2 { font-size: 17px; }
+  .app .voyage-chapter { display: none; }
+  .app .voyage-stage .voyage-leg-status { left: 16px; right: 16px; top: 9px; font-size: 10px; }
+  .app .voyage-stage .voyage-dock-slot, .app .voyage-stage .voyage-footer, .app .patrol.voyage-stage .patrol-static.voyage-static-dock { width: calc(100% - 24px); }
+  .app .patrol.voyage-stage .port-card.voyage-port-dock { grid-template-columns: 80px minmax(0, 1fr) 62px; gap: 10px; padding: 11px 10px; }
+  .app .voyage-port-identity h3 { font-size: 14px; }
+  .app .voyage-port-identity p { font-size: 8px; }
+  .app .voyage-port-identity > span { font-size: 9px; }
+  .app .voyage-details-button { width: 62px; font-size: 10px; padding: 7px 4px; }
+  .app .voyage-stage .miles-num { font-size: 23px; }
+  .app .voyage-stage .miles-note { font-size: 9px; }
+  .app .voyage-details-backdrop { padding: 0; }
+  .app .voyage-details { width: 100%; max-height: 90%; border-radius: 12px 12px 0 0; }
+  .app .voyage-details > header { padding: 16px; }
+  .app .voyage-details h2 { font-size: 23px; }
+  .app .voyage-details-content { padding: 16px 16px 30px; }
+  .app .voyage-gallery-grid { grid-template-columns: 1fr; }
+  .app .voyage-gallery-grid img, .app .voyage-gallery-grid .media-unavailable { height: 220px; }
+}
+@media (max-height: 480px) and (min-width: 600px) {
+  .app .patrol.voyage-stage { grid-template-rows: 44px minmax(0, 1fr) 88px 70px 24px; }
+  .app .voyage-stage .voyage-dock-slot { height: 88px; }
+  .app .patrol.voyage-stage .port-card.voyage-port-dock { inset: 0; }
+  .app .voyage-stage .voyage-footer { height: 70px; }
+  .app .voyage-stage .voyage-header h2 { font-size: 17px; }
+  .app .voyage-stage .voyage-leg-status { top: 4px; }
+  .app .voyage-stage .miles-note { margin: 3px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app .voyage-stage *, .app .voyage-stage *::before { scroll-behavior: auto; }
+}
+
+/* Static mode keeps total mileage and its qualifier beside Continue. */
+.app .voyage-stage.is-static .voyage-footer { position: relative; }
+.app .voyage-stage.is-static .miles { padding-right: 122px; }
+.app .voyage-stage.is-static .miles-readout { justify-content: flex-start; gap: 6px; }
+.app .voyage-stage.is-static .miles-label { font-size: 9px; }
+.app .voyage-stage.is-static .miles-note { text-align: left; font-size: 9px; }
+.app .voyage-stage.is-static .journey-continue { position: absolute; top: 24px; right: 0; width: 112px; margin: 0; }
+/* Landscape uses a side dock instead of consuming the globe's height. */
+@media (max-height: 480px) and (min-width: 600px) {
+  .app .patrol.voyage-stage { grid-template-columns: minmax(0, 1.78fr) minmax(0, 1fr); grid-template-rows: 44px minmax(0, 1fr) 24px; }
+  .app .voyage-stage .voyage-header { grid-column: 1 / -1; grid-row: 1; }
+  .app .voyage-stage .voyage-globe-stage { grid-column: 1; grid-row: 2; }
+  .app .voyage-stage .voyage-dock-slot { grid-column: 2; grid-row: 2; align-self: center; width: calc(100% - 24px); height: 104px; transform: translateY(-42px); }
+  .app .patrol.voyage-stage .port-card.voyage-port-dock { inset: 8px 0; grid-template-columns: 64px minmax(0, 1fr) 58px; gap: 7px; padding: 11px 8px; }
+  .app .voyage-stage .voyage-thumb { width: 64px; }
+  .app .voyage-stage .voyage-port-identity h3 { font-size: 13px; }
+  .app .voyage-stage .voyage-port-identity p, .app .voyage-stage .voyage-port-identity > span { font-size: 8px; }
+  .app .voyage-stage .voyage-details-button { width: 58px; padding: 6px 3px; font-size: 10px; }
+  .app .voyage-stage .voyage-footer { grid-column: 2; grid-row: 2; align-self: center; width: calc(100% - 24px); height: 80px; transform: translateY(58px); }
+  .app .voyage-stage .voyage-credit-space { grid-column: 1 / -1; grid-row: 3; }
+  .app .patrol.voyage-stage .patrol-static.voyage-static-dock { grid-column: 2; grid-row: 2; align-self: center; width: calc(100% - 24px); transform: translateY(-58px); }
+  .app .voyage-stage.is-static .voyage-footer { height: 128px; transform: translateY(66px); }
+  .app .voyage-stage.is-static .miles { padding-right: 0; }
+  .app .voyage-stage.is-static .journey-continue { top: auto; bottom: 0; width: 100%; }
+  .app .voyage-stage .voyage-leg-status { font-size: 10px; }
+}

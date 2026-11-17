@@ -1,0 +1,19 @@
+.app .globe-map .map-canvas { background: #020c18; }
+.app .globe-map .map-vignette {
+  background: radial-gradient(ellipse at 50% 44%, transparent 45%, rgba(1, 7, 17, .35) 100%);
+}
+.app .globe-map .maplibregl-marker-covered {
+  pointer-events: none;
+}
+.app .globe-map .journey-marker.maplibregl-marker-covered .jm-label {
+  visibility: hidden;
+}
+.app .globe-map .maplibregl-ctrl-attrib { font-size: 10px; line-height: 14px; }
+.app .globe-map.is-cinematic .maplibregl-ctrl-attrib { margin: 0; }
+
+/* Keep the real provider controls clear of the phone's exploration jump bar. */
+@media (max-width: 860px) {
+  .app.phase-explore .globe-map .maplibregl-ctrl-bottom-left { bottom: 72px; }
+  .app.phase-explore:not(.has-panel) .globe-map .maplibregl-ctrl-bottom-right { bottom: 72px; }
+  .app.phase-explore.has-panel .globe-map .maplibregl-ctrl-bottom-left { bottom: calc(72vh + 8px); }
+}

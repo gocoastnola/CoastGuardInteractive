@@ -1,8 +1,20 @@
 # PROGRESS.md
 
-_Current work: story-locked visual branch, 2026-11-17. Prior repair and historical reports remain below._
+_Current work: native globe and adventure audio revision, 2026-11-17. Prior reports remain as history._
 
-## Current visual update — not deployed
+## Current globe/audio revision
+
+The owner requested a genuine native globe as the main voyage stage, smaller optional photos, motivational recorded music, stronger arrivals and an assignment reveal without repeated clicks. Work is on `codex/globe-and-adventure-audio-20261117-162137Z`, from freshly fetched main `481c4c98b31451541c6ceae26158b9f08f122571`. The verified pre-globe tag/bundle, original recovery tag and untouched benchmark are recorded in [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md).
+
+The single native MapLibre sphere, broad leg orientation, authored illustrative clouds/ocean highlights, 88-pixel dock/80×64 thumbnail and explicit pauseable gallery preserve the four-photo ZIP opening and every story/arrival. The current 390×664 portrait budget reserves **372 pixels (56.0%)** for the globe and 56 pixels for real provider/music credits; the earlier 404-pixel stage measurement is historical. Reduced grid alignment and off-screen/back-face marker keyboard exposure were genuine QA defects and have been fixed.
+
+Primary music is the bundled **Vanguard — Scott Buckley**, verified **CC BY 4.0**, attributed in the native information control and bundled text. It streams through one HTML audio element into the existing single AudioContext, cued/restarted at 45 seconds with 0.4 mix gain. Readiness gating avoids an audible pre-cue lead-in; recorded playback failure uses the new authored rhythmic score. Fallback BPM values do not describe Vanguard. New arrival/orders effects remain authored. No paid service, new account/key or dependency is introduced.
+
+Final measured Node 22.23.5/npm 11.9.0 checks: **npm ci PASS**, **79 unit tests in 13 files PASS**, **18 records PASS (all unverified)** and **production-project-subpath build PASS**. An earlier diagnostic browser run was 9 passed/6 failed (four harness assumptions, two application defects); the clean **17-case development** run and **seven-case production** subset remain in progress/NOT RUN until results arrive. WebKit is now **available** through bounded user-space libraries and a temporary wrapper; blank-page startup passed, while its seven targeted compatibility checks are **NOT RUN** pending execution. Earlier host-launch BLOCKED notes are historical.
+
+Publication of this concrete revision is already owner-authorized. Current live journey, CI and publication results remain pending. Earlier component frames and fixture probes do not substitute for final-source live captures. Actual listening and physical-device testing remain **NOT RUN**; the actual Vanguard excerpt is available separately from authored-fallback WAV previews.
+
+## Prior visual update — archived pre-publication verification record
 
 The owner has approved scoped visual/sound development in `codex/long-watch-visual-20261117`, based on the separately tested technical-repair commit `b37975c2a604d59f0f375c358c796794a4d81458`. This supersedes the earlier proposal-only limit for this bounded visual pass; it does not authorize a new storyline, replacement map engine, merge or deployment.
 
