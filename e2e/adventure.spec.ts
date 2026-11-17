@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { beginZip, completedPatrolArrivals, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, fullPatrolRecap, globeStage, imageLoaded, nativePatrolState, noAssignmentSpoilers, noHorizontalOverflow, observeJourney, observePatrol, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
+import { assertPatrolVessel, beginZip, completedPatrolArrivals, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, fullPatrolRecap, globeStage, imageLoaded, nativePatrolState, nativePatrolVessel, noAssignmentSpoilers, noHorizontalOverflow, observeJourney, observePatrol, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
 
 const POLAR_STAR = 'USCGC Polar Star (WAGB-10)'
 test.beforeEach(async ({ page }) => deterministicMedia(page))
@@ -21,6 +21,9 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 664 
     await expect(page.getByTestId('miles-counter')).toContainText('Cape May')
     await expect(page.getByTestId('miles-note')).toContainText(/approximate.*straight.line/i)
     await expect.poll(async () => Number((await page.getByTestId('miles-value').innerText()).replaceAll(',', ''))).toBeGreaterThan(0)
+    const landTravel = await nativePatrolVessel(page)
+    expect(landTravel.domCount, 'The icebreaker never flies over the hometown land journey').toBe(0)
+    expect(landTravel.goldColor).toBe('#f4bd56')
     await screenshot(page, testInfo, 'hometown-to-cape-may')
     await phase(page, 'act1')
     await noAssignmentSpoilers(page)
@@ -78,10 +81,13 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 664 
     await page.getByTestId('patrol-explore').click()
     await phase(page, 'explore')
     await explorationMarkers(page, false)
+    await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
     await expect(page.getByTestId('panel-title')).toHaveText(POLAR_STAR)
     await expect(page.getByTestId('panel-ribbon')).toContainText('Your first unit')
     await expect(page.locator('[data-testid^="journey-marker-"]')).toHaveCount(0)
     expect(await page.evaluate(() => window.__journeyObserved.phases)).toEqual(['dateEntry', 'travel', 'act1', 'orders', 'act2', 'shipIntro', 'patrol', 'explore'])
+    expect(await page.evaluate(() => window.__journeyObserved.landHeadSeen), 'The original head dot still appears during non-patrol travel').toBe(true)
+    expect(await page.evaluate(() => window.__journeyObserved.vesselBeforePatrol), 'The ship appears only after the patrol begins').toBe(false)
     expect(await page.evaluate(() => window.__audioContexts.length)).toBe(1)
     expect(await page.evaluate(() => window.__audioContexts[0].state)).toBe('running')
     expect(await page.evaluate(() => window.__musicElements.length)).toBe(1)
@@ -164,6 +170,10 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await expect(page.getByTestId('patrol-recap')).toHaveCount(0)
   await expect(page.getByTestId('patrol-explore')).toHaveCount(0)
   const before = await nativePatrolState(page)
+  assertPatrolVessel(before.vessel)
+  const animated = page.locator('[data-testid="patrol-vessel"] .patrol-vessel-float')
+  expect(await animated.evaluate(element => getComputedStyle(element).animationName), 'Reduced motion removes the miniature ship bob').toBe('none')
+  const shipTransform = await animated.evaluate(element => getComputedStyle(element).transform)
   // A real observation interval verifies the static camera; no animation clock is replaced.
   await page.evaluate(() => new Promise<void>(resolve => {
     const start = performance.now()
@@ -174,9 +184,12 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   expect(after.lng).toBeCloseTo(before.lng, 5)
   expect(after.lat).toBeCloseTo(before.lat, 5)
   expect(after.moving).toBe(false)
+  expect(after.vessel.instanceId).toBe(before.vessel.instanceId)
+  expect(await animated.evaluate(element => getComputedStyle(element).transform)).toBe(shipTransform)
   await page.getByTestId('journey-continue').click()
   await phase(page, 'explore')
   await explorationMarkers(page, false)
+  await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
   await expect(page.getByTestId('panel-ribbon')).toBeVisible()
 })
 
@@ -189,15 +202,20 @@ test('Escape, restart and repeated visits preserve a single map and audio contex
     await reachShipBySkip(page)
     await page.keyboard.press('Escape')
     await phase(page, 'patrol')
+    await expect(page.getByTestId('patrol-vessel')).toHaveCount(1)
+    const vessel = page.getByTestId('patrol-vessel')
+    await expect(vessel).toHaveAttribute('aria-hidden', 'true')
     await page.keyboard.press('Escape')
     await phase(page, 'explore')
     await expect(page.getByTestId('panel-ribbon')).toBeVisible()
     await expect(page.locator('.maplibregl-canvas')).toHaveCount(1)
     await expect(page.locator('[data-testid^="journey-marker-"]')).toHaveCount(0)
+    await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
     await page.getByTestId('back-to-map').click()
     await expect(page.getByTestId('station-panel')).toBeHidden()
     await page.getByTestId('restart-adventure').click()
     await phase(page, 'dateEntry')
+    await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
     await expect(page.getByTestId('zip-input')).toBeFocused()
     await expect.poll(() => page.evaluate(() => window.__musicElements[0]?.paused)).toBe(true)
   }

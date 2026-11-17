@@ -25,6 +25,7 @@ import { prefersReducedMotion } from '../lib/motion'
 import { arcPrefix, boundsOf, type LngLat } from '../journey/arc'
 import { globeOverviewZoom, PATROL_OVERVIEW_LATITUDE, startPatrolOverviewCamera, voyageMidpoint } from '../lib/globe'
 import { installGlobeAtmosphere } from '../lib/globe-atmosphere'
+import { createPatrolVessel, routeTangent, type PatrolVesselHandle } from '../lib/patrolVessel'
 
 /** Keyless vector styles. Primary = OpenFreeMap; fallback = CARTO Dark Matter (both attribution-required). */
 export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/dark'
@@ -56,8 +57,10 @@ export interface FitOptions {
 
 /** Imperative surface used by the adventure overlay. Camera moves stay in MapLibre (see AGENTS.md). */
 export interface MapHandle {
-  /** Reveals `progress` (0..1) of a pre-sampled arc with a glowing head dot. */
+  /** Reveals `progress` (0..1) of a pre-sampled arc with its current leading marker. */
   drawArc(points: LngLat[], progress: number): void
+  /** Show the small red icebreaker only during the post-orders patrol. */
+  setPatrolVessel(enabled: boolean): void
   clearArc(): void
   setJourneyMarkers(markers: JourneyMarker[]): void
   /** Frames every point (e.g. the whole arc) with optional pitch/bearing. */
@@ -107,6 +110,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
   const markersRef = useRef<globalThis.Map<string, { marker: Marker; el: HTMLButtonElement }>>(new globalThis.Map())
   const journeyMarkersRef = useRef<Marker[]>([])
   const arcState = useRef<{ points: LngLat[]; progress: number } | null>(null)
+  const patrolVesselEnabled = useRef(false)
+  const patrolVessel = useRef<PatrolVesselHandle | null>(null)
   const styleReady = useRef(false)
   const storyLabelVisibility = useRef(new globalThis.Map<string, NonNullable<SymbolLayerSpecification['layout']>['visibility']>())
   const onSelectRef = useRef(onSelect)
@@ -251,6 +256,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     if (!arcSrc || !headSrc) return
     const state = arcState.current
     if (!state) {
+      removePatrolVessel()
       arcSrc.setData(emptyLine())
       for (const id of ['journey-head-halo', 'journey-head-dot']) map.setLayoutProperty(id, 'visibility', 'none')
       return
@@ -260,8 +266,21 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     feature.geometry.coordinates = line
     arcSrc.setData(feature)
     headSrc.setData(pointAt(head))
+    if (patrolVesselEnabled.current && state.points.length > 0) {
+      patrolVessel.current ??= createPatrolVessel(map)
+      const { from, to } = routeTangent(state.points, state.progress)
+      patrolVessel.current.update(head, from, to)
+    } else {
+      removePatrolVessel()
+    }
     const showHead = state.progress > 0.005 && state.progress < 0.995 ? 'visible' : 'none'
-    for (const id of ['journey-head-halo', 'journey-head-dot']) map.setLayoutProperty(id, 'visibility', showHead)
+    map.setLayoutProperty('journey-head-halo', 'visibility', showHead)
+    map.setLayoutProperty('journey-head-dot', 'visibility', patrolVesselEnabled.current ? 'none' : showHead)
+  }
+
+  const removePatrolVessel = () => {
+    patrolVessel.current?.remove()
+    patrolVessel.current = null
   }
 
   /* ---------- imperative handle ---------- */
@@ -272,8 +291,15 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         arcState.current = { points, progress }
         if (mapRef.current) applyArc(mapRef.current)
       },
+      setPatrolVessel(enabled) {
+        patrolVesselEnabled.current = enabled
+        if (!enabled) removePatrolVessel()
+        if (mapRef.current) applyArc(mapRef.current)
+      },
       clearArc() {
         arcState.current = null
+        patrolVesselEnabled.current = false
+        removePatrolVessel()
         if (mapRef.current) applyArc(mapRef.current)
       },
       setJourneyMarkers(markers) {
@@ -508,6 +534,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       markersRef.current.clear()
       journeyMarkersRef.current.forEach((m) => m.remove())
       journeyMarkersRef.current = []
+      removePatrolVessel()
       styleReady.current = false
       map.remove()
       mapRef.current = null

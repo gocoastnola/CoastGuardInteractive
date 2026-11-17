@@ -1,0 +1,104 @@
+.patrol-vessel {
+  width: 58px;
+  height: 42px;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The globe covers the ship at its limb; do not inherit MapLibre's opacity fade. */
+.patrol-vessel.maplibregl-marker {
+  transition: none;
+}
+
+.patrol-vessel-orientation,
+.patrol-vessel-float {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.patrol-vessel-float {
+  position: relative;
+  animation: patrol-vessel-bob 3.2s ease-in-out infinite;
+}
+
+.patrol-vessel-float::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 62%;
+  width: 23px;
+  height: 9px;
+  border-bottom: 1.5px solid rgba(211, 242, 242, 0.64);
+  border-radius: 50%;
+  opacity: 0.65;
+}
+
+.patrol-vessel-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(0, 10, 20, 0.42));
+}
+
+/* A local CSS hull replaces the image if the bundled artwork cannot be read. */
+.patrol-vessel-fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.patrol-vessel-fallback::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  top: 47%;
+  width: 80%;
+  height: 28%;
+  border-radius: 2px 3px 13px 10px;
+  background: #cf3937;
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 15% 100%);
+}
+
+.patrol-vessel-fallback::before {
+  content: '';
+  position: absolute;
+  left: 31%;
+  top: 29%;
+  width: 34%;
+  height: 22%;
+  border-radius: 2px 2px 0 0;
+  background: #f8f1df;
+  border-top: 3px solid #c7d8db;
+}
+
+.patrol-vessel.is-art-unavailable .patrol-vessel-art {
+  visibility: hidden;
+}
+
+.patrol-vessel.is-art-unavailable .patrol-vessel-fallback {
+  display: block;
+}
+
+@keyframes patrol-vessel-bob {
+  0%, 100% { transform: translateY(1px); }
+  50% { transform: translateY(-1px); }
+}
+
+@media (max-width: 599px) {
+  .patrol-vessel {
+    width: 52px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .patrol-vessel-float {
+    animation: none;
+  }
+}

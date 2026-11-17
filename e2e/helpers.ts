@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page, type TestInfo } from '@playwright/test'
 import type { Map as NativeMap } from 'maplibre-gl'
-import { buildPatrolLegs, patrolMiles } from '../src/journey/patrol'
+import { buildPatrolLegs, PATROL_STOPS, patrolMiles } from '../src/journey/patrol'
 
 // Explicit owner-approved itinerary: omissions or reordered arrivals must fail.
 export const PATROL_PORTS = ['honolulu', 'hobart', 'wellington', 'mcmurdo', 'punta-arenas', 'cape-horn', 'rio', 'panama', 'home-seattle']
@@ -23,9 +23,11 @@ declare global {
     __oscillatorTimes: number[]
     __masterGains: GainNode[]
     __musicEndedCount: number
-    __journeyObserved: { phases: string[]; weeks: number[] }
-    __readPatrolArrival: ReturnType<typeof installPatrolProbe>
-    __patrolObserved: { arrivals: { id: string; startMs: number; endMs?: number; geometry?: PatrolArrival; slides: number[]; opaqueMs: number }[]; startMs: number; recapMs?: number; lastFrameMs: number }
+    __journeyObserved: { phases: string[]; weeks: number[]; landHeadSeen: boolean; vesselBeforePatrol: boolean }
+    __readPatrolArrival: ReturnType<typeof installPatrolProbe>['readArrival']
+    __readPatrolVessel: ReturnType<typeof installPatrolProbe>['readVessel']
+    __patrolObserved: { arrivals: { id: string; startMs: number; endMs?: number; geometry?: PatrolArrival; slides: number[]; opaqueMs: number }[]; startMs: number; recapMs?: number; lastFrameMs: number;
+      vessel: { frames: number; instanceIds: number[]; maxCount: number; missingAfterMount: number; maxAnchorError: number; maxLineError: number; maxPositionError: number; maxLongitudeStep: number; crossedAntimeridian: boolean; lastLongitude?: number } }
   }
 }
 
@@ -86,6 +88,7 @@ export async function openLanding(page: Page) {
   await expect(page.getByText('Independent educational demonstration', { exact: false })).toBeVisible()
   await expect(page.locator('.maplibregl-canvas')).toHaveCount(1)
   await expect(page.locator('.map-status')).toHaveCount(0)
+  await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
   await explorationMarkers(page, true)
   await noAssignmentSpoilers(page)
 }
@@ -94,6 +97,7 @@ const ASSIGNMENT_SPOILERS = /Polar\s*Star|Seattle|Antarct\w*|McMurdo/i
 
 /** Check what applicants can read/hear, not the preloaded unit dataset. */
 export async function noAssignmentSpoilers(page: Page, ordersReady = false) {
+  await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
   if (ordersReady) {
     await expect(page.getByTestId('slot-landed')).toHaveCount(0)
     await expect(page.getByTestId('slot-final')).toHaveCount(0)
@@ -157,13 +161,22 @@ export async function beginZip(page: Page, zip = '70130') {
 export async function observeJourney(page: Page) {
   await page.evaluate(() => {
     const app = document.querySelector<HTMLElement>('.app')!
-    const observed = window.__journeyObserved = { phases: [app.dataset.phase!], weeks: [] as number[] }
+    const observed = window.__journeyObserved = { phases: [app.dataset.phase!], weeks: [] as number[], landHeadSeen: false, vesselBeforePatrol: false }
     new MutationObserver(() => {
       const p = app.dataset.phase!
       if (observed.phases.at(-1) !== p) observed.phases.push(p)
       const match = document.querySelector('[data-testid="week-value"]')?.textContent?.match(/Week\s+(\d+)/)
       if (match && !observed.weeks.includes(Number(match[1]))) observed.weeks.push(Number(match[1]))
     }).observe(app, { attributes: true, attributeFilter: ['data-phase'], childList: true, characterData: true, subtree: true })
+    const frame = () => {
+      if (app.dataset.phase === 'patrol' || app.dataset.phase === 'explore') return
+      if (document.querySelector('[data-testid="patrol-vessel"]')) observed.vesselBeforePatrol = true
+      if (app.dataset.phase === 'travel' && !observed.landHeadSeen) {
+        observed.landHeadSeen = window.__readPatrolVessel().headVisibility === 'visible'
+      }
+      requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
   })
 }
 
@@ -215,6 +228,49 @@ export async function globeStage(page: Page) {
 
 /** Install a passive DOM reader before brief touch-and-go arrivals begin. */
 function installPatrolProbe() {
+  const vesselIds = new WeakMap<Element, number>()
+  let nextVesselId = 1
+  const nativeMap = () => {
+    const element = document.querySelector('.map-root')!
+    type Fiber = { ref?: { current?: { getMap?: () => NativeMap } }; return?: Fiber }
+    const key = Object.keys(element).find(key => key.startsWith('__reactFiber$'))!
+    let fiber = (element as unknown as Record<string, Fiber>)[key]
+    while (fiber && !fiber.ref?.current?.getMap) fiber = fiber.return!
+    return fiber.ref!.current!.getMap!()
+  }
+  const readVessel = () => {
+    const map = nativeMap()
+    // MapLibre6 has no map._markers collection. Observe its actual positioned
+    // native Marker element and project the live GeoJSON head through getMap().
+    const elements = document.querySelectorAll<HTMLElement>('[data-testid="patrol-vessel"]')
+    const element = elements[0]
+    const sources = map.getStyle().sources as Record<string, { data?: { geometry?: { coordinates?: number[] | number[][] } } }>
+    const route = sources['journey-arc']?.data?.geometry?.coordinates as number[][] | undefined
+    const head = sources['journey-head']?.data?.geometry?.coordinates as number[] | undefined
+    const lineEnd = route?.at(-1)
+    const position = element ? [Number(element.dataset.lng), Number(element.dataset.lat)] : undefined
+    const distance = (point?: number[]) => head && point
+      ? Math.max(Math.abs((head[0] - point[0] + 540) % 360 - 180), Math.abs(head[1] - point[1])) : Infinity
+    const box = element?.getBoundingClientRect()
+    const projected = head && map.project([head[0], head[1]])
+    const canvas = map.getCanvas().getBoundingClientRect()
+    if (element && !vesselIds.has(element)) vesselIds.set(element, nextVesselId++)
+    return {
+      nativeCount: [...elements].filter(marker => marker.classList.contains('maplibregl-marker')).length, domCount: elements.length,
+      instanceId: element ? vesselIds.get(element) : undefined,
+      head, lineEnd, position, routeLength: route?.length ?? 0,
+      lineError: distance(lineEnd), positionError: distance(position),
+      anchorError: box && projected ? Math.hypot(box.x + box.width / 2 - canvas.x - projected.x,
+        box.y + box.height / 2 - canvas.y - projected.y) : Infinity,
+      covered: element?.classList.contains('maplibregl-marker-covered'), opacity: element ? Number(getComputedStyle(element).opacity) : 0,
+      pointerEvents: element ? getComputedStyle(element).pointerEvents : undefined,
+      decorative: element?.getAttribute('aria-hidden') === 'true' && element.tabIndex < 0,
+      asset: element?.querySelector('img')?.getAttribute('src'),
+      goldColor: map.getPaintProperty('journey-arc-line', 'line-color'),
+      goldVisibility: map.getLayoutProperty('journey-arc-line', 'visibility') ?? 'visible',
+      headVisibility: map.getLayoutProperty('journey-head-dot', 'visibility') ?? 'visible',
+    }
+  }
   const readArrival = (stop: string) => {
     const rect = (selector: string) => {
       const box = document.querySelector(selector)!.getBoundingClientRect()
@@ -242,14 +298,16 @@ function installPatrolProbe() {
       canvases: document.querySelectorAll('.maplibregl-canvas').length, markerCount: document.querySelectorAll('.map-root .journey-marker').length,
       dialogs: document.querySelectorAll('[role="dialog"]').length, slides: card.querySelectorAll('.antarctic-slide').length,
       noOverflow: document.documentElement.scrollWidth <= innerWidth + 1,
+      vessel: readVessel(),
     }
 
   }
   window.__readPatrolArrival = readArrival
-  return readArrival
+  window.__readPatrolVessel = readVessel
+  return { readArrival, readVessel }
 }
 
-type PatrolArrival = ReturnType<ReturnType<typeof installPatrolProbe>>
+type PatrolArrival = ReturnType<ReturnType<typeof installPatrolProbe>['readArrival']>
 
 /** Read one arrival in a single browser round trip. */
 export async function patrolGeography(page: Page, stop: string) {
@@ -287,15 +345,54 @@ function assertPatrolGeography(state: PatrolArrival, viewport: { width: number; 
   expect(state.thumbnail.width * state.thumbnail.height / (viewport.width * viewport.height)).toBeLessThanOrEqual(0.2)
   noOverlap(state.card, state.counter, `${stop}: port card must not obscure cumulative mileage`)
   expect(state.noOverflow).toBe(true)
+  assertPatrolVessel(state.vessel)
+  const expected = PATROL_STOPS.find(port => port.id === stop)!.lngLat
+  expect(Math.abs((state.vessel.head![0] - expected[0] + 540) % 360 - 180), `${stop}: the vessel reaches this port's longitude`).toBeLessThan(1e-8)
+  expect(state.vessel.head![1], `${stop}: the vessel reaches this port's latitude`).toBeCloseTo(expected[1], 8)
   return state
+}
+
+export async function nativePatrolVessel(page: Page) {
+  return page.evaluate(() => window.__readPatrolVessel())
+}
+
+export function assertPatrolVessel(state: Awaited<ReturnType<typeof nativePatrolVessel>>) {
+  expect(state.domCount, 'One vessel element is mounted').toBe(1)
+  expect(state.nativeCount, 'The vessel uses the native MapLibre Marker positioning').toBe(1)
+  expect(state.routeLength).toBeGreaterThan(1)
+  expect(state.lineError, 'The native head source remains the exact gold polyline end').toBeLessThan(1e-8)
+  expect(state.positionError, 'The position given to the native marker is the exact route head').toBeLessThan(1e-8)
+  expect(state.anchorError, 'The vessel anchor follows the actual projected gold line end').toBeLessThan(1.1)
+  expect(state.goldColor).toBe('#f4bd56')
+  expect(state.goldVisibility).toBe('visible')
+  expect(state.headVisibility, 'The previous head dot stays hidden while the ship leads').toBe('none')
+  expect(state.decorative, 'The miniature ship is decoration rather than an extra focus target').toBe(true)
+  expect(state.pointerEvents).toBe('none')
 }
 
 /** Sample real rendered arrivals without slowing or replacing the voyage clock. */
 export async function observePatrol(page: Page) {
   await page.evaluate(() => {
-    const observed = window.__patrolObserved = { arrivals: [], startMs: performance.now(), lastFrameMs: performance.now() } as Window['__patrolObserved']
+    const observed = window.__patrolObserved = { arrivals: [], startMs: performance.now(), lastFrameMs: performance.now(),
+      vessel: { frames: 0, instanceIds: [], maxCount: 0, missingAfterMount: 0, maxAnchorError: 0, maxLineError: 0, maxPositionError: 0, maxLongitudeStep: 0, crossedAntimeridian: false } } as Window['__patrolObserved']
     let previous: Window['__patrolObserved']['arrivals'][number] | undefined
     const frame = (now: number) => {
+      if (document.querySelector('[data-testid="patrol"]')) {
+        const state = window.__readPatrolVessel()
+        const vessel = observed.vessel
+        vessel.frames++
+        vessel.maxCount = Math.max(vessel.maxCount, state.domCount)
+        if (vessel.instanceIds.length && state.domCount !== 1) vessel.missingAfterMount++
+        if (state.instanceId && !vessel.instanceIds.includes(state.instanceId)) vessel.instanceIds.push(state.instanceId)
+        vessel.maxLineError = Math.max(vessel.maxLineError, state.lineError)
+        if (state.domCount) vessel.maxPositionError = Math.max(vessel.maxPositionError, state.positionError)
+        if (!state.covered && state.opacity > 0.95) vessel.maxAnchorError = Math.max(vessel.maxAnchorError, state.anchorError)
+        if (state.head) {
+          if (vessel.lastLongitude !== undefined) vessel.maxLongitudeStep = Math.max(vessel.maxLongitudeStep, Math.abs((state.head[0] - vessel.lastLongitude + 540) % 360 - 180))
+          vessel.lastLongitude = state.head[0]
+          if (state.head[0] < -180) vessel.crossedAntimeridian = true
+        }
+      }
       const card = document.querySelector<HTMLElement>('[data-port-card][aria-hidden="false"]')
       const id = card?.dataset.testid?.replace('port-', '')
       if (previous?.id !== id) {
@@ -337,6 +434,15 @@ export async function completedPatrolArrivals(page: Page) {
     if (arrival.id === 'mcmurdo') expect(arrival.slides).toEqual([0, 1, 2, 3])
   }
   expect(observed.recapMs! - observed.startMs, 'The complete nine-stop patrol is shorter than the former minute-long sequence').toBeLessThan(45_000)
+  expect(observed.vessel.frames, 'Observe the actual vessel throughout the full voyage').toBeGreaterThan(50)
+  expect(observed.vessel.instanceIds, 'All nine legs reuse the same mounted vessel').toHaveLength(1)
+  expect(observed.vessel.maxCount).toBe(1)
+  expect(observed.vessel.missingAfterMount).toBe(0)
+  expect(observed.vessel.maxLineError).toBeLessThan(1e-8)
+  expect(observed.vessel.maxPositionError).toBeLessThan(1e-8)
+  expect(observed.vessel.maxAnchorError).toBeLessThan(1.1)
+  expect(observed.vessel.crossedAntimeridian, 'The real ship passes180° across the Pacific route').toBe(true)
+  expect(observed.vessel.maxLongitudeStep, 'Wrapped samples never jump to the other side of the globe').toBeLessThan(40)
   return observed
 }
 
@@ -356,7 +462,7 @@ export async function nativePatrolState(page: Page) {
     return { lng: center.lng, lat: center.lat, zoom: map.getZoom(), bearing: map.getBearing(), moving: map.isMoving(),
       canvas: { width: canvas.width, height: canvas.height },
       centerError: Math.hypot(canvas.x + projected.x - stage.x - stage.width / 2, canvas.y + projected.y - stage.y - stage.height / 2),
-      route: source?.data?.geometry?.coordinates ?? [] }
+      route: source?.data?.geometry?.coordinates ?? [], vessel: window.__readPatrolVessel() }
   })
 }
 
@@ -368,7 +474,7 @@ export async function nativeOrbitSamples(page: Page, durationMs: number, minimum
     let fiber = (element as unknown as Record<string, Fiber>)[key]
     while (fiber && !fiber.ref?.current?.getMap) fiber = fiber.return!
     const map = fiber.ref!.current!.getMap!()
-    const samples: { ms: number; lng: number; lat: number; bearing: number; moving: boolean }[] = []
+    const samples: { ms: number; lng: number; lat: number; bearing: number; moving: boolean; vesselCovered?: boolean; vesselOpacity?: number }[] = []
     const start = performance.now()
     let travel = 0
     await new Promise<void>((resolve, reject) => {
@@ -377,7 +483,9 @@ export async function nativeOrbitSamples(page: Page, durationMs: number, minimum
         if (!samples.length || elapsed - samples.at(-1)!.ms >= 100) {
           const center = map.getCenter()
           if (samples.length) travel += (center.lng - samples.at(-1)!.lng + 540) % 360 - 180
-          samples.push({ ms: elapsed, lng: center.lng, lat: center.lat, bearing: map.getBearing(), moving: map.isMoving() })
+          const vessel = document.querySelector('[data-testid="patrol-vessel"]')
+          samples.push({ ms: elapsed, lng: center.lng, lat: center.lat, bearing: map.getBearing(), moving: map.isMoving(),
+            vesselCovered: vessel?.classList.contains('maplibregl-marker-covered'), vesselOpacity: vessel ? Number(getComputedStyle(vessel).opacity) : undefined })
         }
         if (minimumTravel && Math.abs(travel) >= minimumTravel) return resolve()
         if (elapsed >= durationMs) return minimumTravel ? reject(new Error(`Native orbit reached only ${travel.toFixed(1)}° in ${durationMs}ms`)) : resolve()
@@ -425,6 +533,10 @@ export async function fullPatrolRecap(page: Page) {
   // coordinate within sub-millimetre precision while requiring all1129 points.
   const maxCoordinateError = Math.max(...state.route.flatMap((point, index) => point.map((value, axis) => Math.abs(value - expectedPath[index][axis]))))
   expect(maxCoordinateError, 'The complete routed polyline remains drawn at100%').toBeLessThan(1e-9)
+  assertPatrolVessel(state.vessel)
+  const seattle = PATROL_STOPS.at(-1)!.lngLat
+  expect(Math.abs((state.vessel.head![0] - seattle[0] + 540) % 360 - 180)).toBeLessThan(1e-8)
+  expect(state.vessel.head![1]).toBeCloseTo(seattle[1], 8)
   expect(dom.miles?.trim()).toBe(Math.round(patrolMiles(legs)).toLocaleString('en-US'))
   expect(dom.progress).toBe('100')
   expect(dom.projection).toBe('vertical-perspective')
@@ -521,4 +633,5 @@ export async function reachShipBySkip(page: Page) {
   await phase(page, 'act2')
   await page.keyboard.press('Escape')
   await phase(page, 'shipIntro')
+  await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
 }

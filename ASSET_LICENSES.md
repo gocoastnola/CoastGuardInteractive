@@ -55,6 +55,7 @@ The official track page expressly permits free use, including commercial project
 | Asset | Licence |
 | --- | --- |
 | `public/favicon.svg`, inline SVG header art, icons in `src/components/Icons.tsx`, landing artwork | Created for this project; owned by the project owner. |
+| `public/media/polar-star-mini.svg` | Original vector illustration created for this project on 2026-11-17; owned by the project owner. Transparent toy-like red icebreaker used as the patrol route-head marker. No third-party artwork, Hot Wheels logo or official seal; not a photograph. Accessible SVG title: “Miniature red Polar Star icebreaker.” |
 | Unit text, narration scripts | Placeholder demo text authored for this project; to be replaced/verified (SOURCES.md). |
 
 Historical Phase 1 used no photography. Current photography is documented below; bundled and remote assets must be distinguished. When imagery is added, record source, alt text, license and attribution in its data/component record and here.

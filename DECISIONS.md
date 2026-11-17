@@ -2,6 +2,14 @@
 
 Format: date · decision · why · alternatives · consequences.
 
+## 2026-11-17 · Miniature red icebreaker at the patrol route head
+
+- The owner requested a small toy-like red Polar Star at the leading tip of the gold voyage line, with the connecting line retained. Use an original project-authored SVG, without a Hot Wheels logo or official seal; it is an illustrative miniature rather than a photograph.
+- Keep MapLibre and use one native Marker at the exact head returned by the existing `arcPrefix` call. This shares the visible route's geometry and progress and follows native globe projection/occlusion without another voyage clock or engine.
+- Face projected travel by horizontal flip and limited ±14° tilt so the vessel stays upright. Keep the wake and bob subtle, disable bob for reduced motion, and preserve the static itinerary. The decorative marker does not intercept interaction and is removed with its listeners on exit.
+- Count segments as `points.length - 1` for every leg, matching `arcPrefix`; counting the initial point again had placed early port-call heads beyond the destination. Keep the route coordinates, story, port holds, overview, galleries and audio unchanged.
+- Work begins at main `ce5f4c5916dd5f199bc6408fa96fb90c99e2449b` on `codex/polar-star-route-marker-20261117-223000Z`. No dependency or paid service is added. Local verification and actual previews are in [docs/PATROL-VESSEL.md](docs/PATROL-VESSEL.md); latest complete CI and publication status are on PR #9. The owner skipped further recovery checks; existing recovery references are untouched. This request authorizes implementation; no new explicit merge/deploy approval is recorded.
+
 ## 2026-11-17 · Faster calls and a completed-patrol globe overview
 
 - Owner: “Please speed up the port calls just a bit. It should touch and go … until back to Seattle and then a rotating view of everywhere you went encompassing the entire patrol.”
