@@ -23,7 +23,7 @@ declare global {
     __oscillatorTimes: number[]
     __masterGains: GainNode[]
     __musicEndedCount: number
-    __journeyObserved: { phases: string[]; weeks: number[] }
+    __journeyObserved: { phases: string[]; weeks: number[]; landHeadSeen: boolean; vesselBeforePatrol: boolean }
     __readPatrolArrival: ReturnType<typeof installPatrolProbe>['readArrival']
     __readPatrolVessel: ReturnType<typeof installPatrolProbe>['readVessel']
     __patrolObserved: { arrivals: { id: string; startMs: number; endMs?: number; geometry?: PatrolArrival; slides: number[]; opaqueMs: number }[]; startMs: number; recapMs?: number; lastFrameMs: number;
@@ -161,13 +161,22 @@ export async function beginZip(page: Page, zip = '70130') {
 export async function observeJourney(page: Page) {
   await page.evaluate(() => {
     const app = document.querySelector<HTMLElement>('.app')!
-    const observed = window.__journeyObserved = { phases: [app.dataset.phase!], weeks: [] as number[] }
+    const observed = window.__journeyObserved = { phases: [app.dataset.phase!], weeks: [] as number[], landHeadSeen: false, vesselBeforePatrol: false }
     new MutationObserver(() => {
       const p = app.dataset.phase!
       if (observed.phases.at(-1) !== p) observed.phases.push(p)
       const match = document.querySelector('[data-testid="week-value"]')?.textContent?.match(/Week\s+(\d+)/)
       if (match && !observed.weeks.includes(Number(match[1]))) observed.weeks.push(Number(match[1]))
     }).observe(app, { attributes: true, attributeFilter: ['data-phase'], childList: true, characterData: true, subtree: true })
+    const frame = () => {
+      if (app.dataset.phase === 'patrol' || app.dataset.phase === 'explore') return
+      if (document.querySelector('[data-testid="patrol-vessel"]')) observed.vesselBeforePatrol = true
+      if (app.dataset.phase === 'travel' && !observed.landHeadSeen) {
+        observed.landHeadSeen = window.__readPatrolVessel().headVisibility === 'visible'
+      }
+      requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
   })
 }
 

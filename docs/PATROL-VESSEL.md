@@ -16,7 +16,7 @@ The four-photo ZIP opening, training, surprise orders, ship introduction, all ni
 
 ## Verification record
 
-Local unit, production-build and data checks pass on Node 22.23.5 / npm 11.9.0. Browser and rendered verification are in progress. Earlier reports and PRs document their own historical builds and do not certify this vessel revision.
+Local unit, production-build and data checks pass on Node 22.23.5 / npm 11.9.0. The complete phone-viewport journey, reduced-motion patrol, two-visit restart path and focused phone rotation/gallery check also pass. Earlier reports and PRs document their own historical builds and do not certify this vessel revision. The complete CI matrix and any subsequent engine results are recorded on [PR #9](https://github.com/gocoastnola/CoastGuardInteractive/pull/9); check its latest head before publication.
 
 | Check | Status | Evidence / limits |
 | --- | --- | --- |
@@ -24,9 +24,13 @@ Local unit, production-build and data checks pass on Node 22.23.5 / npm 11.9.0. 
 | Unit tests | PASS | 96 tests in 14 files, including seven new tangent/orientation tests and extended reduced-motion mount/unmount assertions |
 | Production-subpath build | PASS | `npm run build -- --base=/CoastGuardInteractive/`; browser asset-path verification follows below |
 | Demo-data validation | PASS | Existing validator through `node --import tsx scripts/validate-data.ts`: 18 records, all unverified; no unit data edits |
-| Browser journey, route-head position and cleanup | PENDING | Check desktop/phone, travel/port calls, gallery pause, recap, exit and reduced motion |
-| Real-resource visual evidence | PENDING | Record the final candidate's rendered vessel and gold connecting line |
+| Local production browser checks | PASS | Four focused cases: complete 390×664 normal journey, reduced motion, two real patrol/restart visits, and phone portrait/landscape/gallery controls. Real MapLibre, line geometry, native marker placement and authored timeline; external map/photo fixtures are separate from live checks |
+| Route-head geometry and lifecycle | PASS | Complete phone journey observed all nine actual port endpoints, one stable vessel element, matching line/head/ship coordinates, projected anchor error below 1.1 CSS px and antimeridian continuity; recap retains the Seattle endpoint; Explore/restart removes the vessel; no ship before patrol |
+| Project-subpath SVG | PASS | Focused production phone case requests `/CoastGuardInteractive/media/polar-star-mini.svg` successfully and checks its loaded image |
+| Real-resource visual evidence | PASS | Actual production-build [desktop 1440×900 and phone viewport 390×844 screenshots](evidence/patrol-vessel/README.md), inspected with real geographic tiles and existing photographs; no physical-device or frame-rate claim |
 | Merge / deployment / hosted checks | NOT RUN | No new explicit publication approval is recorded for this revision |
 | Physical-device / subjective-listening checks | NOT RUN | Browser emulation is not phone hardware; soundtrack is unchanged |
 
 No dependency, account, key or paid service is added. The owner's instruction to skip further recovery checks remains in effect; existing tags, bundles, backups and the separate benchmark are untouched. The current instruction authorizes implementing and reviewing the ship marker; prior publication approvals apply to their recorded revisions.
+
+Initial harness attempts exposed timing assumptions rather than application failures: extra sequential asset reads missed a brief port card, and a late dot-visibility poll missed the short land leg. Asset checks now run during the requested paused gallery; the unchanged non-patrol dot is sampled passively from before ZIP submission. Live screenshot capture similarly uses stable recap state instead of waiting again for a port whose brief hold may have ended during the screenshot. No route, hold, assertion tolerance or application clock was weakened.
