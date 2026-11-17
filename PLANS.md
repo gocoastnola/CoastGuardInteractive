@@ -2,7 +2,11 @@
 
 ## Current requested refinement (2026-11-17)
 
-Shorten port calls while preserving their order and route, then show a continuous broad globe overview of the complete patrol after Seattle. Keep the view until Explore/Escape, with paused photo review for every visited stop and a static reduced-motion alternative. Preserve the four-photo ZIP opening, training, surprise orders, music and all approved assets. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) for timing and current verification. The owner requested skipping further recovery checks; do not touch backup repositories or recovery tags.
+Add a small red toy-like Polar Star riding the leading tip of the gold voyage line. Keep the connected route, native MapLibre globe, all existing story and timing, galleries, completed overview and music. Use original bundled vector artwork and the existing route-head calculation; keep the ship upright and disable bob for reduced motion. Correct the route segment count so arrivals reach their port coordinates. See [docs/PATROL-VESSEL.md](docs/PATROL-VESSEL.md) for implementation and pending verification. The owner requested skipping further recovery checks; do not touch backup repositories or recovery tags. No new explicit merge/deploy approval is recorded for this revision.
+
+## Published patrol-pacing revision (2026-11-17)
+
+The previous refinement shortened port calls while preserving their order and route, then added a continuous broad globe overview of the complete patrol after Seattle. The view stays until Explore/Escape, with paused photo review for every visited stop and a static reduced-motion alternative. The four-photo ZIP opening, training, surprise orders, music and all approved assets remain. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) for that revision's timing, historical verification and publication ledger.
 
 ## Published globe/audio revision (2026-11-17)
 

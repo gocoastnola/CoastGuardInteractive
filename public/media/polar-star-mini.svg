@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 112" role="img" aria-labelledby="polar-star-mini-title">
+  <title id="polar-star-mini-title">Miniature red Polar Star icebreaker</title>
+  <defs>
+    <linearGradient id="hull" x1="0" y1="0" x2="0.2" y2="1">
+      <stop stop-color="#ff5a4f"/>
+      <stop offset=".4" stop-color="#ed2f35"/>
+      <stop offset="1" stop-color="#a7122a"/>
+    </linearGradient>
+    <linearGradient id="bow" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ff6c57"/>
+      <stop offset="1" stop-color="#c01a2b"/>
+    </linearGradient>
+    <linearGradient id="cabin" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#fffef4"/>
+      <stop offset="1" stop-color="#cbdce3"/>
+    </linearGradient>
+    <linearGradient id="funnel" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#ffe2a0"/>
+      <stop offset=".5" stop-color="#edb759"/>
+      <stop offset="1" stop-color="#bd7d2d"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="83" cy="96" rx="57" ry="5" fill="#081d34" opacity=".23"/>
+  <!-- The low, wide hull and raised icebreaking bow carry the tiny silhouette. -->
+  <path d="m19 66 22-13 88-3 20 8-29 15-86 4Z" fill="#f5dfc5" stroke="#791b2a" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="m24 65 19-9 84-3 15 5-23 10-84 5Z" fill="#f4f3e5"/>
+  <path d="m20 66 97 3 32-11c3-1 4 1 3 4l-11 24c-3 7-9 10-19 11l-73-1c-14 0-22-5-25-15Z" fill="url(#hull)" stroke="#762031" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="m117 69 32-11c3-1 4 1 3 4l-11 24c-3 7-9 10-19 11Z" fill="url(#bow)"/>
+  <path d="m26 83 15 6 83 3 16-8-2 5c-4 5-9 7-17 8l-72-1c-11 0-19-4-23-13Z" fill="#8a1c31" opacity=".58"/>
+  <path d="m24 69 92 3 31-11" fill="none" stroke="#ff9b7b" stroke-width="2.5" stroke-linecap="round" opacity=".88"/>
+  <path d="m102 72 10 .2-10 21-10-.3Z" fill="#fffdf2"/>
+  <path d="m113 71 3 .1-9 22-3-.1Z" fill="#193c62"/>
+  <path d="m31 76 48 1" fill="none" stroke="#ff9a85" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+  <path d="m39 63 8-6 26 .5-6 7Z" fill="#c4d4d9"/>
+  <!-- Two warm buff stacks sit behind the compact white bridge. -->
+  <path d="m41 37 12-3 5 3v22l-15 2Z" fill="url(#funnel)" stroke="#9a6b35" stroke-width="1" stroke-linejoin="round"/>
+  <path d="m41 37 12-3 5 3-13 3Z" fill="#2b3b48"/>
+  <path d="m41 37 4 3v5l-4-2Zm4 3 13-3v6l-13 3Z" fill="#152c40"/>
+  <path d="m58 32 12-3 5 3v24l-15 3Z" fill="url(#funnel)" stroke="#9a6b35" stroke-width="1" stroke-linejoin="round"/>
+  <path d="m58 32 12-3 5 3-13 3Z" fill="#32424e"/>
+  <path d="m58 32 4 3v5l-4-2Zm4 3 13-3v6l-13 3Z" fill="#142c40"/>
+  <path d="m53 58 17-9 43-1 10 7-12 13-56-1Z" fill="#ecf3ef" stroke="#6e8893" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="m55 57 56 1v10l-56-1Z" fill="url(#cabin)"/>
+  <path d="m111 58 12-3-1 8-11 5Z" fill="#afc4d0"/>
+  <path d="m66 42 34-3 14 7-4 14-44-1Z" fill="url(#cabin)" stroke="#6c8593" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="m100 39 14 7-4 14-9-4Z" fill="#b8ced8"/>
+  <path d="m63 41 35-4 19 8-4 4-15-6-34 3Z" fill="#fffef1" stroke="#76909e" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="m69 47 28-2v7l-28 2Zm31-2 10 4-1 6-9-4Z" fill="#143a59"/>
+  <path d="m75 47-.2 6m8-6.7-.2 6.2m8-6.8-.2 6.2m14-4.1-.5 5.7" stroke="#d5e6eb" stroke-width="2"/>
+  <path d="m70 48 25-2" stroke="#68b8d3" stroke-width="1.3" opacity=".8"/>
+  <path d="M73 59h25m-25 3h18" stroke="#a0b9c5" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Chunky dark mast: intentionally simple enough to read at marker scale. -->
+  <path d="M88 37V13m-8 10h16m-13 7h11m-6-17 7 24m-7-16-6 16" fill="none" stroke="#17334a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m84 14 9-2 4 2-9 2Z" fill="#25475c"/>
+  <path d="M78 38v-7m25 10v-7" stroke="#78909e" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="78" cy="30" r="2.5" fill="#f7f8ed"/>
+  <circle cx="103" cy="33" r="2.7" fill="#f7f8ed"/>
+  <path d="m124 59 8-2" stroke="#415467" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m130 55 1-8" stroke="#415467" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="m30 61 1-6m7 2v-6" stroke="#d7e4e5" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

@@ -6,11 +6,13 @@ An existing ZIP-first recruiting journey: hometown → Training Center Cape May 
 
 All unit content in this build is placeholder (`contentReviewStatus: "demo-unverified"`). See [SOURCES.md](SOURCES.md).
 
-## Current globe and audio revision
+## Current patrol vessel revision
 
 This revision uses a single native 3D globe, broad leg-by-leg orientation and a compact destination-photo dock. Tap **Details** for full photos, text and credits; the voyage pauses while the drawer is open. The original ZIP opening, training and all nine voyage arrivals remain. Primary music is the bundled **Vanguard — Scott Buckley**, licensed under **CC BY 4.0** and attributed in the information control. Authored fallback music and reveal/arrival cues need no paid service, account or API key.
 
-The latest requested refinement uses brief touch-and-go port calls, then a rotating full-patrol overview after Seattle. Choose any visited stop for photographs, or **Explore the map** when ready. See [pacing and final-overview verification](docs/PATROL-PACING.md) for the current change.
+The latest refinement adds an original miniature red Polar Star illustration at the leading tip of the gold patrol line. The native map marker follows the same route-head calculation, stays upright as it turns, and has a gentle bob that is disabled for reduced motion. The connecting line remains. See [vessel scope and verification](docs/PATROL-VESSEL.md); application checks for this branch are pending.
+
+The published pacing baseline uses brief touch-and-go port calls, then a rotating full-patrol overview after Seattle. Choose any visited stop for photographs, or **Explore the map** when ready. See [pacing and final-overview verification](docs/PATROL-PACING.md) for that prior revision.
 
 The earlier [globe/audio report](docs/GLOBE-AUDIO-REVISION.md), [genuine before/after evidence](docs/evidence/globe-audio/README.md) and [PR #7](https://github.com/gocoastnola/CoastGuardInteractive/pull/7) document the published globe baseline. Its test counts are historical evidence, not certification of later changes. Physical-device performance and subjective listening remain untested.
 

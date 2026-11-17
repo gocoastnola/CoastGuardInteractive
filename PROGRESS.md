@@ -1,12 +1,18 @@
 # PROGRESS.md
 
-_Current work: touch-and-go port calls and completed-patrol overview, 2026-11-17. Prior reports remain as history._
+_Current work: miniature Polar Star patrol marker, 2026-11-17. Prior reports remain as history._
 
-## Current patrol-pacing revision
+## Current patrol-vessel revision
+
+The owner requested a small red toy-like Polar Star at the tip of the gold voyage line, preserving the connecting line. Work starts at main `ce5f4c5916dd5f199bc6408fa96fb90c99e2449b` on `codex/polar-star-route-marker-20261117-223000Z`. An original bundled SVG is placed through a native MapLibre Marker at `arcPrefix`'s exact head. Projected direction determines upright flip/tilt; gentle bob is disabled for reduced motion. Patrol progress now counts segments consistently so port calls use the actual endpoint. Story, timing, music, route coordinates, galleries, overview and engine remain unchanged.
+
+Local Node 22.23.5 checks pass: 96 unit tests in 14 files, production-subpath build and 18 unverified data records. Browser checks and final visual evidence are in progress. The SVG has also passed local PNG rendering and inspection at 640px and 58px wide. See [docs/PATROL-VESSEL.md](docs/PATROL-VESSEL.md) for scope and the current verification ledger. No dependency is added. Recovery checks remain skipped at the owner's request; no new merge/deploy approval or publication is recorded for this revision.
+
+## Published patrol-pacing revision
 
 The owner requested shorter calls and a rotating whole-patrol view after Seattle. Work starts at freshly fetched main `2cec276dc08bde643577a6e0f1e0261b124472ce` on `codex/patrol-touch-and-go-20261117-210100Z`. Ordinary holds are 1.4s, McMurdo 2.4s, Panama 1.8s and Seattle 2.2s; every stop, sea waypoint, image, credit and mileage calculation is retained. The completed route remains on a broad globe rotating through all longitudes until Explore or Escape. All nine stops can reopen their galleries, which pause/resume the orbit. Reduced motion remains static.
 
-Final evidence: local Node 22.23.5 and CI Node 22.23.4; **89 unit tests**, build/data validation, **18 Chromium** and **eight production cases PASS** in GitHub Actions run #27. The focused native WebKit recap passes too. Real production-build desktop/phone captures retain all nine arrivals, four McMurdo photos, the full route and all galleries; native camera longitude turns through every hemisphere and survives 932↔390 reflow. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) and [genuine evidence](docs/evidence/patrol-recap/README.md). [PR #8](https://github.com/gocoastnola/CoastGuardInteractive/pull/8) records final publication/hosted checks. Further recovery checks are skipped at the owner's request; no backup/tag changes are made.
+Historical final pacing evidence: local Node 22.23.5 and CI Node 22.23.4; **89 unit tests**, build/data validation, **18 Chromium** and **eight production cases PASS** in GitHub Actions run #27. The focused native WebKit recap passed too. Real production-build desktop/phone captures retained all nine arrivals, four McMurdo photos, the full route and all galleries; native camera longitude turned through every hemisphere and survived 932↔390 reflow. See [docs/PATROL-PACING.md](docs/PATROL-PACING.md) and [genuine evidence](docs/evidence/patrol-recap/README.md). [PR #8](https://github.com/gocoastnola/CoastGuardInteractive/pull/8) records that revision's publication/hosted checks. No backup/tag changes were made.
 
 ## Published globe/audio revision
 

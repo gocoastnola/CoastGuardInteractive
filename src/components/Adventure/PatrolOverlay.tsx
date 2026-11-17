@@ -104,6 +104,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
     setRecap(false)
     sound.enable()
     sound.ambient()
+    map.setPatrolVessel(true)
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
       lngLat: i === 0 ? PATROL_STOPS[0].lngLat : legs[i - 1].points.at(-1)!,
@@ -117,6 +118,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       map.drawArc(fullPath, 1)
       map.frameVoyageLeg([PATROL_STOPS[0].lngLat], { duration: 0 })
       return () => {
+        map.setPatrolVessel(false)
         map.stop()
         map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
         sound.stopAmbient()
@@ -128,7 +130,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
     map.setJourneyMarkers(markers)
     map.drawArc(fullPath, 0)
     map.frameVoyageLeg(legs[0].points, { duration: 0 })
-    const legSamples = legs.map((leg, i) => i === 0 ? leg.points.length : leg.points.length - 1)
+    // Progress counts segments, matching arcPrefix's (points.length - 1).
+    // Counting the first point again puts the head just past early port calls.
+    const legSamples = legs.map(leg => leg.points.length - 1)
     const totalSamples = legSamples.reduce((a, b) => a + b, 0)
     const tl = gsap.timeline({ defaults: { ease: 'none' } })
     timeline.current = tl
@@ -207,6 +211,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       tl.revert()
       timeline.current = null
       recapRef.current = false
+      map.setPatrolVessel(false)
       map.stop()
       map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
       sound.stopAmbient()

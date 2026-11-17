@@ -37,14 +37,16 @@ describe('reduced-motion story recovery', () => {
     const ambient = vi.spyOn(sound, 'ambient').mockImplementation(() => {})
     const stopAmbient = vi.spyOn(sound, 'stopAmbient').mockImplementation(() => {})
     const setPadding = vi.fn()
-    const map = { setJourneyMarkers: vi.fn(), fitPoints: vi.fn(), frameVoyageLeg: vi.fn(), drawArc: vi.fn(), stop: vi.fn(), getMap: vi.fn(() => ({ setPadding })) } as unknown as MapHandle
+    const map = { setJourneyMarkers: vi.fn(), setPatrolVessel: vi.fn(), fitPoints: vi.fn(), frameVoyageLeg: vi.fn(), drawArc: vi.fn(), stop: vi.fn(), getMap: vi.fn(() => ({ setPadding })) } as unknown as MapHandle
     const { unmount } = render(<PatrolOverlay map={map} onDone={() => {}} />)
     expect(enable).toHaveBeenCalledOnce()
     expect(ambient).toHaveBeenCalledOnce()
+    expect(map.setPatrolVessel).toHaveBeenCalledExactlyOnceWith(true)
     const itinerary = screen.getByRole('list', { name: 'Complete voyage itinerary' })
     expect(within(itinerary).getAllByRole('listitem')).toHaveLength(9)
     expect(itinerary.textContent!.indexOf('McMurdo')).toBeLessThan(itinerary.textContent!.indexOf('Patagonia'))
     unmount()
+    expect(map.setPatrolVessel).toHaveBeenLastCalledWith(false)
     expect(map.stop).toHaveBeenCalledOnce()
     expect(setPadding).toHaveBeenCalledWith({ top: 0, bottom: 0, left: 0, right: 0 })
     expect(stopAmbient).toHaveBeenCalledOnce()

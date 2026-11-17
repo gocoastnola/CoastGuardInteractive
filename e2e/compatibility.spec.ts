@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { writeFile } from 'node:fs/promises'
 import { PATROL_STOPS } from '../src/journey/patrol'
-import { attributionUsable, beginZip, controlInViewport, deterministicMedia, fullPatrolRecap, imageLoaded, nativeOrbitSamples, nativePatrolState, noHorizontalOverflow, opaque, openLanding, PATROL_PORTS, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
+import { assertPatrolVessel, attributionUsable, beginZip, controlInViewport, deterministicMedia, fullPatrolRecap, imageLoaded, nativeOrbitSamples, nativePatrolState, nativePatrolVessel, noHorizontalOverflow, opaque, openLanding, PATROL_PORTS, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
 
 test('user gesture initializes actual WebAudio; interruption does not create another context @production', async ({ page }) => {
   await deterministicMedia(page)
@@ -140,6 +140,16 @@ test('native sphere and compact phone dock retain real Details and credit contro
   await page.getByTestId('port-details-honolulu').click()
   await expect(page.getByRole('dialog')).toContainText('Honolulu')
   await expect(page.getByTestId('gallery-close')).toBeFocused()
+  // Check the asset while the user's requested gallery has paused the voyage;
+  // extra serial reads must not consume the brief1.4s Honolulu call.
+  const vesselImage = page.locator('[data-testid="patrol-vessel"] .patrol-vessel-art')
+  await imageLoaded(vesselImage)
+  const vesselAsset = (await vesselImage.getAttribute('src'))!
+  expect(vesselAsset).toMatch(/\/media\/polar-star-mini\.svg$/)
+  if (process.env.E2E_PRODUCTION === '1') expect(vesselAsset).toBe('/CoastGuardInteractive/media/polar-star-mini.svg')
+  const assetResponse = await page.request.get(vesselAsset)
+  expect(assetResponse.status(), 'The bundled miniature SVG loads beneath the deployed project path').toBe(200)
+  expect(assetResponse.headers()['content-type']).toContain('image/svg+xml')
   const cameraGeometry = () => page.locator('.map-root').evaluate(element => {
     type LiveMap = { getCenter(): unknown; project(point: unknown): { x: number; y: number }; getCanvas(): HTMLCanvasElement; isMoving(): boolean }
     type Fiber = { ref?: { current?: { getMap?: () => LiveMap } }; return?: Fiber }
@@ -162,9 +172,11 @@ test('native sphere and compact phone dock retain real Details and credit contro
   }
   const pausedMiles = await page.getByTestId('miles-value').innerText()
   await rotate({ width: 844, height: 390 })
+  assertPatrolVessel(await nativePatrolVessel(page))
   expect((await cameraGeometry()).moving, 'Resizing an open gallery must leave the camera paused').toBe(false)
   await expect(page.getByTestId('miles-value')).toHaveText(pausedMiles)
   await rotate({ width: 390, height: 664 })
+  assertPatrolVessel(await nativePatrolVessel(page))
   await page.getByTestId('gallery-close').click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await phase(page, 'patrol')
@@ -175,6 +187,7 @@ test('native sphere and compact phone dock retain real Details and credit contro
   await rotate({ width: 390, height: 664 })
   await page.keyboard.press('Escape')
   await phase(page, 'explore')
+  await expect(page.getByTestId('patrol-vessel')).toHaveCount(0)
   await page.getByTestId('back-to-map').click()
   await attributionUsable(page)
 })
@@ -250,6 +263,8 @@ test('completed patrol rotates through every hemisphere, keeps all port gallerie
   const quadrants = new Set(samples.map(sample => Math.floor(((sample.lng % 360 + 360) % 360) / 90)))
   expect([...quadrants].sort()).toEqual([0, 1, 2, 3])
   const bearings = samples.map(sample => sample.bearing)
+  expect(samples.some(sample => sample.vesselCovered), 'The native globe covers the Seattle ship on its far hemisphere').toBe(true)
+  expect(samples.filter(sample => sample.vesselCovered).every(sample => sample.vesselOpacity === 0), 'The ship disappears when the physical globe covers it').toBe(true)
   expect(Math.max(...bearings) - Math.min(...bearings), 'The orbit changes native longitude while keeping camera bearing steady').toBeLessThan(0.1)
   await phase(page, 'patrol')
   await fullPatrolRecap(page)
