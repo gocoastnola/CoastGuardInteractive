@@ -57,11 +57,6 @@ export function SlotMachine({ units, onReport }: Props) {
     return () => ctx.revert()
   }, [reduced])
 
-  // Reduced motion: no spin — land instantly.
-  useEffect(() => {
-    if (reduced) setState('landed')
-  }, [reduced])
-
   useEffect(() => () => {
     spinTween.current?.kill()
     if (hornTimer.current !== null) window.clearTimeout(hornTimer.current)
@@ -85,6 +80,11 @@ export function SlotMachine({ units, onReport }: Props) {
     if (state !== 'ready') return
     sound.enable()
     sound.ambient()
+    if (reduced) {
+      sound.lock()
+      setState('landed')
+      return
+    }
     setState('spinning')
     if (!strip.current) {
       setState('landed')
@@ -133,9 +133,10 @@ export function SlotMachine({ units, onReport }: Props) {
   const target = reel.items[reel.target]
 
   return (
-    <div className="slot" ref={root} role="dialog" aria-labelledby="slot-title" data-testid="slot">
+    <div className={`slot long-watch-orders ${landed ? 'has-assignment' : ''}`} ref={root} role="dialog" aria-labelledby="slot-title" data-testid="slot">
       <SoundToggle />
       <div className="slot-head" data-slot-reveal>
+        <p className="scene-kicker"><span>03</span> The next chapter</p>
         <div className="orders-eyebrow">{SLOT.demoNote}</div>
         <h2 id="slot-title" className="orders-title">
           {SLOT.title}
@@ -143,6 +144,7 @@ export function SlotMachine({ units, onReport }: Props) {
         <p className="orders-sub">{SLOT.sub}</p>
       </div>
 
+      <div className="orders-record" data-slot-reveal><span>UNIT ASSIGNMENT</span><span>ILLUSTRATIVE / 001</span></div>
       <div className={`slot-frame ${landed ? 'is-landed' : ''} ${state === 'spinning' ? 'is-spinning' : ''}`} data-slot-reveal>
         <div className="slot-window" style={{ height: ROW_H }}>
           {landed ? (

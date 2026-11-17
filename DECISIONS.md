@@ -100,3 +100,12 @@ This records the implementation at that time. The 2026-11-17 ZIP-first decision 
 - **Preserved audio decision:** retain the existing synthesized score/SFX and browser-gesture initialization behavior. Journey-wide mute/volume or altered autoplay behavior is a separate product/accessibility decision.
 - **Authorized now:** recovery verification, narrowly scoped technical repairs, meaningful tests, current documentation and a separate redesign proposal. No major redesign implementation, engine replacement, broad dependency changes, merging or deployment is authorized.
 - **Verification rule:** historical test counts are historical evidence. Record actual runtime, baseline failures, final checks and limitations for this branch before claiming success.
+
+## 2026-11-17 — Story-locked visual development (owner-approved)
+
+- The original four-corner mission-photo ZIP opening is locked: preserve its layout, four photographs, ZIP input, and familiar controls. Do not turn it into a single-ship or expedition advertisement. Remove assignment/destination spoilers from supporting text and accessible names while retaining the original mission imagery.
+- Preserve hometown travel → Cape May eight-week training → graduation → apparently uncertain assignment reel → Polar Star reveal → report aboard Seattle → full voyage → homecoming/exploration. No ship/destination preview in the opening or pre-reveal map markers.
+- Exact illustrative itinerary remains Seattle, Honolulu, Hobart, Wellington, McMurdo, Punta Arenas/Patagonia, Cape Horn passage, Rio, Panama Canal transit, Seattle. No stop removed or reordered.
+- Authorized visual work enhances the existing map, color, photograph staging, motion and transitions. Keep MapLibre, the existing route geometry, source data status and original score. No new framework, external account, paid service or deployment.
+- The local single-ship opening experiment was rejected and removed from active source. Its screenshots are not the approved opening. Design development branches from the separately tested technical-repair commit; neither PR is merged or deployed by this work.
+- Validation may run for a PR targeting the foundation branch; publication remains limited to the existing exact main/master conditions. ZIP entry is not a pending decision.

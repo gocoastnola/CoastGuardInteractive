@@ -40,6 +40,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
   const totalMiles = useMemo(() => patrolMiles(legs), [legs])
   const [miles, setMiles] = useState(reduced ? totalMiles : 0)
   const [portLabel, setPortLabel] = useState(PATROL_STOPS[1].name)
+  const [activeStop, setActiveStop] = useState<string | null>(null)
+  const [activeSlide, setActiveSlide] = useState(0)
 
   const finish = (skipped: boolean) => {
     if (done.current) return
@@ -55,7 +57,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
     const markerFor = (i: number): JourneyMarker => ({
       id: PATROL_STOPS[i].id,
-      lngLat: PATROL_STOPS[i].lngLat,
+      // Keep markers on the same unwrapped world copy as the cumulative track.
+      // At phone overview zoom, multiple copies can be on screen simultaneously.
+      lngLat: i === 0 ? PATROL_STOPS[0].lngLat : legs[i - 1].points[legs[i - 1].points.length - 1],
       label: PATROL_STOPS[i].name,
       sublabel: PATROL_STOPS[i].country,
       kind: i === 0 || i === PATROL_STOPS.length - 1 ? 'home' : 'unit',
@@ -69,6 +73,19 @@ export function PatrolOverlay({ map, onDone }: Props) {
     }
 
     const cards = Array.from(root.current.querySelectorAll<HTMLElement>('[data-port-card]'))
+    // Fit the entire voyage into the free chart area, beside the desktop card
+    // or above the tallest phone card. offsetTop ignores GSAP's entrance transform.
+    const chartPadding = () => {
+      if (window.innerHeight <= 520 && window.innerWidth >= 600) {
+        return { top: 90, bottom: 80, left: 24, right: Math.ceil(window.innerWidth * 0.58) }
+      }
+      if (window.innerWidth <= 860) {
+        const cardTop = Math.min(...cards.map(card => card.offsetTop))
+        const chartBottom = Math.max(220, cardTop - 28)
+        return { top: 140, bottom: Math.max(100, window.innerHeight - chartBottom), left: 24, right: 24 }
+      }
+      return { top: 190, bottom: 95, left: 48, right: 470 }
+    }
     const beatEl = root.current.querySelector<HTMLElement>('[data-patrol-beat]')
     const markers: JourneyMarker[] = [markerFor(0)]
     map.setJourneyMarkers(markers)
@@ -99,7 +116,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
             duration: FRAME_S * 1000,
             pitch: 0,
             maxZoom: 1.2,
-            padding: { top: 80, bottom: window.innerWidth <= 860 ? 260 : 170, left: 36, right: 36 },
+            absolutePadding: true,
+            padding: chartPadding(),
           })
           setPortLabel(stop.name)
           sound.whoosh()
@@ -136,6 +154,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
       const life = stop.gallery ? ANTARCTIC_LIFE_S : stop.special === 'canal' ? CANAL_LIFE_S : CARD_LIFE_S
       tl.call(
         () => {
+          setActiveStop(stop.id)
+          setActiveSlide(0)
           markers.push(markerFor(k + 1))
           map.setJourneyMarkers([...markers])
           if (stop.special === 'homecoming') sound.fanfare()
@@ -150,6 +170,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         slides.forEach((slide, index) => {
           tl.set(slide, { opacity: index === 0 ? 1 : 0 }, t + 0.02)
           if (index > 0) {
+            tl.call(() => setActiveSlide(index), [], t + 0.4 + index * 2.1)
             tl.to(slide, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, t + 0.4 + index * 2.1)
           }
           if (index < slides.length - 1) {
@@ -165,6 +186,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
           tl.to(card.querySelector('.canal-ship'), { y: -26, duration: 2.1, ease: 'power1.inOut' }, t + 0.4)
         }
         tl.to(card, { opacity: 0, y: -24, duration: 0.4, ease: 'power2.in' }, t + life)
+        tl.call(() => setActiveStop(null), [], t + life + 0.4)
       }
       // Homecoming gets a breath for the fanfare; every other port: sail on NOW.
       t += life + 0.55
@@ -180,6 +202,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
           duration: 2600,
           pitch: 0,
           maxZoom: 1.2,
+          absolutePadding: true,
           padding: { top: 90, bottom: 110, left: 40, right: 40 }
         })
       },
@@ -190,6 +213,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
     return () => {
       tl.kill()
+      // Absolute chart insets belong to this scene, not subsequent exploration.
+      map.getMap()?.setPadding({ top: 0, bottom: 0, left: 0, right: 0 })
       sound.stopAmbient()
       gsap.set([...cards, beatEl].filter(Boolean) as HTMLElement[], { clearProps: 'all' })
     }
@@ -212,8 +237,9 @@ export function PatrolOverlay({ map, onDone }: Props) {
   }, [map, fullPath, totalMiles])
 
   return (
-    <div className={`patrol ${reduced ? 'is-static' : ''}`} ref={root} data-testid="patrol">
+    <div className={`patrol long-watch-patrol ${reduced ? 'is-static' : ''}`}  ref={root} data-testid="patrol">
       <div className="patrol-head">
+        <p className="scene-kicker"><span>05</span> A wider world</p>
         <div className="patrol-eyebrow">{PATROL.eyebrow}</div>
         <div className="patrol-title">{PATROL.title}</div>
       </div>
@@ -226,25 +252,26 @@ export function PatrolOverlay({ map, onDone }: Props) {
 
       {/* Port cards (one per arrival) */}
       {!reduced &&
-        PATROL_STOPS.slice(1).map((stop) => (
-          <div className={`port-card${stop.special === 'canal' ? ' port-card--canal' : ''}`} key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
+        PATROL_STOPS.slice(1).map((stop, portIndex) => (
+          <div className={`port-card${stop.special === 'canal' ? ' port-card--canal' : ''}`} key={stop.id} aria-hidden={activeStop !== stop.id} data-port-card data-testid={`port-${stop.id}`}>
             {stop.gallery ? (
               <div className="antarctic-gallery" aria-label="Polar Star at McMurdo Station: icebreaking, research station and science support">
                 {stop.gallery.map((photo, index) => (
-                  <div className="antarctic-slide" data-antarctic-slide key={photo.source} style={{ opacity: index === 0 ? 1 : 0 }}>
+                  <div className="antarctic-slide" data-antarctic-slide key={photo.source} aria-hidden={activeStop !== stop.id || activeSlide !== index} style={{ opacity: index === 0 ? 1 : 0 }}>
                     <SafeImage src={photo.img} alt={photo.caption} loading="eager" />
                     <div className="antarctic-caption">{photo.caption}</div>
-                    <a className="antarctic-credit" href={photo.source} target="_blank" rel="noopener noreferrer">{photo.source.includes('commons.wikimedia.org') ? 'NSF photo · source' : 'USCG photo · source'}</a>
+                    <a className="antarctic-credit" tabIndex={activeStop === stop.id && activeSlide === index ? 0 : -1} style={{ pointerEvents: activeStop === stop.id && activeSlide === index ? 'auto' : 'none' }} href={photo.source} target="_blank" rel="noopener noreferrer">{photo.source.includes('commons.wikimedia.org') ? 'NSF photo · source' : 'USCG photo · source'}</a>
                   </div>
                 ))}
               </div>
             ) : (
               <>
                 <SafeImage className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" />
-                {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
+                {stop.photoSource && <a className="port-credit" tabIndex={activeStop === stop.id ? 0 : -1} style={{ pointerEvents: activeStop === stop.id ? 'auto' : 'none' }} href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
               </>
             )}
             <div className="port-body">
+              <div className="port-sequence">{String(portIndex + 1).padStart(2, '0')} <span>/ 09 — FIRST PATROL</span></div>
               <div className="port-eyebrow">
                 {stop.special === 'canal' ? PATROL.canalTitle : PATROL.arrived}
               </div>
@@ -293,6 +320,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
         </div>
       )}
 
+      <div className="patrol-chart-label" aria-hidden="true"><span className="chart-key" /> CUMULATIVE VOYAGE / ILLUSTRATIVE ROUTE</div>
       <div className="journey-counter patrol-counter">
         <MilesCounter miles={miles} total={totalMiles} place={PATROL.totalLabel} cumulative />
       </div>

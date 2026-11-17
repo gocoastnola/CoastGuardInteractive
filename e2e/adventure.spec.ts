@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { beginZip, controlInViewport, deterministicMedia, imageLoaded, noHorizontalOverflow, observeJourney, opaque, openLanding, phase, reachShipBySkip, screenshot } from './helpers'
+import { beginZip, controlInViewport, deterministicMedia, explorationMarkers, fourCornerPhotographs, imageLoaded, noAssignmentSpoilers, noHorizontalOverflow, noOverlap, observeJourney, opaque, openLanding, patrolGeography, phase, reachShipBySkip, screenshot } from './helpers'
 
 const POLAR_STAR = 'USCGC Polar Star (WAGB-10)'
 // Explicit intended itinerary: deleting or reordering a destination must fail.
@@ -8,22 +8,25 @@ test.beforeEach(async ({ page }) => deterministicMedia(page))
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
   test(`complete ZIP-first journey at normal timing — ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
-    // Measured unaccelerated baseline is ~118 s. Individual state waits remain bounded.
+    // Original measured baseline ~118 s; approved training/graduate holds add6.6 s.
     test.setTimeout(160_000)
     await page.setViewportSize(viewport)
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))
     await openLanding(page)
+    await fourCornerPhotographs(page)
     await observeJourney(page)
     await controlInViewport(page, page.getByTestId('zip-begin'))
     await noHorizontalOverflow(page)
     await beginZip(page)
+    await noAssignmentSpoilers(page)
     await opaque(page.locator('.journey-counter'))
     await expect(page.getByTestId('miles-counter')).toContainText('Cape May')
     await expect(page.getByTestId('miles-note')).toContainText(/approximate.*straight.line/i)
     await expect.poll(async () => Number((await page.getByTestId('miles-value').innerText()).replaceAll(',', ''))).toBeGreaterThan(0)
     await screenshot(page, testInfo, 'hometown-to-cape-may')
     await phase(page, 'act1')
+    await noAssignmentSpoilers(page)
     await expect(page.getByTestId('journey-marker-home')).toHaveCount(0)
     await expect(page.getByTestId('journey-marker-bootcamp')).toHaveCount(1)
     await expect(page.locator('.training-photo')).toHaveCount(6)
@@ -35,6 +38,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await screenshot(page, testInfo, 'graduation')
     expect(await page.evaluate(() => window.__journeyObserved.weeks)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
     await phase(page, 'orders')
+    await noAssignmentSpoilers(page, true)
     await expect(page.getByTestId('slot')).toContainText(/illustrative|demo/i)
     await page.getByTestId('slot-spin').click()
     await opaque(page.getByTestId('slot-landed'))
@@ -62,17 +66,20 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await screenshot(page, testInfo, 'polar-star-exterior')
     await page.getByTestId('ship-begin').click()
     await phase(page, 'patrol')
+    await expect(page.getByTestId('map')).toHaveClass(/is-cinematic/)
+    await explorationMarkers(page, true)
     await opaque(page.locator('.patrol-counter'))
     await expect(page.locator('.patrol-counter')).toBeInViewport()
     await expect(page.getByTestId('miles-note')).toContainText(/approximate|illustrative/i)
     for (const id of PORTS) {
       const card = page.getByTestId(`port-${id}`)
       await opaque(card, 20_000)
+      if (viewport.width === 390 && ['honolulu', 'hobart', 'mcmurdo'].includes(id)) await patrolGeography(page, id)
       await expect(card.locator('.port-name')).not.toBeEmpty()
       await expect.poll(() => card.locator('.port-body').evaluate(body => body.scrollHeight <= body.clientHeight + 1), { message: `${id}: portrait/desktop port caption must fit without hidden overflow` }).toBe(true)
       const cardBox = (await card.boundingBox())!
       const mileageBox = (await page.locator('.patrol-counter').boundingBox())!
-      expect(cardBox.y + cardBox.height, `${id}: port card must not obscure cumulative mileage`).toBeLessThanOrEqual(mileageBox.y + 1)
+      noOverlap(cardBox, mileageBox, `${id}: port card must not obscure cumulative mileage`)
       await noHorizontalOverflow(page)
       if (id === 'mcmurdo') {
         await expect(card).toContainText(/research|science/i)
@@ -82,6 +89,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
       if (id === 'home-seattle') await screenshot(page, testInfo, 'homecoming')
     }
     await phase(page, 'explore')
+    await explorationMarkers(page, false)
     await expect(page.getByTestId('panel-title')).toHaveText(POLAR_STAR)
     await expect(page.getByTestId('panel-ribbon')).toContainText('Your first unit')
     await expect(page.locator('[data-testid^="journey-marker-"]')).toHaveCount(0)
@@ -142,6 +150,8 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await screenshot(page, testInfo, 'reduced-motion-training')
   await page.getByTestId('journey-continue').click()
   await phase(page, 'orders')
+  await noAssignmentSpoilers(page, true)
+  await page.getByTestId('slot-spin').click()
   await expect(page.getByTestId('slot-landed')).toContainText(POLAR_STAR)
   await page.getByTestId('slot-report').click()
   await phase(page, 'act2')
@@ -149,6 +159,7 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await phase(page, 'shipIntro')
   await page.getByTestId('ship-begin').click()
   await phase(page, 'patrol')
+  await explorationMarkers(page, true)
   await opaque(page.locator('.patrol-counter'))
   const stops = page.locator('.patrol-static-list li')
   await expect(stops).toHaveCount(9)
@@ -159,6 +170,7 @@ test('reduced motion preserves training, graduation and all patrol stops @produc
   await expect(stops.filter({ hasText: 'McMurdo' })).toContainText(/research|science/i)
   await page.getByTestId('journey-continue').click()
   await phase(page, 'explore')
+  await explorationMarkers(page, false)
   await expect(page.getByTestId('panel-ribbon')).toBeVisible()
 })
 

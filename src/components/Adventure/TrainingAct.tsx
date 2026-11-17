@@ -153,9 +153,15 @@ export function TrainingAct({ shipDate, map, onDone }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
-  const photoIndex = weeks === null ? -1 : Math.min(TRAINING_PHOTOS.length - 1, Math.floor(weeks / 1.5))
+  const graduated = weeks !== null && weeks >= TRAINING_WEEKS
+  const photoIndex = weeks === null ? 0 : Math.min(TRAINING_PHOTOS.length - 1, Math.floor(weeks / 1.5))
   return (
-    <div className={`journey journey--act1 journey--training ${reduced ? 'is-static' : ''}`} ref={root} data-testid="journey-act1">
+    <div className={`journey journey--act1 journey--training long-watch-training ${reduced ? 'is-static' : ''} ${graduated ? 'is-graduating' : ''}`}  ref={root} data-testid="journey-act1">
+      <header className="training-scene-header">
+        <p className="scene-kicker"><span>02</span> Cape May, New Jersey</p>
+        <h2 className="training-scene-title">{graduated && !reduced ? <>You earned<br />{' '}this moment.</> : <>The work.<br />{' '}The beginning.</>}</h2>
+        <p className="training-scene-context">Eight weeks of basic training · illustrative journey</p>
+      </header>
       <div className={reduced ? 'training-static' : undefined} data-testid={reduced ? 'training-static' : undefined}>
       <div className="journey-beats" aria-live="polite">
         {beats.map((b, i) => (
@@ -175,7 +181,7 @@ export function TrainingAct({ shipDate, map, onDone }: Props) {
         {TRAINING_PHOTOS.map((photo, i) => (
           <figure className={`training-photo ${reduced || photoIndex === i ? 'is-active' : ''}`} key={photo.caption} aria-hidden={!reduced && photoIndex !== i}>
             <SafeImage src={photo.src} alt={photo.alt} loading="eager" />
-            <figcaption style={{ pointerEvents: reduced || photoIndex === i ? 'auto' : 'none' }}>
+            <figcaption className="training-photo-caption" style={{ pointerEvents: reduced || photoIndex === i ? 'auto' : 'none' }}>
               {photo.caption} <a className="training-credit" href={photo.source} tabIndex={reduced || photoIndex === i ? 0 : -1} style={{ pointerEvents: reduced || photoIndex === i ? 'auto' : 'none' }} target="_blank" rel="noopener noreferrer">USCG photo · source</a>
             </figcaption>
           </figure>

@@ -55,6 +55,50 @@ export async function openLanding(page: Page) {
   await expect(page.getByText('Independent educational demonstration', { exact: false })).toBeVisible()
   await expect(page.locator('.maplibregl-canvas')).toHaveCount(1)
   await expect(page.locator('.map-status')).toHaveCount(0)
+  await explorationMarkers(page, true)
+  await noAssignmentSpoilers(page)
+}
+
+const ASSIGNMENT_SPOILERS = /Polar\s*Star|Seattle|Antarct\w*|McMurdo/i
+
+/** Check what applicants can read/hear, not the preloaded unit dataset. */
+export async function noAssignmentSpoilers(page: Page, ordersReady = false) {
+  if (ordersReady) {
+    await expect(page.getByTestId('slot-landed')).toHaveCount(0)
+    await expect(page.getByTestId('slot-final')).toHaveCount(0)
+    await expect(page.getByTestId('slot-spin')).toBeVisible()
+    // The reel is a list of possible units. Its clipped rows naturally contain
+    // those unit names; they must not be mistaken for an announced assignment.
+    for (const selector of ['.slot-head', '.orders-record', '[data-testid="slot-spin"]']) {
+      const region = page.locator(selector)
+      expect(await region.innerText()).not.toMatch(ASSIGNMENT_SPOILERS)
+      expect(await region.ariaSnapshot()).not.toMatch(ASSIGNMENT_SPOILERS)
+    }
+  } else {
+    expect(await page.locator('body').innerText()).not.toMatch(ASSIGNMENT_SPOILERS)
+    expect(await page.locator('body').ariaSnapshot()).not.toMatch(ASSIGNMENT_SPOILERS)
+  }
+}
+
+/** The owner-approved opening remains four actual photographs in four corners. */
+export async function fourCornerPhotographs(page: Page) {
+  const viewport = page.viewportSize()!
+  await expect(page.locator('.mosaic-tile')).toHaveCount(4)
+  for (let index = 0; index < 4; index++) {
+    const tile = page.locator(`.mosaic-tile--${index}`)
+    const image = tile.locator('img')
+    await opaque(tile)
+    await imageLoaded(image)
+    await expect.poll(() => image.evaluate(el => Number(getComputedStyle(el).opacity))).toBeGreaterThan(0.5)
+    const box = (await tile.boundingBox())!
+    expect(box.width).toBeGreaterThan(viewport.width * 0.4)
+    expect(box.height).toBeGreaterThan(viewport.height * 0.4)
+    const centre = { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+    if (index % 2 === 0) expect(centre.x).toBeLessThan(viewport.width / 2)
+    else expect(centre.x).toBeGreaterThan(viewport.width / 2)
+    if (index < 2) expect(centre.y).toBeLessThan(viewport.height / 2)
+    else expect(centre.y).toBeGreaterThan(viewport.height / 2)
+  }
 }
 
 export async function phase(page: Page, name: string, timeout = 20_000) {
@@ -98,6 +142,50 @@ export async function imageLoaded(locator: Locator) {
 
 export async function noHorizontalOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
+}
+
+export function noOverlap(a: { x: number; y: number; width: number; height: number }, b: { x: number; y: number; width: number; height: number }, message: string) {
+  const horizontal = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x)
+  const vertical = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y)
+  // Preserve the no-obscuring requirement for both stacked and side-by-side scenes.
+  expect(horizontal <= 1 || vertical <= 1, message).toBe(true)
+}
+
+/** Verify the actual portrait chart, without reaching into React or map internals. */
+export async function patrolGeography(page: Page, stop: string) {
+  const card = (await page.getByTestId(`port-${stop}`).boundingBox())!
+  const heading = (await page.locator('.patrol-head').boundingBox())!
+  const counter = (await page.locator('.patrol-counter').boundingBox())!
+  const dots = await page.locator('.map-root .journey-marker .jm-dot').evaluateAll(elements => elements.map(el => {
+    const box = el.getBoundingClientRect(); return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+  }))
+  expect(dots.length, `${stop}: visited locations remain on the cumulative chart`).toBeGreaterThan(1)
+  for (const dot of dots) {
+    expect(dot.x, `${stop}: visited marker stays inside viewport`).toBeGreaterThanOrEqual(0)
+    expect(dot.x, `${stop}: visited marker stays inside viewport`).toBeLessThanOrEqual(page.viewportSize()!.width)
+    expect(dot.y, `${stop}: visited marker clears chapter heading`).toBeGreaterThanOrEqual(heading.y + heading.height)
+    expect(dot.y, `${stop}: visited marker stays above the photograph`).toBeLessThanOrEqual(card.y)
+  }
+  const current = (await page.locator('.journey-marker.is-current .jm-dot').boundingBox())!
+  // The wide Pacific frame has bearing0: Hobart/McMurdo lie west of Seattle.
+  // A canonical +360° marker copy would incorrectly appear on its right.
+  if (['hobart', 'mcmurdo'].includes(stop)) expect(current.x + current.width / 2).toBeLessThan(dots[0].x)
+  const label = (await page.locator('.journey-marker.is-current .jm-label').boundingBox())!
+  noOverlap(label, card, `${stop}: active label must clear the photograph`)
+  noOverlap(label, counter, `${stop}: active label must clear mileage`)
+  noOverlap(label, heading, `${stop}: active label must clear chapter heading`)
+}
+
+export async function explorationMarkers(page: Page, hidden: boolean) {
+  const markers = page.getByTestId('marker')
+  await expect(markers).toHaveCount(18)
+  await expect.poll(() => markers.evaluateAll((elements, storyHidden) => elements.every((element) => {
+    const button = element as HTMLButtonElement
+    const display = getComputedStyle(button).display
+    return storyHidden
+      ? button.hidden && display === 'none' && button.tabIndex === -1 && button.getAttribute('aria-hidden') === 'true'
+      : !button.hidden && display !== 'none' && button.tabIndex === 0 && button.getAttribute('aria-hidden') !== 'true'
+  }), hidden)).toBe(true)
 }
 
 export async function controlInViewport(page: Page, locator: Locator) {

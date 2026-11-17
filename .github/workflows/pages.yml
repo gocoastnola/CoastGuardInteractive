@@ -4,7 +4,7 @@ on:
   push:
     branches: [master, main]
   pull_request:
-    branches: [main]
+    branches: [main, codex/zip-first-foundation-20261117-063137Z]
   workflow_dispatch:
 
 permissions:

@@ -32,7 +32,7 @@ const TILES = [
     img: '/media/mission-ice.jpg',
     label: 'Go farther',
     sub: 'Polar Operations',
-    alt: 'USCGC Polar Star carving a channel through Antarctic ice',
+    alt: 'Coast Guard icebreaking operations',
   },
 ] as const
 
