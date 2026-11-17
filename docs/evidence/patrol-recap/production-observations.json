@@ -1,0 +1,1953 @@
+{
+  "mode": "Live external resources; no response fixtures, no changed clocks, standard Skip only before patrol; full nine-stop patrol at normal timing",
+  "started": "2026-11-17T21:35:31.672Z",
+  "baseURL": "http://127.0.0.1:5175/CoastGuardInteractive/",
+  "environment": {
+    "physicalDevice": false,
+    "renderer": "headless Chromium with SwiftShader",
+    "proxyConfigured": true,
+    "localProxyBypass": true,
+    "version": "156.0.8078.4"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": [
+        {
+          "type": "warning",
+          "message": "[.WebGL-0xe6c001c9600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "message": "[.WebGL-0xe6c001c9600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "message": "[.WebGL-0xe6c001c9600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "message": "[.WebGL-0xe6c001c9600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+        },
+        {
+          "type": "warning",
+          "message": "Image \"circle-11\" could not be loaded. Please make sure you have added the image before it is needed with map.addImage(), resolved it with map.setMissingStyleImageResolver(), or included it in a \"sprite\" property in your style."
+        }
+      ],
+      "failures": [],
+      "shots": [
+        "1440-900-recap-hemisphere-0.png",
+        "1440-900-recap-hemisphere-1.png",
+        "1440-900-recap-hemisphere-2.png",
+        "1440-900-recap-hemisphere-3.png",
+        "1440-900-recap-hemisphere-4.png",
+        "1440-900-recap-mcmurdo-requested-gallery.png"
+      ],
+      "arrivals": [
+        {
+          "id": "honolulu",
+          "startMs": 33910.1,
+          "slides": [],
+          "opaque": {
+            "ms": 33910.1,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -143.0326002691611,
+              "lat": 35.72957780922416
+            },
+            "zoom": 1.864467198749011,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20of%20Honolulu-Waikiki-Diamond%20Head%20(16773142068).jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 35093.4
+        },
+        {
+          "id": "hobart",
+          "startMs": 38043.2,
+          "slides": [],
+          "opaque": {
+            "ms": 38043.2,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": 178.28012415173384,
+              "lat": -12.090913501805934
+            },
+            "zoom": 2.132938235531068,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Mt%20Wellington%20looking%20down%20on%20Hobart%2C%20Tasmania.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 39809.9
+        },
+        {
+          "id": "wellington",
+          "startMs": 41059.8,
+          "slides": [],
+          "opaque": {
+            "ms": 41059.8,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": 161.22765832360994,
+              "lat": -42.91088835710703
+            },
+            "zoom": 1.7160329617182442,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Wellington%20Port%20from%20Mt%20Vic.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 42376.4
+        },
+        {
+          "id": "mcmurdo",
+          "startMs": 44443,
+          "slides": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "opaque": {
+            "ms": 44443,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": 173.75962863090444,
+              "lat": -59.676129880280406
+            },
+            "zoom": 1.1793358672557885,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1602/2400145/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2601/9481427/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/McMurdo%20Station%20in%20Antarctica.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 46859.6
+        },
+        {
+          "id": "punta-arenas",
+          "startMs": 49042.9,
+          "slides": [],
+          "opaque": {
+            "ms": 49042.9,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -127.04073054743026,
+              "lat": -62.07842089983153
+            },
+            "zoom": 1.0706924420088109,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Magellanic%20Penguins%2C%20Isla%20Magdalena.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 50342.8
+        },
+        {
+          "id": "cape-horn",
+          "startMs": 51709.4,
+          "slides": [],
+          "opaque": {
+            "ms": 51709.4,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -69.15782804256139,
+              "lat": -54.58542242602197
+            },
+            "zoom": 1.378154673323451,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/CapeHorn.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 53109.4
+        },
+        {
+          "id": "rio",
+          "startMs": 54959.2,
+          "slides": [],
+          "opaque": {
+            "ms": 54959.2,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -54.28063728779671,
+              "lat": -39.21986324322983
+            },
+            "zoom": 1.7970594446980164,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Rio%20skyline%20and%20Cristo%20Redentor%20from%20Sugarloaf%20Mountain%2C%20Brazil.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 56509.2
+        },
+        {
+          "id": "panama",
+          "startMs": 59125.8,
+          "slides": [],
+          "opaque": {
+            "ms": 59125.8,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -46.631308499377496,
+              "lat": 5.002605015434383
+            },
+            "zoom": 2.1597965256501075,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Miraflores%20Locks%2C%20Panama%20Canal%2C%20Panama.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 60942.3
+        },
+        {
+          "id": "home-seattle",
+          "startMs": 63042.3,
+          "slides": [],
+          "opaque": {
+            "ms": 63042.3,
+            "card": {
+              "x": 290,
+              "y": 700,
+              "width": 860,
+              "height": 88,
+              "top": 700,
+              "right": 1150,
+              "bottom": 788,
+              "left": 290
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 1440,
+              "height": 640,
+              "top": 52,
+              "right": 1440,
+              "bottom": 692,
+              "left": 0
+            },
+            "center": {
+              "lng": -111.40012322990532,
+              "lat": 19.50339446136463
+            },
+            "zoom": 2.0800534471723022,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Seattle%20Skyline%20(52802453072).jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 65525.5
+        }
+      ],
+      "overview": {
+        "phase": "patrol",
+        "projection": {
+          "type": "vertical-perspective"
+        },
+        "worldCopies": false,
+        "styleLoaded": true,
+        "tilesLoaded": true,
+        "sources": [
+          "ne2_shaded",
+          "openmaptiles",
+          "journey-arc",
+          "journey-head"
+        ],
+        "routePoints": 1129,
+        "miles": "28,855",
+        "visited": 9,
+        "samples": [
+          {
+            "ms": 65525.5,
+            "lng": -111.40012322990532,
+            "lat": 19.324139915599567,
+            "bearing": -18,
+            "zoom": 2.0816441536388868
+          },
+          {
+            "ms": 65808.9,
+            "lng": -111.40012322990532,
+            "lat": -0.8675026970932471,
+            "bearing": -18,
+            "zoom": 2.1651372576603998
+          },
+          {
+            "ms": 66075.5,
+            "lng": -111.40012322990532,
+            "lat": -14.342660172816736,
+            "bearing": -18,
+            "zoom": 2.119620390854487
+          },
+          {
+            "ms": 66342.2,
+            "lng": -111.40012322990532,
+            "lat": -19.32934094859626,
+            "bearing": -18,
+            "zoom": 2.0815982231708188
+          },
+          {
+            "ms": 66625.5,
+            "lng": -111.40012322990532,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 66925.5,
+            "lng": -102.19312322995006,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 67175.4,
+            "lng": -94.69612322977122,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 67458.8,
+            "lng": -86.34412322981592,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 67758.7,
+            "lng": -77.32612322977121,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 68042.1,
+            "lng": -68.80912322981595,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 68408.7,
+            "lng": -57.55612322977123,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 68742,
+            "lng": -47.602123229860695,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 69025.4,
+            "lng": -39.244123229815955,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 69325.3,
+            "lng": -30.235123229905355,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 69625.4,
+            "lng": -21.400123229905375,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 69925.4,
+            "lng": -12.685123229905344,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 70175.3,
+            "lng": -4.060123229905344,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 70475.3,
+            "lng": 3.865876770184059,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 70775.3,
+            "lng": 12.994876770094606,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 71058.7,
+            "lng": 21.40687677027347,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 71442,
+            "lng": 32.98387677022879,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 71741.9,
+            "lng": 41.9868767702734,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 72058.5,
+            "lng": 51.13387677022877,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 72341.9,
+            "lng": 60.07687677027343,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 72658.6,
+            "lng": 68.59987677009462,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 72975.3,
+            "lng": 77.71687677004991,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 73258.5,
+            "lng": 86.10487677009462,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 73541.9,
+            "lng": 94.59187677004991,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 73841.8,
+            "lng": 103.86187677004989,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 74125.2,
+            "lng": 112.17787677013939,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 74508.5,
+            "lng": 124.01287677013931,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 74775.1,
+            "lng": 131.87587677018405,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 75058.5,
+            "lng": 140.050876770184,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 75325.2,
+            "lng": 148.53187677004985,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 75658.5,
+            "lng": 158.36287677013934,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 75925.1,
+            "lng": 158.59987677009462,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 76225,
+            "lng": 167.29987677009467,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 76475.1,
+            "lng": 174.78487677009457,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 76741.7,
+            "lng": -177.0461232297713,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 77025.1,
+            "lng": -168.68512322990534,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 77241.7,
+            "lng": -161.9621232298607,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 77675,
+            "lng": -149.12812322995012,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 77941.7,
+            "lng": -141.10312322995009,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 78175,
+            "lng": -133.98112322977124,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 78475,
+            "lng": -125.23012322990536,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 78758.3,
+            "lng": -116.4671232298607,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 79058.3,
+            "lng": -111.40012322990538,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 79325,
+            "lng": -103.24912322981595,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 79575,
+            "lng": -95.74012322990541,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 79825,
+            "lng": -88.13212322986067,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 80058.2,
+            "lng": -81.34012322990537,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 80341.6,
+            "lng": -72.86512322990541,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          },
+          {
+            "ms": 80724.9,
+            "lng": -61.435123229905344,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 2.075563452651451
+          }
+        ],
+        "canvases": 1,
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "contextLost": false,
+        "noOverflow": true
+      },
+      "longitudeTravel": 409.96500000000015,
+      "gallery": {
+        "pausedBefore": [
+          18.862876770139337,
+          -20
+        ],
+        "pausedAfter": [
+          18.862876770139337,
+          -20
+        ],
+        "images": [
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          }
+        ]
+      },
+      "externalFailures": [],
+      "localFailures": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 664
+      },
+      "console": [
+        {
+          "type": "warning",
+          "message": "Image \"circle-11\" could not be loaded. Please make sure you have added the image before it is needed with map.addImage(), resolved it with map.setMissingStyleImageResolver(), or included it in a \"sprite\" property in your style."
+        }
+      ],
+      "failures": [
+        {
+          "url": "http://127.0.0.1:5175/CoastGuardInteractive/media/music/vanguard-scott-buckley.mp3",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "shots": [
+        "390-664-recap-hemisphere-0.png",
+        "390-664-recap-hemisphere-1.png",
+        "390-664-recap-hemisphere-2.png",
+        "390-664-recap-hemisphere-3.png",
+        "390-664-recap-hemisphere-4.png",
+        "390-664-recap-mcmurdo-requested-gallery.png",
+        "390-664-recap-landscape.png",
+        "390-664-recap-portrait-restored.png"
+      ],
+      "arrivals": [
+        {
+          "id": "honolulu",
+          "startMs": 10017.4,
+          "slides": [],
+          "opaque": {
+            "ms": 10017.4,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -143.0326002691611,
+              "lat": 35.72957780922416
+            },
+            "zoom": 1.0161872291839487,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20of%20Honolulu-Waikiki-Diamond%20Head%20(16773142068).jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 11534.1
+        },
+        {
+          "id": "hobart",
+          "startMs": 13933.9,
+          "slides": [],
+          "opaque": {
+            "ms": 13933.9,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": 178.28012415173384,
+              "lat": -12.090913501805934
+            },
+            "zoom": 1.2846582659660066,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Mt%20Wellington%20looking%20down%20on%20Hobart%2C%20Tasmania.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 15217.3
+        },
+        {
+          "id": "wellington",
+          "startMs": 16733.9,
+          "slides": [],
+          "opaque": {
+            "ms": 16917.2,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": 161.22765832360994,
+              "lat": -42.91088835710703
+            },
+            "zoom": 0.8677529921531824,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Wellington%20Port%20from%20Mt%20Vic.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 18317.1
+        },
+        {
+          "id": "mcmurdo",
+          "startMs": 20050.3,
+          "slides": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "opaque": {
+            "ms": 20050.3,
+            "card": {
+              "x": 12,
+              "y": 432.00439453125,
+              "width": 366,
+              "height": 88,
+              "top": 432.00439453125,
+              "right": 378,
+              "bottom": 520.00439453125,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": 173.75962863090444,
+              "lat": -59.676129880280406
+            },
+            "zoom": 0.33105589769072696,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1602/2400145/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2601/9481427/1000w_q95.jpg",
+                "loaded": true
+              },
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/McMurdo%20Station%20in%20Antarctica.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 22550.2
+        },
+        {
+          "id": "punta-arenas",
+          "startMs": 24633.5,
+          "slides": [],
+          "opaque": {
+            "ms": 24633.5,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -127.04073054743026,
+              "lat": -62.07842089983153
+            },
+            "zoom": 0.2224124724437493,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Magellanic%20Penguins%2C%20Isla%20Magdalena.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 26100.1
+        },
+        {
+          "id": "cape-horn",
+          "startMs": 27350,
+          "slides": [],
+          "opaque": {
+            "ms": 27500,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -69.15782804256139,
+              "lat": -54.58542242602197
+            },
+            "zoom": 0.5298747037583895,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/CapeHorn.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 28866.7
+        },
+        {
+          "id": "rio",
+          "startMs": 30616.6,
+          "slides": [],
+          "opaque": {
+            "ms": 30616.6,
+            "card": {
+              "x": 12,
+              "y": 432.2406005859375,
+              "width": 366,
+              "height": 88,
+              "top": 432.2406005859375,
+              "right": 378,
+              "bottom": 520.2406005859375,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -54.28063728779671,
+              "lat": -39.21986324322983
+            },
+            "zoom": 0.9487794751329544,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Rio%20skyline%20and%20Cristo%20Redentor%20from%20Sugarloaf%20Mountain%2C%20Brazil.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 32133.2
+        },
+        {
+          "id": "panama",
+          "startMs": 34383.2,
+          "slides": [],
+          "opaque": {
+            "ms": 34383.2,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -46.631308499377496,
+              "lat": 5.002605015434383
+            },
+            "zoom": 1.3115165560850455,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Miraflores%20Locks%2C%20Panama%20Canal%2C%20Panama.jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 36249.7
+        },
+        {
+          "id": "home-seattle",
+          "startMs": 38383,
+          "slides": [],
+          "opaque": {
+            "ms": 38383,
+            "card": {
+              "x": 12,
+              "y": 432,
+              "width": 366,
+              "height": 88,
+              "top": 432,
+              "right": 378,
+              "bottom": 520,
+              "left": 12
+            },
+            "stage": {
+              "x": 0,
+              "y": 52,
+              "width": 390,
+              "height": 372,
+              "top": 52,
+              "right": 390,
+              "bottom": 424,
+              "left": 0
+            },
+            "center": {
+              "lng": -111.40012322990532,
+              "lat": 19.50339446136463
+            },
+            "zoom": 1.2317734776072409,
+            "covered": false,
+            "detailsReceivesPointer": true,
+            "images": [
+              {
+                "src": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Seattle%20Skyline%20(52802453072).jpg?width=1200",
+                "loaded": true
+              }
+            ],
+            "unavailable": false
+          },
+          "endMs": 40816.2
+        }
+      ],
+      "overview": {
+        "phase": "patrol",
+        "projection": {
+          "type": "vertical-perspective"
+        },
+        "worldCopies": false,
+        "styleLoaded": true,
+        "tilesLoaded": true,
+        "sources": [
+          "ne2_shaded",
+          "openmaptiles",
+          "journey-arc",
+          "journey-head"
+        ],
+        "routePoints": 1129,
+        "miles": "28,855",
+        "visited": 9,
+        "samples": [
+          {
+            "ms": 40816.2,
+            "lng": -111.40012322990532,
+            "lat": 19.49544667384752,
+            "bearing": -18,
+            "zoom": 1.2318443427884276
+          },
+          {
+            "ms": 41016.2,
+            "lng": -111.40012322990532,
+            "lat": 7.054660238830486,
+            "bearing": -18,
+            "zoom": 1.306059091233093
+          },
+          {
+            "ms": 41199.5,
+            "lng": -111.40012322990532,
+            "lat": -7.515471432333747,
+            "bearing": -18,
+            "zoom": 1.3045757625518017
+          },
+          {
+            "ms": 41332.8,
+            "lng": -111.40012322990532,
+            "lat": -14.779602405830317,
+            "bearing": -18,
+            "zoom": 1.2684825405457967
+          },
+          {
+            "ms": 41516.1,
+            "lng": -111.40012322990532,
+            "lat": -17.997292597861993,
+            "bearing": -18,
+            "zoom": 1.244647787517608
+          },
+          {
+            "ms": 41699.5,
+            "lng": -111.40012322990532,
+            "lat": -19.760852852495766,
+            "bearing": -18,
+            "zoom": 1.2294609751488048
+          },
+          {
+            "ms": 41849.5,
+            "lng": -111.40012322990532,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 42016.1,
+            "lng": -106.88512322990533,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42132.8,
+            "lng": -101.61412323003947,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42282.8,
+            "lng": -98.08012322990533,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42416.1,
+            "lng": -93.56212322986062,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42549.4,
+            "lng": -89.94412323003945,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42699.4,
+            "lng": -85.87912323003945,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42832.8,
+            "lng": -81.44212322986061,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 42949.4,
+            "lng": -77.37112322999474,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 43116.1,
+            "lng": -73.67212322986063,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 43299.4,
+            "lng": -68.99512322990535,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 43449.4,
+            "lng": -63.26512322990533,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 43632.8,
+            "lng": -57.64612322999477,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 43816.1,
+            "lng": -53.29312322995008,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44016.1,
+            "lng": -47.82112322999478,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44149.4,
+            "lng": -41.85412323003948,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44349.4,
+            "lng": -37.64212322986066,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44532.8,
+            "lng": -31.963123229950043,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44699.4,
+            "lng": -26.37412323003946,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 44899.4,
+            "lng": -21.400123229905375,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 45099.3,
+            "lng": -15.439123229816005,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 45249.3,
+            "lng": -9.36412322981596,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 45482.6,
+            "lng": -5.044123229816023,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 45649.3,
+            "lng": 2.1798767700946655,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 45899.3,
+            "lng": 6.931876770049939,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 46116,
+            "lng": 14.320876770183986,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 46316,
+            "lng": 20.938876770228717,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 46515.9,
+            "lng": 26.656876770049962,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 46716,
+            "lng": 32.9178767701394,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 46949.3,
+            "lng": 39.01087677018404,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 47132.6,
+            "lng": 45.871876770049994,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 47299.2,
+            "lng": 51.256876770049985,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 47482.6,
+            "lng": 56.55787677013927,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 47632.6,
+            "lng": 62.04787677013928,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 47832.6,
+            "lng": 66.50587677018405,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 48032.6,
+            "lng": 68.59987677009462,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 48232.6,
+            "lng": 74.71387677022881,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 48399.3,
+            "lng": 80.65387677022875,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 48532.5,
+            "lng": 85.46287677013936,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 48699.2,
+            "lng": 89.39887677022875,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 48832.6,
+            "lng": 94.42987677009455,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 49049.2,
+            "lng": 98.70187677027343,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 49232.5,
+            "lng": 104.89087677018404,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 49399.2,
+            "lng": 110.31187677027344,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 49549.2,
+            "lng": 115.435876770184,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 49715.8,
+            "lng": 119.81587677018399,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 49899.2,
+            "lng": 125.02987677009469,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50032.5,
+            "lng": 130.37887677022877,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50249.2,
+            "lng": 134.78587677018402,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50415.8,
+            "lng": 140.8158767701841,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50599.2,
+            "lng": 146.19787677013937,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50799.2,
+            "lng": 151.44187677027344,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 50949.2,
+            "lng": 157.46587677018397,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 51132.4,
+            "lng": 158.59987677009462,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 51299.1,
+            "lng": 163.90087676996052,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 51515.8,
+            "lng": 169.28887677000523,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 51699.1,
+            "lng": 175.33087676996047,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 51882.5,
+            "lng": -178.97512322990536,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 52049.1,
+            "lng": -173.33812322995004,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 52215.7,
+            "lng": -168.5741232300395,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 52415.7,
+            "lng": -163.34212322986065,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 52632.3,
+            "lng": -157.24312322995007,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 52815.7,
+            "lng": -150.97912323003948,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 52999,
+            "lng": -145.45312322995005,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 53132.4,
+            "lng": -140.16712322986064,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 53315.7,
+            "lng": -135.7511232299948,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 53499.1,
+            "lng": -130.4261232299948,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 53682.3,
+            "lng": -125.00212322986067,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 53849,
+            "lng": -119.32312322995006,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 54032.4,
+            "lng": -114.70612322999477,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 54232.4,
+            "lng": -111.40012322990538,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863888
+          },
+          {
+            "ms": 54499,
+            "lng": -105.46312322995004,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 54615.7,
+            "lng": -97.31812322995006,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 54732.3,
+            "lng": -93.74212322986068,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 54882.4,
+            "lng": -90.16312322995009,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 55015.6,
+            "lng": -85.56112322977128,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          },
+          {
+            "ms": 55198.9,
+            "lng": -81.77512322990538,
+            "lat": -20,
+            "bearing": -18,
+            "zoom": 1.2272834830863886
+          }
+        ],
+        "canvases": 1,
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "contextLost": false,
+        "noOverflow": true
+      },
+      "longitudeTravel": 389.62500000000006,
+      "gallery": {
+        "pausedBefore": [
+          23.014876770094702,
+          -20
+        ],
+        "pausedAfter": [
+          23.014876770094702,
+          -20
+        ],
+        "images": [
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          },
+          {
+            "loaded": true,
+            "unavailable": false
+          }
+        ]
+      },
+      "externalFailures": [],
+      "localFailures": []
+    }
+  ]
+}

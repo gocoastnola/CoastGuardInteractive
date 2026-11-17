@@ -1,0 +1,51 @@
+{
+  "scope": "Final focused Chromium behaviors after responsive fix, localhost Vite5174, deterministic remote map-style/image fixtures; native MapLibre, route, timers and audio remain real. Separate production/live-resource capture follows.",
+  "sourceCommit": "e70ca98",
+  "testCommit": "99f1448",
+  "passed": [
+    {
+      "name": "reduced motion preserves training, graduation and all patrol stops @production",
+      "project": "chromium",
+      "status": "passed",
+      "durationMs": 9198,
+      "report": "/workspace/coastguard-touch-go-evidence/chromium-focused/results.json"
+    },
+    {
+      "name": "requested McMurdo gallery pauses the real voyage, scrolls, traps focus and resumes @production",
+      "project": "chromium",
+      "status": "passed",
+      "durationMs": 32773,
+      "report": "/workspace/coastguard-touch-go-evidence/chromium-focused/results.json"
+    },
+    {
+      "name": "completed patrol rotates through every hemisphere, keeps all port galleries and exits on request @production",
+      "project": "chromium",
+      "status": "passed",
+      "durationMs": 95375,
+      "report": "/workspace/coastguard-touch-go-evidence/chromium-recap/results.json"
+    }
+  ],
+  "attemptHistory": [
+    "Initial exact-coordinate comparison corrected for ~1e-14degree Node/Chromium trig differences; every1129coordinates now checked within1e-9degree.",
+    "Initial zero-bearing expectation corrected to steady bearing; actual longitude still must complete360degrees.",
+    "932\u2192390 recap restart reproduced, fixed in app before final tests.",
+    "First post-fix recap attempt passed behavior but exhausted130s at last cleanup check; atomic read batching preserved assertions and final recap case passed95.375s.",
+    "First WebKit attempt was environment-interrupted before recap; partial trace preserved, no result claimed."
+  ],
+  "webkit": {
+    "status": "passed",
+    "scope": "One new native recap case only; existing7WebKit baseline cases not repeated",
+    "report": "/workspace/coastguard-touch-go-evidence/webkit-recap-resumed/results.json",
+    "orbit": {
+      "status": "passed",
+      "durationMs": 76197,
+      "nativeSamples": 78,
+      "longitudeTravelDegrees": 364.5900000000002,
+      "sampleDurationMs": 12396,
+      "latitudeMin": -20,
+      "latitudeMax": -20,
+      "bearingMin": -18,
+      "bearingMax": -18
+    }
+  }
+}

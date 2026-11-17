@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "durationMs": 95375,
+  "nativeSamples": 84,
+  "longitudeTravelDegrees": 360.56399999991095,
+  "sampleDurationMs": 12061.400000000001,
+  "latitudeMin": -20,
+  "latitudeMax": -20,
+  "bearingMin": -18,
+  "bearingMax": -18
+}

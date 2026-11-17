@@ -1,0 +1,32 @@
+[
+  {
+    "file": "desktop-overview-1.png",
+    "bytes": 463887,
+    "sha256": "eed184562aeb9735d1659b89f2327636f23b8b01bea6c0fbd50a44dbaead5c1f"
+  },
+  {
+    "file": "desktop-overview-2.png",
+    "bytes": 469107,
+    "sha256": "77c264a241c96786227bd0d9ea4d26e976012795a180ca3b8978aa493be672d9"
+  },
+  {
+    "file": "phone-landscape.png",
+    "bytes": 190272,
+    "sha256": "e6ac8b92cd666f24201914f7aaf5f0fa1ee3f1565b5ecaf222656ad14a8cc41b"
+  },
+  {
+    "file": "phone-overview-1.png",
+    "bytes": 170824,
+    "sha256": "031c7d50128c10b75d4babd0cb4e7009807f2bd3e1e75e8b6578af6f02ef4108"
+  },
+  {
+    "file": "phone-overview-2.png",
+    "bytes": 175637,
+    "sha256": "5682d2a14a7bed5001c0dabf84f971cec01c2d62d672b13bf9fd10692f90372d"
+  },
+  {
+    "file": "phone-restored.png",
+    "bytes": 153652,
+    "sha256": "6455b2ba24f4de615b5f5895b0ad969e4db21d3920ec4c743fee2bbbedfe00d2"
+  }
+]

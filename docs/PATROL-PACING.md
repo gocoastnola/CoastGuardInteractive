@@ -25,14 +25,25 @@ The authored normal patrol reaches its recap at approximately **32.72 seconds**,
 
 ## Verification record
 
-Actual local runtime: **Node 22.23.5 / npm 11.9.0**. Locked package files and dependencies are unchanged.
+Actual local runtime: **Node 22.23.5 / npm 11.9.0**. GitHub Actions used **Node 22.23.4**. Locked package files and dependencies are unchanged. Application commit is `e70ca98`; browser tests are frozen in `99f144892630a346d2c75434860e96c7c6ee09e4`. Later evidence-only commits do not change the tested bundle.
 
 | Check | Status | Evidence / limits |
 | --- | --- | --- |
 | Unit tests | PASS | 89 tests in 13 files, including quarter-turn wrapping and orbit listener cancellation |
-| Production-subpath build | PASS | `/CoastGuardInteractive/`; final-source build before browser verification |
-| Data validation | PASS | Same validator executed with `node --import tsx scripts/validate-data.ts`: 18 valid demo-unverified records. Local npm/tsx CLI hit a sandbox IPC-listen restriction; no validator or application change |
-| Browser, rendered voyage and recap | NOT RUN | Final result pending; earlier PR #7 checks do not certify this change |
+| Production-subpath build | PASS | `/CoastGuardInteractive/`, local and GitHub Actions run #27 |
+| Data validation | PASS | 18 demo-unverified records. Standard npm command passed in CI; the same validator passed locally via `node --import tsx` after the CLI's sandbox IPC restriction |
+| Complete Chromium suite | PASS | 18/18 in GitHub Actions run #27, including both complete ZIP-first journeys and all nine quick arrivals |
+| Production browser subset | PASS | 8/8 in the same CI run; deployment correctly skipped for the PR |
+| Focused Chromium recap | PASS | Three relevant behaviors passed locally; native recap measured 360.564° longitude over 12.061s, 84 sampled positions, constant −18° bearing |
+| Native WebKit recap | PASS | One focused case: 364.590° longitude, all galleries, paused breakpoint changes, resume and exit cleanup; not physical iPhone testing |
+| Real production-build map/media | PASS | 1440×900 and 390×664, no resource fixtures or accelerated clocks; every arrival, four loaded McMurdo thumbnails, full route, all galleries and Explore exit |
+| New hosted version | NOT RUN | Prepublication snapshot; [PR #8](https://github.com/gocoastnola/CoastGuardInteractive/pull/8) records actual deployment and subsequent hosted checks |
 | Physical-device / subjective-listening checks | NOT RUN | Browser viewport emulation is not phone hardware; soundtrack is unchanged |
 
-The application and browser evidence will be recorded with the focused pull request. Publication must follow the existing validation-gated workflow; do not claim the new timing is live before deployment and hosted verification.
+[Genuine screenshots and measurements](evidence/patrol-recap/README.md) show multiple hemispheres and phone reflow. Real-resource native travel measured 409.965° desktop / 389.625° phone across the saved viewpoints. Both runs retained all 1,129 coordinates, approximately 28,855 miles and nine visited stops. There were no JavaScript page errors or HTTP resource failures; one expected recording seek cancellation was retained. Software-renderer ReadPixels and the existing optional `circle-11` style warning were recorded separately.
+
+Frame-sampled arrival durations are quantized by software graphics scheduling (for example one desktop call sampled at 1.183s); they are not exact timer or physical-device measurements. The authored holds are listed above. Screenshot inspection found the pre-existing small Seattle-label/status overlap in one desktop view and persistent attribution over part of scrollable gallery content; the header, Explore control, photo sources and recap stay usable.
+
+Testing also corrected two new harness assumptions: last-bit Node/browser trigonometry differences now use a tiny floating-point tolerance while comparing every route point, and the orbit assertion requires changing longitude with steady bearing rather than zero bearing. An interrupted WebKit run was preserved and repeated once after the environment resumed. One genuine responsive-restart defect was fixed as described above. The final complete CI run is green; failures were not hidden by skipping scenes or weakening the itinerary.
+
+[PR #8](https://github.com/gocoastnola/CoastGuardInteractive/pull/8) is the final release ledger. Publication follows the existing validation-gated workflow; the timing is not claimed live before actual deployment and hosted verification. No recovery checks or backup operations were performed for this revision.
