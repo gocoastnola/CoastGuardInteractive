@@ -1,0 +1,66 @@
+{
+  "verified_at_utc": "2026-11-17T17:19:23.901529+00:00",
+  "original_repository": "gocoastnola/CoastGuardInteractive",
+  "backup_repository": "gocoastnola/Version-before-astra-pro",
+  "operation": "Read-only network verification; only local report/download files written. No backup refs, source, settings or deployed files modified. No GPU/browser used.",
+  "commands": [
+    "git ls-remote --tags https://github.com/gocoastnola/CoastGuardInteractive.git refs/tags/pre-codex-redesign-2026-11-16* refs/tags/pre-codex-baseline-20261117-162137Z*",
+    "git ls-remote https://github.com/gocoastnola/Version-before-astra-pro.git refs/heads/main refs/heads/gh-pages",
+    "curl -sSL (hosted backup HTML and referenced JS)"
+  ],
+  "recovery_tags": [
+    {
+      "tag": "pre-codex-redesign-2026-11-16",
+      "url": "https://github.com/gocoastnola/CoastGuardInteractive/tree/pre-codex-redesign-2026-11-16",
+      "expected_commit": "013fff722014729f4e044b0ce4060dbdfc3bbd57",
+      "remote_tag_object": "786a60b10611f046aa60ede4fbe4643e909dd86c",
+      "remote_peeled_commit": "013fff722014729f4e044b0ce4060dbdfc3bbd57",
+      "matches": true,
+      "annotated_object_distinct_from_commit": true
+    },
+    {
+      "tag": "pre-codex-baseline-20261117-162137Z",
+      "url": "https://github.com/gocoastnola/CoastGuardInteractive/tree/pre-codex-baseline-20261117-162137Z",
+      "expected_commit": "481c4c98b31451541c6ceae26158b9f08f122571",
+      "remote_tag_object": "aa6e0381dc82754ba0b2518a73d26818293adb8a",
+      "remote_peeled_commit": "481c4c98b31451541c6ceae26158b9f08f122571",
+      "matches": true,
+      "annotated_object_distinct_from_commit": true
+    }
+  ],
+  "backup_refs": [
+    {
+      "branch": "main",
+      "expected_commit": "7a2dca70b754cae08ee8f6147467619a7078dd19",
+      "actual_commit": "7a2dca70b754cae08ee8f6147467619a7078dd19",
+      "unchanged": true
+    },
+    {
+      "branch": "gh-pages",
+      "expected_commit": "24aed4ebcaa55f759d9386e529a564d1eea71a05",
+      "actual_commit": "24aed4ebcaa55f759d9386e529a564d1eea71a05",
+      "unchanged": true
+    }
+  ],
+  "hosted_backup_assets": {
+    "html": {
+      "url": "https://gocoastnola.github.io/Version-before-astra-pro/",
+      "http_status": 200,
+      "expected_sha256": "2d1358533101100f58ddc55562aea66c7309b49c818dc3029eb88aa7c820ae4a",
+      "actual_sha256": "2d1358533101100f58ddc55562aea66c7309b49c818dc3029eb88aa7c820ae4a",
+      "bytes": 1055,
+      "unchanged": true
+    },
+    "javascript": {
+      "url": "https://gocoastnola.github.io/Version-before-astra-pro/assets/index-Cdu-i_-D.js",
+      "http_status": 200,
+      "expected_sha256": "f276650103f6c16facecae406bc3733f52efb9fe861c3c46cc8f8ffcc765f21b",
+      "actual_sha256": "f276650103f6c16facecae406bc3733f52efb9fe861c3c46cc8f8ffcc765f21b",
+      "expected_bytes": 292998,
+      "actual_bytes": 292998,
+      "unchanged": true,
+      "referenced_by_hosted_html": true
+    }
+  },
+  "all_checks_passed": true
+}

@@ -1,0 +1,2462 @@
+{
+  "recorded_at_utc": "2026-11-17T17:47:22.505908+00:00",
+  "application_source_commit": "96683727af7a8c72ca0e23980d922f52c0524176",
+  "baseline": "481c4c98b31451541c6ceae26158b9f08f122571",
+  "runtime": {
+    "node": "22.23.5",
+    "npm": "11.9.0"
+  },
+  "local_checks": {
+    "unit_tests": {
+      "result": "PASS",
+      "count": 79,
+      "files": 13
+    },
+    "data_validation": {
+      "result": "PASS",
+      "records": 18,
+      "all_demo_unverified": true
+    },
+    "production_build": {
+      "result": "PASS",
+      "base": "/CoastGuardInteractive/",
+      "main_js": "index-CWqZArX9.js"
+    },
+    "development_initial": {
+      "result": "FAIL",
+      "passed": 15,
+      "failed": 2,
+      "total": 17,
+      "causes": [
+        "desktop directory toggle test assumption",
+        "single-slice fallback-signal probe intermittence; unchanged app passed targeted rerun"
+      ]
+    },
+    "targeted_final": {
+      "result": "PASS",
+      "cases": 3
+    },
+    "production_browser": {
+      "result": "PASS",
+      "cases": 7
+    },
+    "webkit_browser": {
+      "result": "PASS",
+      "cases": 7,
+      "physical_iPhone": false
+    },
+    "listening": {
+      "result": "NOT RUN"
+    },
+    "physical_device": {
+      "result": "NOT RUN"
+    }
+  },
+  "live": {
+    "desktop": {
+      "environment": {
+        "browser": "headless Chromium",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "externalResources": "live; no resource fixtures",
+        "physicalDevice": false,
+        "baseURL": "http://127.0.0.1:5174/"
+      },
+      "started": "2026-11-17T17:40:09.516Z",
+      "mode": "Final native-globe/recorded-score source; complete desktop story at normal timing; actual external resources; no fixtures",
+      "journey": {
+        "phases": [
+          "dateEntry",
+          "travel",
+          "act1",
+          "orders",
+          "act2",
+          "shipIntro",
+          "patrol",
+          "explore"
+        ],
+        "weeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "shots": [
+        {
+          "name": "01-zip-opening",
+          "t": 4571,
+          "phase": "dateEntry"
+        },
+        {
+          "name": "02-hometown-travel",
+          "t": 13428,
+          "phase": "travel"
+        },
+        {
+          "name": "03-training",
+          "t": 36367,
+          "phase": "act1"
+        },
+        {
+          "name": "04-graduation",
+          "t": 62677,
+          "phase": "act1"
+        },
+        {
+          "name": "05-orders-waiting",
+          "t": 71696,
+          "phase": "orders"
+        },
+        {
+          "name": "06-assignment",
+          "t": 80523,
+          "phase": "orders"
+        },
+        {
+          "name": "07-seattle-travel",
+          "t": 85732,
+          "phase": "act2"
+        },
+        {
+          "name": "08b-ship-gallery-resolved",
+          "t": 95377,
+          "phase": "shipIntro"
+        },
+        {
+          "name": "08-ship-intro",
+          "t": 97500,
+          "phase": "shipIntro"
+        },
+        {
+          "name": "09-port-honolulu",
+          "t": 104390,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-hobart",
+          "t": 111384,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-wellington",
+          "t": 116886,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-mcmurdo",
+          "t": 123098,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-01",
+          "t": 123887,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-02",
+          "t": 125196,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-03",
+          "t": 127093,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-04",
+          "t": 129286,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-punta-arenas",
+          "t": 135705,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-cape-horn",
+          "t": 141390,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-rio",
+          "t": 147214,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-panama",
+          "t": 154391,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-home-seattle",
+          "t": 161177,
+          "phase": "patrol"
+        },
+        {
+          "name": "10-explore",
+          "t": 170517,
+          "phase": "explore"
+        }
+      ],
+      "camera": [
+        {
+          "stop": "honolulu",
+          "active": "false",
+          "cardOpacity": 0.9898,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": false,
+          "tilesLoaded": false,
+          "zoom": 1.864467198749011,
+          "center": {
+            "lng": -143.0326002691611,
+            "lat": 35.72957780922416
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700.0816040039062,
+            "width": 860,
+            "height": 88,
+            "top": 700.0816040039062,
+            "right": 1150,
+            "bottom": 788.0816040039062,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 608,
+            "y": 420,
+            "width": 10,
+            "height": 10,
+            "top": 420,
+            "right": 618,
+            "bottom": 430,
+            "left": 608
+          },
+          "currentCovered": false,
+          "visitedMarkers": 2,
+          "coveredMarkers": 0,
+          "routePoints": 49
+        },
+        {
+          "stop": "hobart",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": false,
+          "tilesLoaded": false,
+          "zoom": 2.132938235531068,
+          "center": {
+            "lng": 178.28012415173384,
+            "lat": -12.090913501805934
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 536,
+            "y": 501,
+            "width": 10,
+            "height": 10,
+            "top": 501,
+            "right": 546,
+            "bottom": 511,
+            "left": 536
+          },
+          "currentCovered": false,
+          "visitedMarkers": 3,
+          "coveredMarkers": 1,
+          "routePoints": 96
+        },
+        {
+          "stop": "wellington",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.7160329617182442,
+          "center": {
+            "lng": 161.22765832360994,
+            "lat": -42.91088835710703
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 778,
+            "y": 382,
+            "width": 10,
+            "height": 10,
+            "top": 382,
+            "right": 788,
+            "bottom": 392,
+            "left": 778
+          },
+          "currentCovered": false,
+          "visitedMarkers": 4,
+          "coveredMarkers": 1,
+          "routePoints": 143
+        },
+        {
+          "stop": "mcmurdo",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.1793358672557885,
+          "center": {
+            "lng": 173.75962863090444,
+            "lat": -59.676129880280406
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 671,
+            "y": 472,
+            "width": 10,
+            "height": 10,
+            "top": 472,
+            "right": 681,
+            "bottom": 482,
+            "left": 671
+          },
+          "currentCovered": false,
+          "visitedMarkers": 5,
+          "coveredMarkers": 2,
+          "routePoints": 331
+        },
+        {
+          "stop": "punta-arenas",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.0706924420088109,
+          "center": {
+            "lng": -127.04073054743026,
+            "lat": -62.07842089983153
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 873,
+            "y": 448,
+            "width": 10,
+            "height": 10,
+            "top": 448,
+            "right": 883,
+            "bottom": 458,
+            "left": 873
+          },
+          "currentCovered": false,
+          "visitedMarkers": 6,
+          "coveredMarkers": 2,
+          "routePoints": 566
+        },
+        {
+          "stop": "cape-horn",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.378154673323451,
+          "center": {
+            "lng": -69.15782804256139,
+            "lat": -54.58542242602197
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 719,
+            "y": 378,
+            "width": 10,
+            "height": 10,
+            "top": 378,
+            "right": 729,
+            "bottom": 388,
+            "left": 719
+          },
+          "currentCovered": false,
+          "visitedMarkers": 7,
+          "coveredMarkers": 2,
+          "routePoints": 613
+        },
+        {
+          "stop": "rio",
+          "active": "false",
+          "cardOpacity": 0.9892,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": false,
+          "tilesLoaded": false,
+          "zoom": 1.7970594446980164,
+          "center": {
+            "lng": -54.28063728779671,
+            "lat": -39.21986324322983
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700.0867919921875,
+            "width": 860,
+            "height": 88,
+            "top": 700.0867919921875,
+            "right": 1150,
+            "bottom": 788.0867919921875,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 806,
+            "y": 294,
+            "width": 10,
+            "height": 10,
+            "top": 294,
+            "right": 816,
+            "bottom": 304,
+            "left": 806
+          },
+          "currentCovered": false,
+          "visitedMarkers": 8,
+          "coveredMarkers": 4,
+          "routePoints": 754
+        },
+        {
+          "stop": "panama",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 2.1597965256501075,
+          "center": {
+            "lng": -46.631308499377496,
+            "lat": 5.002605015434383
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 545,
+            "y": 280,
+            "width": 10,
+            "height": 10,
+            "top": 280,
+            "right": 555,
+            "bottom": 290,
+            "left": 545
+          },
+          "currentCovered": false,
+          "visitedMarkers": 9,
+          "coveredMarkers": 4,
+          "routePoints": 942
+        },
+        {
+          "stop": "home-seattle",
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 2.0800534471723022,
+          "center": {
+            "lng": -111.40012322990532,
+            "lat": 19.50339446136463
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 1440,
+            "height": 640,
+            "top": 52,
+            "right": 1440,
+            "bottom": 692,
+            "left": 0
+          },
+          "dock": {
+            "x": 290,
+            "y": 700,
+            "width": 860,
+            "height": 88,
+            "top": 700,
+            "right": 1150,
+            "bottom": 788,
+            "left": 290
+          },
+          "counter": {
+            "x": 290,
+            "y": 818,
+            "width": 860,
+            "height": 50,
+            "top": 818,
+            "right": 1150,
+            "bottom": 868,
+            "left": 290
+          },
+          "attribution": {
+            "x": 6,
+            "y": 868,
+            "width": 758,
+            "height": 26,
+            "top": 868,
+            "right": 764,
+            "bottom": 894,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 724,
+            "y": 194,
+            "width": 10,
+            "height": 10,
+            "top": 194,
+            "right": 734,
+            "bottom": 204,
+            "left": 724
+          },
+          "currentCovered": false,
+          "visitedMarkers": 10,
+          "coveredMarkers": 6,
+          "routePoints": 1129
+        }
+      ],
+      "requestedGallery": null,
+      "failures": [
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261115_080022_pt/3/1/1.pbf",
+          "error": {
+            "errorText": "net::ERR_ABORTED"
+          },
+          "t": 7232
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261115_080022_pt/4/0/4.pbf",
+          "error": {
+            "errorText": "net::ERR_ABORTED"
+          },
+          "t": 71313
+        },
+        {
+          "url": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2601/9481427/1000w_q95.jpg",
+          "status": 503
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261115_080022_pt/3/1/0.pbf",
+          "error": {
+            "errorText": "net::ERR_ABORTED"
+          },
+          "t": 168482
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261115_080022_pt/3/3/0.pbf",
+          "error": {
+            "errorText": "net::ERR_ABORTED"
+          },
+          "t": 168482
+        }
+      ],
+      "console": [
+        {
+          "type": "error",
+          "count": 1
+        },
+        {
+          "type": "warning",
+          "count": 6
+        }
+      ],
+      "metrics": {
+        "entryUsableMs": 2392,
+        "resourceBytes": 14358612,
+        "cls": 0.016694613174417547,
+        "heap": 72200000,
+        "audioContexts": [
+          {
+            "state": "running",
+            "sampleRate": 44100
+          }
+        ],
+        "musicPlayers": [
+          {
+            "src": "http://127.0.0.1:5174/media/music/vanguard-scott-buckley.mp3",
+            "paused": false,
+            "currentTime": 180.090794,
+            "duration": 234.529093,
+            "readyState": 4
+          }
+        ]
+      },
+      "long_tasks": {
+        "count": 445,
+        "max_ms": 909,
+        "total_ms": 165324
+      },
+      "audio": [
+        {
+          "tap": "real master gain output, before compressor/limiter; passive analyser",
+          "phase": "shipIntro",
+          "observedMs": 1186.6999999955297,
+          "totalSamples": 12288,
+          "nonFiniteSamples": 0,
+          "samplesAtOrAboveOne": 0,
+          "maxRMS": 0.0286309523111404,
+          "maxPeak": 0.09110051393508911,
+          "contexts": 1,
+          "players": 1,
+          "contextState": "running",
+          "src": "http://127.0.0.1:5174/media/music/vanguard-scott-buckley.mp3",
+          "mediaStart": 119.710204,
+          "mediaEnd": 120.662222,
+          "paused": false,
+          "readyState": 4,
+          "mediaError": null
+        }
+      ]
+    },
+    "phone": {
+      "environment": {
+        "browser": "headless Chromium",
+        "viewport": {
+          "width": 390,
+          "height": 664
+        },
+        "externalResources": "live; no resource fixtures",
+        "physicalDevice": false,
+        "baseURL": "http://127.0.0.1:5174/"
+      },
+      "started": "2026-11-17T17:43:32.874Z",
+      "mode": "Final native-globe/recorded-score source. Pre-patrol chapters skipped through existing controls; all nine patrol legs at authored timing, with one explicitly requested McMurdo gallery pause/resume. Live assets; no fixtures or manual camera changes.",
+      "journey": {
+        "phases": [
+          "dateEntry",
+          "travel",
+          "act1",
+          "orders",
+          "act2",
+          "shipIntro",
+          "patrol",
+          "explore"
+        ],
+        "weeks": []
+      },
+      "shots": [
+        {
+          "name": "01-zip-opening",
+          "t": 2470,
+          "phase": "dateEntry"
+        },
+        {
+          "name": "08-ship-controls",
+          "t": 9763,
+          "phase": "shipIntro"
+        },
+        {
+          "name": "09-port-honolulu",
+          "t": 14238,
+          "phase": "patrol"
+        },
+        {
+          "name": "rotation-mid-leg-landscape",
+          "t": 20518,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-hobart",
+          "t": 21844,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-wellington",
+          "t": 26731,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-mcmurdo",
+          "t": 32961,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-01",
+          "t": 33273,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-02",
+          "t": 35044,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-03",
+          "t": 37273,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-slide-04",
+          "t": 39212,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-requested-gallery-top",
+          "t": 40609,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-mcmurdo-requested-gallery-last-photo",
+          "t": 41232,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-punta-arenas",
+          "t": 47155,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-cape-horn",
+          "t": 52850,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-rio",
+          "t": 58169,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-panama",
+          "t": 65259,
+          "phase": "patrol"
+        },
+        {
+          "name": "09-port-home-seattle",
+          "t": 72038,
+          "phase": "patrol"
+        },
+        {
+          "name": "10-explore",
+          "t": 80565,
+          "phase": "explore"
+        }
+      ],
+      "camera": [
+        {
+          "stop": "honolulu",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9893,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.0161872291839487,
+          "center": {
+            "lng": -143.0326002691611,
+            "lat": 35.72957780922416
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.08538818359375,
+            "width": 366,
+            "height": 88,
+            "top": 432.08538818359375,
+            "right": 378,
+            "bottom": 520.0853881835938,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 130,
+            "y": 262,
+            "width": 10,
+            "height": 10,
+            "top": 262,
+            "right": 140,
+            "bottom": 272,
+            "left": 130
+          },
+          "currentCovered": false,
+          "visitedMarkers": 2,
+          "coveredMarkers": 0,
+          "routePoints": 49
+        },
+        {
+          "stop": "hobart",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 1,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.2846582659660064,
+          "center": {
+            "lng": 178.28012415173384,
+            "lat": -12.090913501805934
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432,
+            "width": 366,
+            "height": 88,
+            "top": 432,
+            "right": 378,
+            "bottom": 520,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 89,
+            "y": 309,
+            "width": 10,
+            "height": 10,
+            "top": 309,
+            "right": 99,
+            "bottom": 319,
+            "left": 89
+          },
+          "currentCovered": false,
+          "visitedMarkers": 3,
+          "coveredMarkers": 0,
+          "routePoints": 96
+        },
+        {
+          "stop": "wellington",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9999,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 0.8677529921531824,
+          "center": {
+            "lng": 161.22765832360994,
+            "lat": -42.91088835710703
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.00091552734375,
+            "width": 366,
+            "height": 88,
+            "top": 432.00091552734375,
+            "right": 378,
+            "bottom": 520.0009155273438,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 225,
+            "y": 241,
+            "width": 10,
+            "height": 10,
+            "top": 241,
+            "right": 235,
+            "bottom": 251,
+            "left": 225
+          },
+          "currentCovered": false,
+          "visitedMarkers": 4,
+          "coveredMarkers": 1,
+          "routePoints": 143
+        },
+        {
+          "stop": "mcmurdo",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9884,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 0.33105589769072696,
+          "center": {
+            "lng": 173.75962863090444,
+            "lat": -59.676129880280406
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.09320068359375,
+            "width": 366,
+            "height": 88,
+            "top": 432.09320068359375,
+            "right": 378,
+            "bottom": 520.0932006835938,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 166,
+            "y": 291,
+            "width": 10,
+            "height": 10,
+            "top": 291,
+            "right": 176,
+            "bottom": 301,
+            "left": 166
+          },
+          "currentCovered": false,
+          "visitedMarkers": 5,
+          "coveredMarkers": 2,
+          "routePoints": 331
+        },
+        {
+          "stop": "punta-arenas",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9963,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 0.2224124724437493,
+          "center": {
+            "lng": -127.04073054743026,
+            "lat": -62.07842089983153
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.0293884277344,
+            "width": 366,
+            "height": 88.00003051757812,
+            "top": 432.0293884277344,
+            "right": 378,
+            "bottom": 520.0294189453125,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 279,
+            "y": 278,
+            "width": 10,
+            "height": 10,
+            "top": 278,
+            "right": 289,
+            "bottom": 288,
+            "left": 279
+          },
+          "currentCovered": false,
+          "visitedMarkers": 6,
+          "coveredMarkers": 2,
+          "routePoints": 566
+        },
+        {
+          "stop": "cape-horn",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9613,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 0.5298747037583895,
+          "center": {
+            "lng": -69.15782804256139,
+            "lat": -54.58542242602197
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.309814453125,
+            "width": 366,
+            "height": 88,
+            "top": 432.309814453125,
+            "right": 378,
+            "bottom": 520.309814453125,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 192,
+            "y": 239,
+            "width": 10,
+            "height": 10,
+            "top": 239,
+            "right": 202,
+            "bottom": 249,
+            "left": 192
+          },
+          "currentCovered": false,
+          "visitedMarkers": 7,
+          "coveredMarkers": 2,
+          "routePoints": 613
+        },
+        {
+          "stop": "rio",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9997,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 0.9487794751329544,
+          "center": {
+            "lng": -54.28063728779671,
+            "lat": -39.21986324322983
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.00250244140625,
+            "width": 366,
+            "height": 88,
+            "top": 432.00250244140625,
+            "right": 378,
+            "bottom": 520.0025024414062,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 241,
+            "y": 192,
+            "width": 10,
+            "height": 10,
+            "top": 192,
+            "right": 251,
+            "bottom": 202,
+            "left": 241
+          },
+          "currentCovered": false,
+          "visitedMarkers": 8,
+          "coveredMarkers": 4,
+          "routePoints": 754
+        },
+        {
+          "stop": "panama",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9997,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": false,
+          "tilesLoaded": false,
+          "zoom": 1.3115165560850455,
+          "center": {
+            "lng": -46.631308499377496,
+            "lat": 5.002605015434383
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.002197265625,
+            "width": 366,
+            "height": 88,
+            "top": 432.002197265625,
+            "right": 378,
+            "bottom": 520.002197265625,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 95,
+            "y": 184,
+            "width": 10,
+            "height": 10,
+            "top": 184,
+            "right": 105,
+            "bottom": 194,
+            "left": 95
+          },
+          "currentCovered": false,
+          "visitedMarkers": 9,
+          "coveredMarkers": 4,
+          "routePoints": 942
+        },
+        {
+          "stop": "home-seattle",
+          "layout": {
+            "viewport": {
+              "width": 390,
+              "height": 664
+            },
+            "voyageGridTemplateRows": "52px 372px 104px 80px 56px",
+            "voyageGridTemplateColumns": "390px",
+            "footerGridTemplateRows": "none",
+            "footer": {
+              "x": 12,
+              "y": 528,
+              "width": 366,
+              "height": 80,
+              "top": 528,
+              "right": 378,
+              "bottom": 608,
+              "left": 12
+            },
+            "creditsRow": {
+              "x": 0,
+              "y": 608,
+              "width": 390,
+              "height": 56,
+              "top": 608,
+              "right": 390,
+              "bottom": 664,
+              "left": 0
+            },
+            "attribution": {
+              "x": 6,
+              "y": 610,
+              "width": 384,
+              "height": 48,
+              "top": 610,
+              "right": 390,
+              "bottom": 658,
+              "left": 6
+            },
+            "attributionContent": {
+              "x": 35,
+              "y": 613,
+              "width": 346,
+              "height": 42,
+              "top": 613,
+              "right": 381,
+              "bottom": 655,
+              "left": 35
+            },
+            "attributionFontSize": "10px",
+            "attributionLineHeight": "14px",
+            "footerBottomToCreditsTop": 0,
+            "footerBottomToAttributionTop": 2,
+            "attributionWithinCreditsRow": true,
+            "creditsRowToViewportBottom": 0
+          },
+          "active": "false",
+          "cardOpacity": 0.9965,
+          "projection": {
+            "type": "vertical-perspective"
+          },
+          "worldCopies": false,
+          "styleLoaded": true,
+          "tilesLoaded": true,
+          "zoom": 1.2317734776072409,
+          "center": {
+            "lng": -111.40012322990532,
+            "lat": 19.50339446136463
+          },
+          "stage": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 372,
+            "top": 52,
+            "right": 390,
+            "bottom": 424,
+            "left": 0
+          },
+          "dock": {
+            "x": 12,
+            "y": 432.027587890625,
+            "width": 366,
+            "height": 88,
+            "top": 432.027587890625,
+            "right": 378,
+            "bottom": 520.027587890625,
+            "left": 12
+          },
+          "counter": {
+            "x": 12,
+            "y": 550,
+            "width": 366,
+            "height": 46.796875,
+            "top": 550,
+            "right": 378,
+            "bottom": 596.796875,
+            "left": 12
+          },
+          "attribution": {
+            "x": 6,
+            "y": 610,
+            "width": 384,
+            "height": 48,
+            "top": 610,
+            "right": 390,
+            "bottom": 658,
+            "left": 6
+          },
+          "currentDot": {
+            "x": 195,
+            "y": 136,
+            "width": 10,
+            "height": 10,
+            "top": 136,
+            "right": 205,
+            "bottom": 146,
+            "left": 195
+          },
+          "currentCovered": false,
+          "visitedMarkers": 10,
+          "coveredMarkers": 5,
+          "routePoints": 1129
+        }
+      ],
+      "requestedGallery": {
+        "figures": 4,
+        "images": [
+          {
+            "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2602/9520592/1000w_q95.jpg",
+            "loaded": true
+          },
+          {
+            "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/1602/2400145/1000w_q95.jpg",
+            "loaded": true
+          },
+          {
+            "src": "https://d1ldvf68ux039x.cloudfront.net/thumbs/photos/2601/9481427/1000w_q95.jpg",
+            "loaded": true
+          },
+          {
+            "src": "https://commons.wikimedia.org/wiki/Special:FilePath/McMurdo%20Station%20in%20Antarctica.jpg?width=1200",
+            "loaded": true
+          }
+        ],
+        "beforeMiles": "12,265",
+        "afterMiles": "12,265",
+        "closedInPhase": "patrol"
+      },
+      "failures": [
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261115_080022_pt/6/10/23.pbf",
+          "error": {
+            "errorText": "net::ERR_ABORTED"
+          },
+          "t": 80054
+        }
+      ],
+      "console": [
+        {
+          "type": "warning",
+          "count": 5
+        }
+      ],
+      "metrics": {
+        "entryUsableMs": 1142,
+        "resourceBytes": 14358612,
+        "cls": 0.1943355342201173,
+        "heap": 27600000,
+        "phaseFrames": [
+          {
+            "phase": "dateEntry",
+            "startMs": 342.8999999985099,
+            "endMs": 3356.3000000044703,
+            "elapsedMs": 3013.4000000059605,
+            "frames": 52,
+            "intervals": 51,
+            "minIntervalMs": 16.5,
+            "maxIntervalMs": 516.6000000000001,
+            "meanIntervalMs": 60.45490196078432,
+            "p95IntervalMs": 249.9000000000001,
+            "retainedIntervalSamples": 51,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "travel",
+            "startMs": 3356.3000000044703,
+            "endMs": 3554,
+            "elapsedMs": 197.69999999552965,
+            "frames": 1,
+            "intervals": 0,
+            "minIntervalMs": null,
+            "maxIntervalMs": null,
+            "meanIntervalMs": null,
+            "p95IntervalMs": null,
+            "retainedIntervalSamples": 0,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "act1",
+            "startMs": 3554,
+            "endMs": 4350.20000000298,
+            "elapsedMs": 796.2000000029802,
+            "frames": 4,
+            "intervals": 3,
+            "minIntervalMs": 166.69999999999982,
+            "maxIntervalMs": 233.30000000000018,
+            "meanIntervalMs": 211.10000000000005,
+            "p95IntervalMs": 233.30000000000018,
+            "retainedIntervalSamples": 3,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "orders",
+            "startMs": 4350.20000000298,
+            "endMs": 7010,
+            "elapsedMs": 2659.7999999970198,
+            "frames": 14,
+            "intervals": 13,
+            "minIntervalMs": 116.70000000000073,
+            "maxIntervalMs": 283.39999999999964,
+            "meanIntervalMs": 194.86153846153846,
+            "p95IntervalMs": 283.39999999999964,
+            "retainedIntervalSamples": 13,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "act2",
+            "startMs": 7010,
+            "endMs": 7919.39999999851,
+            "elapsedMs": 909.3999999985099,
+            "frames": 5,
+            "intervals": 4,
+            "minIntervalMs": 116.59999999999945,
+            "maxIntervalMs": 266.6999999999998,
+            "meanIntervalMs": 154.17499999999995,
+            "p95IntervalMs": 266.6999999999998,
+            "retainedIntervalSamples": 4,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "shipIntro",
+            "startMs": 7919.39999999851,
+            "endMs": 11235.60000000149,
+            "elapsedMs": 3316.2000000029802,
+            "frames": 26,
+            "intervals": 25,
+            "minIntervalMs": 16.599999999998545,
+            "maxIntervalMs": 283.2999999999993,
+            "meanIntervalMs": 131.996,
+            "p95IntervalMs": 283.2999999999993,
+            "retainedIntervalSamples": 25,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "patrol",
+            "startMs": 11235.60000000149,
+            "endMs": 78447,
+            "elapsedMs": 67211.39999999851,
+            "frames": 609,
+            "intervals": 608,
+            "minIntervalMs": 16.59999999999127,
+            "maxIntervalMs": 399.90000000000146,
+            "meanIntervalMs": 110.54917763157896,
+            "p95IntervalMs": 200.10000000000218,
+            "retainedIntervalSamples": 608,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          },
+          {
+            "phase": "explore",
+            "startMs": 78447,
+            "endMs": 80611.39999999851,
+            "elapsedMs": 2164.39999999851,
+            "frames": 6,
+            "intervals": 5,
+            "minIntervalMs": 183.3000000000029,
+            "maxIntervalMs": 633.3000000000029,
+            "meanIntervalMs": 373.3200000000012,
+            "p95IntervalMs": 633.3000000000029,
+            "retainedIntervalSamples": 5,
+            "sampleLimit": 5000,
+            "percentileUsesAllIntervals": true
+          }
+        ],
+        "audioContexts": [
+          {
+            "state": "running",
+            "sampleRate": 44100
+          }
+        ],
+        "musicPlayers": [
+          {
+            "src": "http://127.0.0.1:5174/media/music/vanguard-scott-buckley.mp3",
+            "paused": false,
+            "currentTime": 110.947574,
+            "duration": 234.529093,
+            "readyState": 4
+          }
+        ]
+      },
+      "long_tasks": {
+        "count": 447,
+        "max_ms": 608,
+        "total_ms": 75095
+      },
+      "audio": [
+        {
+          "tap": "real master gain output, before compressor/limiter; passive analyser",
+          "phase": "shipIntro",
+          "observedMs": 1041.8000000044703,
+          "totalSamples": 20480,
+          "nonFiniteSamples": 0,
+          "samplesAtOrAboveOne": 0,
+          "maxRMS": 0.029387405270016376,
+          "maxPeak": 0.09237411618232727,
+          "contexts": 1,
+          "players": 1,
+          "contextState": "running",
+          "src": "http://127.0.0.1:5174/media/music/vanguard-scott-buckley.mp3",
+          "mediaStart": 51.077823,
+          "mediaEnd": 51.948571,
+          "paused": false,
+          "readyState": 4,
+          "mediaError": null
+        }
+      ]
+    }
+  },
+  "renderer_probe": {
+    "mode": "Read-only existing application canvas renderer probe; live resources, no route fixtures, no journey or manual camera change",
+    "started": "2026-11-17T17:45:53.172Z",
+    "environment": {
+      "browser": "headless Chromium",
+      "engineVersion": "156.0.8078.4",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "baseURL": "http://127.0.0.1:5174/",
+      "launchArgs": [
+        "--enable-unsafe-swiftshader"
+      ],
+      "physicalDevice": false
+    },
+    "console": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x173c001d2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      }
+    ],
+    "providerFailures": [],
+    "renderer": {
+      "contextType": "webgl2",
+      "vendor": "WebKit",
+      "renderer": "WebKit WebGL",
+      "unmaskedVendor": "Google Inc. (Google)",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+      "contextAttributes": {
+        "alpha": true,
+        "antialias": false,
+        "depth": true,
+        "desynchronized": false,
+        "failIfMajorPerformanceCaveat": false,
+        "powerPreference": "high-performance",
+        "premultipliedAlpha": true,
+        "preserveDrawingBuffer": false,
+        "stencil": true,
+        "xrCompatible": false
+      },
+      "drawingBuffer": {
+        "width": 1440,
+        "height": 900
+      },
+      "canvas": {
+        "width": 1440,
+        "height": 900
+      },
+      "contextLost": false,
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "projection": {
+        "type": "vertical-perspective"
+      },
+      "worldCopies": false,
+      "styleLoaded": false,
+      "tilesLoaded": false,
+      "phase": "dateEntry",
+      "mapStatus": null,
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36"
+    }
+  },
+  "note": "Prepublication local evidence. The linked pull request records subsequent CI, exact merged SHA and hosted verification. Software SwiftShader frame timing is not physical-device performance."
+}
