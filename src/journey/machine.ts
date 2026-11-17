@@ -1,16 +1,16 @@
 /**
  * Journey state machine (plain reducer — no library).
  *
- *   dateEntry ─START─▶ act1 ─ACT1_DONE/SKIP─▶ orders(slot) ─CHOOSE─▶ act2
+ *   dateEntry ─START(viaZip)─▶ travel ─TRAVEL_DONE─▶ act1 ─ACT1_DONE/SKIP─▶ orders(slot) ─CHOOSE─▶ act2
  *     ▲                                                               │ ACT2_DONE / SKIP
  *     │                                                               ▼
  *     │                          explore ◀─PATROL_DONE/SKIP── patrol ◀─SHIP_INTRO_DONE── shipIntro
  *     └──────────────────────────── RESTART ◀──────────────────────────────┘
  *   dateEntry ──FREE_EXPLORE──▶ explore          (the quiet "or explore the map" link; no journey data)
  *
- * `dateEntry` is the "Pick your basic training date" landing (owner decision,
- * DECISIONS.md — replaced the ZIP landing; ZIP code retained but unused).
- * `act1` is the Cape May countdown + 8-week training progression.
+ * `dateEntry` is a retained internal identifier: the rendered landing is ZIP entry.
+ * The ZIP-first flow travels from hometown to Cape May before `act1` training.
+ * `act1` is the 8-week training progression; the internal start date is not selected by applicants.
  * `orders` renders the assignment slot machine (always lands on USCGC Polar
  * Star — owner decision, DECISIONS.md). `shipIntro` is the Polar Star mission
  * card; `patrol` is the cinematic world patrol. `idle` exists only before the
@@ -21,7 +21,7 @@ export type Phase = 'idle' | 'dateEntry' | 'travel' | 'act1' | 'orders' | 'act2'
 
 export interface JourneyState {
   phase: Phase
-  /** Chosen basic-training ship date (ISO `YYYY-MM-DD`, local), null before START. */
+  /** Internal narrative start date (ISO `YYYY-MM-DD`, local), null before START. */
   shipDate: string | null
   /** Unit ids offered in the orders board. */
   orderIds: string[]

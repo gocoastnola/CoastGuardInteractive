@@ -229,6 +229,10 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         map.easeTo({ ...opts, essential: true })
       },
       stop() {
+        if (driftTimer.current !== null) {
+          window.clearTimeout(driftTimer.current)
+          driftTimer.current = null
+        }
         mapRef.current?.stop()
       },
       getMap() {
@@ -336,6 +340,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
 
     return () => {
       window.clearTimeout(timeout)
+      if (driftTimer.current !== null) window.clearTimeout(driftTimer.current)
+      driftTimer.current = null
       map.off('move', declutter)
       markersRef.current.forEach(({ marker }) => marker.remove())
       markersRef.current.clear()

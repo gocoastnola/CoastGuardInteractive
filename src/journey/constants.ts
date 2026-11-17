@@ -38,7 +38,7 @@ export const ACT1 = {
   graduate: 2.6, // last beat holds before the board
 } as const
 
-/** Legacy ZIP-era Act 1 timing (hometown → Cape May arc); unused, kept with ZipEntry. */
+/** Hometown → Cape May travel timing, before the separate boot-camp progression. */
 export const ACT1_ARC = {
   frameBoth: 2.2,
   arc: 6.0,

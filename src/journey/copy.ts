@@ -21,7 +21,7 @@ export const LANDING = {
     past: 'Pick a date that is still ahead of you.',
   },
   footnote: 'Ship dates are demo placeholders — real Cape May class dates are not verified. Basic training shown as 8 weeks (demo).',
-  /** Retained for the (unused) ZIP landing — see DECISIONS.md. */
+  /** Current ZIP-first landing copy; date-picker fields above are historical. */
   zipSub: 'Your journey starts at home. Watch the miles to Cape May, conquer eight weeks of boot camp, receive your orders, and see the world aboard Polar Star.',
   zipLabel: 'Your hometown ZIP code',
   zipPlaceholder: '5-digit ZIP',
@@ -46,7 +46,7 @@ export const ACT1_BEATS = [
   'Graduation day. Stronger. Faster. Sharper.',
 ] as const
 
-/** Legacy ZIP-era Act 1 beats (unused; kept with the ZIP landing — DECISIONS.md). */
+/** Current hometown → Cape May travel beats, followed by the separate training act. */
 export const ACT1_ZIP_BEATS = [
   'Everyone starts somewhere. You start here.',
   '{miles} miles to Training Center Cape May.',

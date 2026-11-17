@@ -1,8 +1,34 @@
 # PROGRESS.md
 
-_Last updated: 2026-10-18 (Phase 1 complete)_
+_Current verification pass: 2026-11-17; historical reports retained below._
 
-## What works
+## Current stabilization status
+
+ZIP-first is the current product decision. The exact original recovery tag is remotely verified; see [docs/RECOVERY.md](docs/RECOVERY.md). The separate repair branch starts from freshly fetched main `013fff722014729f4e044b0ce4060dbdfc3bbd57`. No major redesign, merge or deployment is authorized.
+
+Baseline measured on Node.js **22.23.5**, npm **11.9.0** before application behavior changes:
+
+| Check | Baseline result | Scope / limit |
+| --- | --- | --- |
+| Locked dependency install (`npm ci`) | PASS | Existing lockfile, no broad dependency upgrade |
+| Production build | PASS | TypeScript + Vite; runtime checks remain separate |
+| Unit tests | PASS — 55 tests, 8 files | Does not verify rendered UI or actual listening |
+| Data validation | PASS — 18 records | All 18 remain demo-unverified |
+| Existing browser suite | FAIL — 1 passed, 5 failed (6 total) | All five failing tests expected the superseded date-first headline/cards/controls; the current landing is ZIP entry |
+
+A normal-timing live Chromium desktop run traversed the full story and all nine patrol arrivals to exploration in **117.999 seconds**. This is rendered-browser evidence, not a real-device check or an actual listening assessment. Its console/network observations are retained in the delivery evidence; remote-image rate limits and map request cancellations must be classified separately from stale date-picker assertions.
+
+Baseline inspection also confirmed a hidden training-photo state in reduced motion and landscape ship-layout clipping. These are genuine defects to repair and compare at the same viewport; the outdated tests do not excuse them.
+
+Final repair verification is recorded in [docs/VERIFICATION.md](docs/VERIFICATION.md), with the acceptance map in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Historical test counts below do not certify the repaired branch. Distinguish deterministic browser tests (fixtures), rendered live external-resource checks, emulated viewports, WebKit availability, actual listening and physical-device testing.
+
+Current source facts: ZIP → hometown travel → training/graduation → illustrative Polar Star orders → ship intro → full nine-leg patrol, including McMurdo before Patagonia → exploration. Unit data has 18 records; all remain demo-unverified. Training/ports mix bundled and remote authentic photography; the existing score/SFX are synthesized WebAudio. These source observations are not claims of runtime or listening success.
+
+## Historical verification archive
+
+The sections below record earlier phases, including the superseded date-first product. Historical “What works” and checkmarks refer to those earlier reports. Date-picker expectations must not be restored to make old tests pass.
+
+## Historical Phase 1 — what worked
 
 | Area | Status | How verified |
 | --- | --- | --- |
@@ -73,7 +99,7 @@ Known gaps: text beats can collide with map labels on busy regions (add a scrim)
 Demo/approx: route, port blurbs and ship facts are illustrative (labelled in UI); owner will supply verified details.
 Full diff summary: CHANGES-2026-10-19.md.
 
-## Phase 1.7 — Date-first landing + Cape May countdown (2026-10-20) ✅
+## Phase 1.7 — Historical date-first landing (2026-10-20; superseded)
 | Area | Status | How verified |
 | --- | --- | --- |
 | "Pick your basic training date" landing: 8 Tuesday ship-date cards (≥ 14 days out), native date fallback, Begin (Enter works), arrow-key roving, autofocus first card, "or explore the map", photo wall, DEMO badge, disclaimer | ✅ | `07-start-adventure.png`; e2e asserts 8 cards, Tuesdays, ≥14 days, focus, fallback |

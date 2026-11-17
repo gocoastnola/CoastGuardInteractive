@@ -1,3 +1,4 @@
+import { SafeImage } from '../SafeImage'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import type { MapHandle, JourneyMarker } from '../MapView'
@@ -64,7 +65,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       map.setJourneyMarkers(PATROL_STOPS.map((_, i) => markerFor(i)))
       map.fitPoints(fullPath, { duration: 0, pitch: 0, padding: { top: 90, bottom: 110, left: 70, right: 70 } })
       map.drawArc(fullPath, 1)
-      return
+      return () => sound.stopAmbient()
     }
 
     const cards = Array.from(root.current.querySelectorAll<HTMLElement>('[data-port-card]'))
@@ -226,20 +227,20 @@ export function PatrolOverlay({ map, onDone }: Props) {
       {/* Port cards (one per arrival) */}
       {!reduced &&
         PATROL_STOPS.slice(1).map((stop) => (
-          <div className="port-card" key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
+          <div className={`port-card${stop.special === 'canal' ? ' port-card--canal' : ''}`} key={stop.id} data-port-card data-testid={`port-${stop.id}`}>
             {stop.gallery ? (
               <div className="antarctic-gallery" aria-label="Polar Star at McMurdo Station: icebreaking, research station and science support">
                 {stop.gallery.map((photo, index) => (
                   <div className="antarctic-slide" data-antarctic-slide key={photo.source} style={{ opacity: index === 0 ? 1 : 0 }}>
-                    <img src={photo.img} alt={photo.caption} loading="eager" />
+                    <SafeImage src={photo.img} alt={photo.caption} loading="eager" />
                     <div className="antarctic-caption">{photo.caption}</div>
-                    <a className="antarctic-credit" href={photo.source} target="_blank" rel="noopener noreferrer">USCG photo · source</a>
+                    <a className="antarctic-credit" href={photo.source} target="_blank" rel="noopener noreferrer">{photo.source.includes('commons.wikimedia.org') ? 'NSF photo · source' : 'USCG photo · source'}</a>
                   </div>
                 ))}
               </div>
             ) : (
               <>
-                <img className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `/media/port-${stop.id === 'home-seattle' ? 'homecoming' : stop.id === 'panama' ? 'panama' : stop.id}.jpg` }} />
+                <SafeImage className="port-img" src={stop.img} alt={`Scenic destination photograph: ${stop.name}`} loading="eager" />
                 {stop.photoSource && <a className="port-credit" href={stop.photoSource} target="_blank" rel="noopener noreferrer">Photo credit &amp; license</a>}
               </>
             )}
@@ -281,7 +282,8 @@ export function PatrolOverlay({ map, onDone }: Props) {
           <ol className="patrol-static-list">
             {PATROL_STOPS.slice(1).map((stop) => (
               <li key={stop.id}>
-                <span aria-hidden="true">{stop.flag}</span> {stop.name} — {stop.country}
+                <span aria-hidden="true">{stop.flag}</span> <strong>{stop.name}</strong> — {stop.country}
+                <p className="patrol-static-blurb">{stop.blurb}</p>
               </li>
             ))}
           </ol>
@@ -292,7 +294,7 @@ export function PatrolOverlay({ map, onDone }: Props) {
       )}
 
       <div className="journey-counter patrol-counter">
-        <MilesCounter miles={miles} total={totalMiles} place={PATROL.totalLabel} />
+        <MilesCounter miles={miles} total={totalMiles} place={PATROL.totalLabel} cumulative />
       </div>
     </div>
   )

@@ -70,7 +70,9 @@ Format: date · decision · why · alternatives · consequences.
   `dvids-manifest.json` attribution; recorded in ASSET_LICENSES.md. DVIDS public
   API key is NOT in the client bundle — images were fetched once by script.
 
-## 2026-10-20 — Date-first landing ("Pick your basic training date")
+## 2026-10-20 — Date-first landing (historical; superseded)
+
+This records the implementation at that time. The 2026-11-17 ZIP-first decision below supersedes its entry-screen and countdown choices. Do not restore date cards from this history.
 
 - **Landing asks for a ship date, not a ZIP code.** Owner: "I want the first page to
   be 'pick your basic training date' instead of the zip code." The picker shows the
@@ -89,3 +91,12 @@ Format: date · decision · why · alternatives · consequences.
   constants and the `act === 1` arc branch of `JourneyOverlay` stay in the repo for
   a possible optional "hometown" step later (e.g. an arc from home to Cape May after
   the date is picked). Nothing was deleted.
+
+
+## 2026-11-17 — ZIP-first journey retained; repair scope only (owner-directed)
+
+- **Current product decision:** opening headline remains “Enter your ZIP code and start your journey.” A valid hometown ZIP starts travel to Cape May with approximate mileage, then training weeks 1–8 and graduation. The internal `dateEntry` phase name and retained date helpers do not imply a visible date picker.
+- **Preserved story:** illustrative orders always select USCGC Polar Star; exterior ship imagery; full existing patrol including McMurdo before Patagonia; research-support setting, penguins, all other destinations, cumulative route and wide geographic context. The exploration directory remains U.S.-scoped under the existing patrol exception.
+- **Preserved audio decision:** retain the existing synthesized score/SFX and browser-gesture initialization behavior. Journey-wide mute/volume or altered autoplay behavior is a separate product/accessibility decision.
+- **Authorized now:** recovery verification, narrowly scoped technical repairs, meaningful tests, current documentation and a separate redesign proposal. No major redesign implementation, engine replacement, broad dependency changes, merging or deployment is authorized.
+- **Verification rule:** historical test counts are historical evidence. Record actual runtime, baseline failures, final checks and limitations for this branch before claiming success.

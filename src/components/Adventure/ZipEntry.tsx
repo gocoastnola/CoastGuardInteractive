@@ -20,9 +20,8 @@ interface Props {
 }
 
 /**
- * LEGACY — RETAINED BUT UNUSED. The live landing is DateEntry.tsx ("Pick your basic
- * training date", owner decision 2026-10-20, DECISIONS.md). Kept, with zips.ts and
- * the ZIP table, for a possible optional hometown step later.
+ * Current applicant landing. ZIP entry is the owner-confirmed opening; DateEntry
+ * remains historical code only (DECISIONS.md).
  *
  * "Start Your Adventure" — dark nautical hero + a 5-digit ZIP field.
  * The ZIP table is fetched lazily on the first submit (see journey/zips.ts).

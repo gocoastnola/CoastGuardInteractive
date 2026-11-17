@@ -1,3 +1,4 @@
+import { SafeImage } from '../SafeImage'
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import type { Unit } from '../../data/schema'
@@ -49,7 +50,7 @@ export function ShipIntro({ unit, onBegin }: Props) {
     <div className="ship-intro" ref={root} role="dialog" aria-labelledby="ship-title" data-testid="ship-intro">
       <div className="ship-card">
         <div className="ship-hero" data-ship-reveal>
-          <img src="/media/polar-star-hero.jpg" alt={`${unit.name} underway`} />
+          <SafeImage src="/media/polar-star-hero.jpg" alt={`${unit.name} underway`} />
           <div className="ship-hero-scrim" />
           <div className="ship-hero-text">
             <div className="ship-eyebrow">{SHIP.eyebrow}</div>
@@ -75,8 +76,8 @@ export function ShipIntro({ unit, onBegin }: Props) {
             ))}
           </ul>
           <div className="ship-gallery" data-ship-reveal>
-            <img src="/media/mission-ice.jpg" alt="Polar Star crew on the Antarctic ice" loading="lazy" />
-            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Emperor_penguins.jpg?width=1000" alt="Emperor penguins on Antarctic sea ice" loading="lazy" />
+            <SafeImage src="/media/mission-ice.jpg" alt="USCGC Polar Star carving a channel through Antarctic sea ice" loading="lazy" />
+            <SafeImage src="https://commons.wikimedia.org/wiki/Special:FilePath/Emperor_penguins.jpg?width=1000" alt="Emperor penguins on Antarctic sea ice" loading="lazy" />
           </div>
           <div className="ship-foot" data-ship-reveal>
             <span className="ship-demo-note">{SHIP.demoNote}</span>
