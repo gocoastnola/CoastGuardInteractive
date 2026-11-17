@@ -1,6 +1,8 @@
 # CoastGuard Interactive — current handoff (2026-11-17)
 
-Current work is [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md): the owner-requested native globe, compact destination dock/explicit gallery, and licensed recorded primary soundtrack with authored fallback/cues. Earlier repair/visual documents and the appendices below are historical source-state evidence, not certification of this revision.
+Current work is [docs/PATROL-PACING.md](docs/PATROL-PACING.md): touch-and-go port calls followed by a rotating completed-patrol overview after Seattle. Branch `codex/patrol-touch-and-go-20261117-210100Z` begins at freshly fetched main `2cec276dc08bde643577a6e0f1e0261b124472ce`. Keep every stop, sea waypoint, image, credit, the ZIP opening and the pre-patrol story. The overview stays until Explore/Escape, offers all nine galleries, pauses during Details, and honors reduced motion. The owner requested skipping further recovery checks; leave existing backups/tags alone. Local 89 unit tests and the production build pass; final browser results are pending in the current report.
+
+The preceding [globe/audio revision](docs/GLOBE-AUDIO-REVISION.md), repair/visual documents and appendices are source-state history. Their older test counts do not certify this refinement.
 
 ## Locked project and story
 
@@ -10,7 +12,7 @@ Current work is [docs/GLOBE-AUDIO-REVISION.md](docs/GLOBE-AUDIO-REVISION.md): th
 - All nine arrivals remain Honolulu, Hobart, Wellington, **McMurdo before Punta Arenas/Patagonia**, Cape Horn, Rio, Panama and Seattle. Approved training/graduation/exterior/research/penguin imagery, source credits and every destination’s context remain.
 - Preserve independent-demo, unverified-content and illustrative-assignment language. No accounts, applicant forms, backend, keys or paid services are introduced.
 
-## Current implementation and recovery
+## Published globe implementation and recovery history
 
 The current branch is `codex/globe-and-adventure-audio-20261117-162137Z`, based on fresh main `481c4c98b31451541c6ceae26158b9f08f122571`. Remotely verified annotated tag `pre-codex-baseline-20261117-162137Z` preserves that pre-globe baseline. Original tag `pre-codex-redesign-2026-11-16` still preserves `013fff722014729f4e044b0ce4060dbdfc3bbd57`. A complete-history bundle is outside Git at `/workspace/coastguard-globe-evidence/pre-globe-recovery.bundle`. Do not move tags or edit the separately hosted benchmark.
 

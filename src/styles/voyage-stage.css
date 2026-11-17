@@ -9,6 +9,8 @@
 .app .voyage-header p { margin: 0 0 2px; color: #a7c5ce; font-size: 9px; line-height: 1; letter-spacing: .15em; text-transform: uppercase; }
 .app .voyage-header h2 { margin: 0; color: #e8f3f4; font-size: 19px; font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
 .app .voyage-chapter { flex: 0 0 auto; color: #e8bc6c; font-size: 9px; letter-spacing: .09em; }
+.app .voyage-recap-continue { flex: 0 0 auto; min-height: 44px; padding: 10px 12px; border: 1px solid #f1c37c; border-radius: 4px; color: #082437; background: #f1c37c; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; pointer-events: auto; }
+.app .voyage-stage.is-recap .voyage-header h2 { font-size: 18px; }
 .app .voyage-stage .voyage-globe-stage { position: relative; min-width: 0; min-height: 0; }
 .app .voyage-stage .voyage-leg-status { position: absolute; top: 12px; left: 24px; right: 24px; margin: 0; color: #c6e1e8; font-size: 11px; line-height: 1.4; letter-spacing: .025em; text-align: center; text-shadow: 0 2px 8px #03101c; }
 .app .voyage-stage .voyage-dock-slot { position: relative; width: min(860px, calc(100% - 48px)); height: 104px; min-width: 0; margin: 0 auto; pointer-events: none; }
@@ -17,6 +19,9 @@
 .app .voyage-underway > strong { font-size: 17px; font-weight: 500; }
 .app .voyage-underway > small { color: #9fc0ca; font-size: 11px; }
 .app .voyage-stage .voyage-underway[aria-hidden='true'] { visibility: hidden; }
+.app .voyage-stage .voyage-recap-ports { position: absolute; inset: 8px 0; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); align-content: center; gap: 6px; padding: 8px; border: 1px solid #70a6bb52; border-radius: 6px; background: linear-gradient(110deg, #113d52f5, #0a2335f5); pointer-events: auto; }
+.app .voyage-recap-ports button { min-width: 0; min-height: 30px; padding: 5px; overflow: hidden; border: 1px solid #79afc342; border-radius: 3px; color: #f0cf94; background: #12374b; font: inherit; font-size: 11px; line-height: 14px; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.app .voyage-recap-ports button:hover { border-color: #f1c37c; background: #214d60; }
 .app .patrol.voyage-stage .port-card.voyage-port-dock {
   position: absolute; inset: 8px 0; display: grid; grid-template-columns: 80px minmax(0, 1fr) 76px;
   align-items: center; gap: 16px; width: 100%; height: 88px; min-height: 0; max-height: none;
@@ -84,6 +89,10 @@
   .app .voyage-stage .voyage-header { padding: 8px 16px 0; }
   .app .voyage-header h2 { font-size: 17px; }
   .app .voyage-chapter { display: none; }
+  .app .voyage-stage.is-recap .voyage-header h2 { font-size: 15px; }
+  .app .voyage-recap-continue { padding: 8px; font-size: 10px; }
+  .app .voyage-stage .voyage-recap-ports { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; }
+  .app .voyage-recap-ports button { min-height: 24px; padding: 4px; font-size: 10px; line-height: 12px; }
   .app .voyage-stage .voyage-leg-status { left: 16px; right: 16px; top: 9px; font-size: 10px; }
   .app .voyage-stage .voyage-dock-slot, .app .voyage-stage .voyage-footer, .app .patrol.voyage-stage .patrol-static.voyage-static-dock { width: calc(100% - 24px); }
   .app .patrol.voyage-stage .port-card.voyage-port-dock { grid-template-columns: 80px minmax(0, 1fr) 62px; gap: 10px; padding: 11px 10px; }
@@ -132,6 +141,8 @@
   .app .voyage-stage .voyage-port-identity h3 { font-size: 13px; }
   .app .voyage-stage .voyage-port-identity p, .app .voyage-stage .voyage-port-identity > span { font-size: 8px; }
   .app .voyage-stage .voyage-details-button { width: 58px; padding: 6px 3px; font-size: 10px; }
+  .app .voyage-stage .voyage-recap-ports { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; }
+  .app .voyage-recap-ports button { min-height: 24px; padding: 4px; font-size: 10px; line-height: 12px; }
   .app .voyage-stage .voyage-footer { grid-column: 2; grid-row: 2; align-self: center; width: calc(100% - 24px); height: 80px; transform: translateY(58px); }
   .app .voyage-stage .voyage-credit-space { grid-column: 1 / -1; grid-row: 3; }
   .app .patrol.voyage-stage .patrol-static.voyage-static-dock { grid-column: 2; grid-row: 2; align-self: center; width: calc(100% - 24px); transform: translateY(-58px); }
