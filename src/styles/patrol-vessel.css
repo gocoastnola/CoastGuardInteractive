@@ -6,6 +6,11 @@
   user-select: none;
 }
 
+/* The globe covers the ship at its limb; do not inherit MapLibre's opacity fade. */
+.patrol-vessel.maplibregl-marker {
+  transition: none;
+}
+
 .patrol-vessel-orientation,
 .patrol-vessel-float {
   display: block;
