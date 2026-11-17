@@ -1,6 +1,6 @@
 # Native globe and audio — genuine verification evidence
 
-These are actual browser screenshots, not concept art or generated “after” images. Application source is `96683727af7a8c72ca0e23980d922f52c0524176`; later documentation commits preserve the same tested bundle. [PR #7](https://github.com/gocoastnola/CoastGuardInteractive/pull/7) records subsequent CI and publication.
+These are actual browser screenshots, not concept art or generated “after” images. Application source is `96683727af7a8c72ca0e23980d922f52c0524176`; later documentation commits preserve the same tested bundle. [PR #7](https://github.com/gocoastnola/CoastGuardInteractive/pull/7) records subsequent CI. Publication is held after automatic approval review rejected the merge under the original no-merge/no-deploy instruction; these are local final-source screenshots, not a claim that the new version is live.
 
 ## Matched phone comparison
 
