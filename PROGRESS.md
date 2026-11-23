@@ -1,3 +1,7 @@
+## Repair for blank NASA imagery (2026-11-23)
+
+The first satellite-globe commit depended on NASA GIBS imagery being downloaded live on every viewer's device. A real iPhone screenshot showed only the original gray vectors. This revision generates Web Mercator tile imagery from the original NASA Blue Marble Next Generation 5400×2700 composite at build time, serves the 341 tiles from GitHub Pages on the site's own origin, and verifies a real JPEG tile in the production smoke test. The ZIP travel pullback also remains on a broad sphere (max zoom 2.2). The story, ship, ports, sound and backup are untouched. Branch fix/bundled-blue-marble-20261123.
+
 ## Satellite Earth and ZIP cloud-dive experiment (2026-11-23)
 
 Branch feature/satellite-globe-zip-cloud-dive-20261123 from main 2e50a08eb5a7e81c0928712103d8ed207cf0a1b4. NASA true-color tiles cover the existing gray globe; hometown approach and zoom-out are accompanied by two decorative cloud sweeps. Story, routes, ship, audio and mobile reduced-motion remain unchanged. Browser verification is pending; no main-branch deployment has occurred.
