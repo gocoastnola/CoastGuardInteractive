@@ -1,3 +1,11 @@
+## 2026-11-23 · Satellite globe and ZIP cloud dive
+
+- The owner asked for the realistic North-America-facing Earth design rather than the flat gray land, and for a hometown ZIP camera approach followed by zoom-out through clouds to Cape May.
+- Preserve the native MapLibre globe and all real route geometry. NASA GIBS Blue Marble Next Generation raster imagery overlays the stylized vector chart. Raster fades at close zoom, and missing tiles fall back to the existing vector base.
+- A native globe camera approach focuses the ZIP centroid and then widens to both route endpoints. A decorative two-pass cloud veil supplements the existing spherical clouds, with reduced-motion mode retaining the static route.
+- NASA imagery is a static natural-color satellite composite, not live weather. The earlier generated image is a 2D illustration and cannot be wrapped onto an interactive sphere without geographic distortion.
+- Development is on feature/satellite-globe-zip-cloud-dive-20261123; main and the backup repository are untouched.
+
 # DECISIONS.md — architecture decision log
 
 Format: date · decision · why · alternatives · consequences.
