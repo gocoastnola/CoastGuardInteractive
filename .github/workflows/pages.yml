@@ -31,8 +31,18 @@ jobs:
         run: npm run validate:data
       - name: Run unit tests
         run: npm test
+      - name: Generate locally served NASA Blue Marble imagery
+        run: |
+          python3 -m venv /tmp/earth-tiles-env
+          /tmp/earth-tiles-env/bin/python -m pip install --quiet numpy==2.3.5 pillow==12.3.0 basemap-data==2.0.0
+          /tmp/earth-tiles-env/bin/python scripts/build-earth-tiles.py --output public/earth-tiles --max-zoom 4
       - name: Build for the production project subpath
         run: npm run build -- --base=/CoastGuardInteractive/
+      - name: Verify bundled Earth imagery is in the deployed output
+        run: |
+          test -s dist/earth-tiles/0/0/0.jpg
+          test -s dist/earth-tiles/2/1/1.jpg
+          test -s dist/earth-tiles/4/8/6.jpg
       - name: Install Chromium and its system dependencies
         run: npx playwright install --with-deps chromium
       - name: Verify the ZIP-first journey and responsive recovery paths
