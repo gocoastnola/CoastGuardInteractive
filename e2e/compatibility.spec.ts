@@ -56,6 +56,12 @@ test('project subpath serves real ZIP data, bundled exterior media and map worke
   await openLanding(page)
   const basePath = process.env.E2E_PRODUCTION ? '/CoastGuardInteractive/' : '/'
   if (process.env.E2E_PRODUCTION) expect(new URL(page.url()).pathname).toBe(basePath)
+  if (process.env.E2E_PRODUCTION) {
+    const earthTile = await request.get(`${basePath}earth-tiles/2/1/1.jpg`)
+    expect(earthTile.ok(), 'A real satellite tile must be bundled with GitHub Pages').toBe(true)
+    expect(earthTile.headers()['content-type']).toContain('image/jpeg')
+    expect((await earthTile.body()).byteLength).toBeGreaterThan(2000)
+  }
   const zipData = await request.get(`${basePath}data/zips.json`)
   expect(zipData.ok()).toBe(true)
   expect((await zipData.json())['70130']).toHaveLength(2)
