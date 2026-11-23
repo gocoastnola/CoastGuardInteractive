@@ -1,3 +1,10 @@
+## 2026-11-23 · Self-host NASA globe imagery after iPhone screenshot showed the fallback atlas
+
+- The first release used runtime NASA GIBS raster tiles; the provided iPhone screenshot still showed OpenFreeMap-style flat land and atlas lines. A source being registered is not proof that the imagery is actually visible.
+- Build XYZ Web Mercator tiles locally from the NASA Blue Marble Next Generation image in the basemap-data package, using a small Python/Numpy/Pillow generator in CI. GitHub Pages hosts the real JPEG assets on the same origin, eliminating runtime dependencies on the NASA GIBS tile service.
+- Generate z0–4 tile pyramid: 341 files / approximately 4 MB. Overzoom MapLibre's raster source for higher camera zooms. Keep the native sphere, route and markers. Production browser verification now fetches an actual deployed tile.
+- The hometown pullback limits the route framing to a broad globe rather than zooming into a flat-looking continental map. Do not merge without ensuring the satellite tile generation succeeds.
+
 ## 2026-11-23 · Satellite globe and ZIP cloud dive
 
 - The owner asked for the realistic North-America-facing Earth design rather than the flat gray land, and for a hometown ZIP camera approach followed by zoom-out through clouds to Cape May.

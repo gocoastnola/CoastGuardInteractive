@@ -12,3 +12,6 @@ dev.log
 
 # raw Census gazetteer cache (rebuilt by npm run build:zips)
 data-src/
+
+# Generated same-origin NASA Blue Marble imagery (created in CI before build)
+public/earth-tiles/

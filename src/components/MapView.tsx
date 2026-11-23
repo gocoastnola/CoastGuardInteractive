@@ -35,7 +35,9 @@ export const FALLBACK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-s
 // polygons. Renders on MapLibre's existing physical globe; the provider's street labels
 // remain available above it. If tiles fail, the original map remains visible below.
 const EARTH_IMAGERY = 'nasa-blue-marble'
-const EARTH_IMAGERY_TILE = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg'
+// Host tiled NASA imagery on the SAME origin as the module. The previous GIBS
+// runtime URL left users with the old gray base whenever NASA requests failed.
+const EARTH_IMAGERY_TILE = `${import.meta.env.BASE_URL}earth-tiles/{z}/{x}/{y}.jpg`
 const EARTH_IMAGERY_CREDIT = '<a href="https://earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA GIBS · Blue Marble Next Generation</a>'
 
 export interface JumpRequest {
@@ -231,7 +233,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       tiles: [EARTH_IMAGERY_TILE],
       tileSize: 256,
       minzoom: 0,
-      maxzoom: 8,
+      maxzoom: 4,
       attribution: EARTH_IMAGERY_CREDIT,
     })
     // Overlay all provider styling (including flat gray land and map labels).
@@ -241,9 +243,9 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       type: 'raster',
       source: EARTH_IMAGERY,
       paint: {
-        'raster-opacity': ['interpolate', ['linear'], ['zoom'], 7.6, 1, 10.5, 0],
+        'raster-opacity': 1,
         'raster-resampling': 'linear',
-        'raster-fade-duration': 450,
+        'raster-fade-duration': 150,
       },
     })
     map.getCanvas().dataset.earthImagery = EARTH_IMAGERY
