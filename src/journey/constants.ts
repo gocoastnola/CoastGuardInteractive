@@ -38,9 +38,9 @@ export const ACT1 = {
   graduate: 4.2, // last beat holds before the board
 } as const
 
-/** Hometown → Cape May travel timing, before the separate boot-camp progression. */
+/** Hometown → Cape May: dive toward the ZIP, then pull through clouds to the wide route. */
 export const ACT1_ARC = {
-  frameBoth: 2.2,
+  frameBoth: 4.8,
   arc: 6.0,
   arrive: 2.6,
   graduate: 2.4,
