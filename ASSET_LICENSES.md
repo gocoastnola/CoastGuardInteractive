@@ -29,6 +29,7 @@ Every third-party library, font, tile source and asset used by the app, with its
 
 | Source | Use | Licence / attribution requirement |
 | --- | --- | --- |
+| **NASA GIBS Blue Marble Next Generation** — `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg` | Natural-color satellite-composite texture of the globe (WMTS, zoom 0–8) | NASA GIBS/Earthdata public imagery. In-map attribution: NASA GIBS · Blue Marble Next Generation. Historical composite, not live weather. See https://nasa-gibs.github.io/gibs-api-docs/access-basics/ |
 | **OpenFreeMap** — `https://tiles.openfreemap.org/styles/dark` (primary) | Vector tiles + style | Free for any use, no key. Tiles derived from OpenStreetMap data (ODbL) via OpenMapTiles (BSD/CC-BY). Attribution rendered in-map: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap". |
 | **CARTO Dark Matter** — `https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json` (fallback only) | Vector tiles + style | CARTO free basemaps; requires "© CARTO" + "© OpenStreetMap contributors" attribution, which the style supplies and the attribution control shows. Used only if OpenFreeMap fails to load. |
 | OpenStreetMap data | Underlying data for both | ODbL 1.0 — https://www.openstreetmap.org/copyright |
