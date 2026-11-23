@@ -234,8 +234,8 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
       maxzoom: 8,
       attribution: EARTH_IMAGERY_CREDIT,
     })
-    // Above vector land/water, below cartographic labels, our route and ship.
-    const firstLabel = map.getStyle().layers.find(layer => layer.type === 'symbol')?.id
+    // Overlay all provider styling (including flat gray land and map labels).
+    // The story's route and animated atmosphere are re-added above the imagery.
     map.addLayer({
       id: EARTH_IMAGERY,
       type: 'raster',
@@ -245,7 +245,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         'raster-resampling': 'linear',
         'raster-fade-duration': 450,
       },
-    }, firstLabel)
+    })
   }
 
   /* ---------- journey arc layers (idempotent; re-run after a style swap) ---------- */
