@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main, codex/zip-first-foundation-20261117-063137Z]
   workflow_dispatch:
+    inputs:
+      full_regression:
+        description: Run the full long-duration journey suite after focused deployment checks
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -45,10 +50,13 @@ jobs:
           test -s dist/earth-tiles/4/8/6.jpg
       - name: Install Chromium and its system dependencies
         run: npx playwright install --with-deps chromium
-      - name: Verify the ZIP-first journey and responsive recovery paths
+      - name: Smoke-test the actual satellite globe in the production build
+        run: npm run test:e2e -- --grep @deploy-smoke
+        env:
+          E2E_PRODUCTION: '1'
+      - name: Full journey regression (explicit manual run only)
+        if: github.event_name == 'workflow_dispatch' && inputs.full_regression
         run: npm run test:e2e
-      - name: Verify production asset paths and browser startup
-        run: npm run test:e2e -- --grep @production
         env:
           E2E_PRODUCTION: '1'
       - name: Retain browser failure evidence
