@@ -1,3 +1,7 @@
+## Satellite Earth and ZIP cloud-dive experiment (2026-11-23)
+
+Branch feature/satellite-globe-zip-cloud-dive-20261123 from main 2e50a08eb5a7e81c0928712103d8ed207cf0a1b4. NASA true-color tiles cover the existing gray globe; hometown approach and zoom-out are accompanied by two decorative cloud sweeps. Story, routes, ship, audio and mobile reduced-motion remain unchanged. Browser verification is pending; no main-branch deployment has occurred.
+
 # PROGRESS.md
 
 _Current work: miniature Polar Star patrol marker, 2026-11-17. Prior reports remain as history._
