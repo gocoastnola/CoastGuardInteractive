@@ -102,7 +102,7 @@ export function JourneyOverlay({ act, leg, map, onDone }: Props) {
 
     map.drawArc(points, 0)
     // Act 1 begins with an actual camera dive to the applicant's hometown.
-    // The camera then rises through the clouds as the great-circle route begins.
+    // The camera then pulls back to reveal the route without fake cloud effects.
     if (act === 1) {
       map.flyToPlace(leg.from, { zoom: 7.9, pitch: 48, bearing: -14, duration: 2600 })
     } else {
@@ -121,17 +121,6 @@ export function JourneyOverlay({ act, leg, map, onDone }: Props) {
         duration: 3300, pitch: 0, maxZoom: 2.2, padding: framePadding(),
       }), [], 2.45)
 
-      // Two short cloud passes: descending into the hometown and ascending
-      // above it again. These are presentation-only and never block controls.
-      const cloud = root.current.querySelector<HTMLElement>('[data-cloud-pass]')
-      if (cloud) {
-        tl.fromTo(cloud, { opacity: 0, scale: 0.72 },
-          { opacity: 0.88, scale: 1.35, duration: 0.85, ease: 'power2.in' }, 0.9)
-        tl.to(cloud, { opacity: 0, scale: 2.05, duration: 0.95, ease: 'power2.out' }, 1.75)
-        tl.fromTo(cloud, { opacity: 0, scale: 0.75 },
-          { opacity: 0.9, scale: 1.3, duration: 0.85, ease: 'power2.in' }, 2.95)
-        tl.to(cloud, { opacity: 0, scale: 2.1, duration: 1.0, ease: 'power2.out' }, 3.8)
-      }
     }
 
     // text beats
@@ -214,12 +203,6 @@ export function JourneyOverlay({ act, leg, map, onDone }: Props) {
 
   return (
     <div className={`journey journey--act${act} ${reduced ? 'is-static' : ''}`} ref={root} data-testid={`journey-act${act}`}>
-      {act === 1 && !reduced && (
-        <div className="journey-cloud-pass" data-cloud-pass aria-hidden="true">
-          <div className="journey-cloud-pass__bank journey-cloud-pass__bank--far" />
-          <div className="journey-cloud-pass__bank journey-cloud-pass__bank--near" />
-        </div>
-      )}
       <div className="journey-beats" aria-live="polite">
         {beats.map((b, i) => (
           <p key={i} className="journey-beat" data-beat data-testid="journey-beat">

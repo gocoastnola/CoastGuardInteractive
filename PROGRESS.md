@@ -1,3 +1,7 @@
+## 2026-11-23 · Remove artificial cloud effects
+
+Owner requested removing the visually unconvincing clouds. Removed the full-screen ZIP dive cloud banks/GSAP tweens and deleted the procedural custom globe cloud shader, while retaining the native 3D Earth, NASA Blue Marble tiles, ZIP camera dive/pullback, Cape May journey, and ocean styling. Updated ZIP browser assertion to require the cloud overlay be absent. Static clouds contained in NASA imagery are unchanged. Work is isolated to fix/remove-artificial-clouds-20261123.
+
 ## Repair for blank NASA imagery (2026-11-23)
 
 The first satellite-globe commit depended on NASA GIBS imagery being downloaded live on every viewer's device. A real iPhone screenshot showed only the original gray vectors. This revision generates Web Mercator tile imagery from the original NASA Blue Marble Next Generation 5400×2700 composite at build time, serves the 341 tiles from GitHub Pages on the site's own origin, and verifies a real JPEG tile in the production smoke test. The ZIP travel pullback also remains on a broad sphere (max zoom 2.2). The story, ship, ports, sound and backup are untouched. Branch fix/bundled-blue-marble-20261123.

@@ -18,7 +18,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 664 
     await beginZip(page)
     // The ZIP journey briefly approaches the actual hometown before widening
     // into the Cape May route; realistic Earth tiles stay on the native globe.
-    await expect(page.locator('.journey-cloud-pass')).toHaveCount(1)
+    await expect(page.locator('.journey-cloud-pass')).toHaveCount(0)
     await expect(page.locator('.maplibregl-canvas')).toHaveAttribute('data-earth-imagery', 'nasa-blue-marble')
     await noAssignmentSpoilers(page)
     await opaque(page.locator('.journey-counter'))

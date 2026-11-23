@@ -1,3 +1,9 @@
+## 2026-11-23 · Remove artificial clouds at owner's request
+
+- Owner rejected the cloud transitions, describing them as visually unconvincing. Remove the ZIP fly-through CSS cloud banks and GSAP cloud animations entirely, and eliminate the custom shader-generated globe cloud overlay.
+- Keep the ZIP camera zoom-in, zoom-out, native spherical Earth, same-origin NASA imagery, route animation, polar voyage, and existing music unchanged. The static satellite source may still contain natural cloud formations baked into its photographic texture; this change removes only the added synthetic effects.
+- Preserve the ocean highlight code and reduced-motion behavior, with no new dependencies.
+
 ## 2026-11-23 · Self-host NASA globe imagery after iPhone screenshot showed the fallback atlas
 
 - The first release used runtime NASA GIBS raster tiles; the provided iPhone screenshot still showed OpenFreeMap-style flat land and atlas lines. A source being registered is not proof that the imagery is actually visible.
