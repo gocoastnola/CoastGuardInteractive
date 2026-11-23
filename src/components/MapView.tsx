@@ -246,6 +246,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         'raster-fade-duration': 450,
       },
     })
+    map.getCanvas().dataset.earthImagery = EARTH_IMAGERY
   }
 
   /* ---------- journey arc layers (idempotent; re-run after a style swap) ---------- */
