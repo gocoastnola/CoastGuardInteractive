@@ -118,7 +118,7 @@ export function JourneyOverlay({ act, leg, map, onDone }: Props) {
       // Start the wide pullback while the hometown is still close. The route
       // then animates as the camera finishes opening up the view.
       tl.call(() => map.fitPoints(points, {
-        duration: 3300, pitch: 0, maxZoom: 7.5, padding: framePadding(),
+        duration: 3300, pitch: 0, maxZoom: 2.2, padding: framePadding(),
       }), [], 2.45)
 
       // Two short cloud passes: descending into the hometown and ascending
