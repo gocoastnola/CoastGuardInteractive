@@ -31,6 +31,13 @@ import { createPatrolVessel, routeTangent, type PatrolVesselHandle } from '../li
 export const PRIMARY_STYLE = import.meta.env.VITE_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/dark'
 export const FALLBACK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
 
+// NASA Blue Marble Next Generation: genuine Earth imagery instead of recolored vector
+// polygons. Renders on MapLibre's existing physical globe; the provider's street labels
+// remain available above it. If tiles fail, the original map remains visible below.
+const EARTH_IMAGERY = 'nasa-blue-marble'
+const EARTH_IMAGERY_TILE = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg'
+const EARTH_IMAGERY_CREDIT = '<a href="https://earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA GIBS · Blue Marble Next Generation</a>'
+
 export interface JumpRequest {
   target: JumpTarget
   seq: number
@@ -214,6 +221,32 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
     }
     // Do not outline tiled water polygons: their clipped edges include tile and
     // antimeridian seams, which would draw false meridians through the ocean.
+  }
+
+  /* ---------- true-color Earth (persists through existing globe camera moves) ---------- */
+  const applySatelliteImagery = (map: MLMap) => {
+    if (map.getSource(EARTH_IMAGERY)) return
+    map.addSource(EARTH_IMAGERY, {
+      type: 'raster',
+      tiles: [EARTH_IMAGERY_TILE],
+      tileSize: 256,
+      minzoom: 0,
+      maxzoom: 8,
+      attribution: EARTH_IMAGERY_CREDIT,
+    })
+    // Overlay all provider styling (including flat gray land and map labels).
+    // The story's route and animated atmosphere are re-added above the imagery.
+    map.addLayer({
+      id: EARTH_IMAGERY,
+      type: 'raster',
+      source: EARTH_IMAGERY,
+      paint: {
+        'raster-opacity': ['interpolate', ['linear'], ['zoom'], 7.6, 1, 10.5, 0],
+        'raster-resampling': 'linear',
+        'raster-fade-duration': 450,
+      },
+    })
+    map.getCanvas().dataset.earthImagery = EARTH_IMAGERY
   }
 
   /* ---------- journey arc layers (idempotent; re-run after a style swap) ---------- */
@@ -478,6 +511,7 @@ export const MapView = forwardRef<MapHandle, Props>(function MapView(
         'atmosphere-blend': 0.82,
       })
       applyChartPalette(map)
+      applySatelliteImagery(map)
       syncStoryLabels(map)
       applyArc(map)
     })

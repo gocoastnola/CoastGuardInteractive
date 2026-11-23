@@ -27,3 +27,8 @@ The live flow is ZIP-first. Dates are internal illustrative training timing, not
 All images in `public/media/` were fetched from the DVIDS public API; the asset id,
 title, credit, unit and page URL for each file are recorded in
 `public/media/dvids-manifest.json`. Ship facts/port copy remain demo-unverified.
+
+
+## Natural-color Earth imagery (2026-11-23)
+
+NASA GIBS Blue Marble Next Generation historic global composite (WMTS, Web Mercator 0–8): https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/0/0/0.jpeg ; documentation: https://nasa-gibs.github.io/gibs-api-docs/access-basics/ . Attribution shown via MapLibre's attribution control.
